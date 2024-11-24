@@ -99,7 +99,7 @@ public class MainMovement extends LinearOpMode {
     
     //////////////////////// START OF MOVEMENT CODE ////////////////////////
     
-    private void setMotorPowers(boolean Strafing, boolean Rotating, float BL, float BR, float FL, float FR, float speed) {
+    private void setMotorPowers(float BL, float BR, float FL, float FR, float speed) {
 
             // set all the motor powers to the floats defined
             leftBack.setPower(BL * speed * 0.5);
@@ -116,11 +116,11 @@ public class MainMovement extends LinearOpMode {
         // rotates the robot if left stick is not being used (movement takes priorities)
         if ((Math.abs(RjoystickX) >= joystickDeadzone / 2) && !usingLStick) {
             if(RjoystickX < 0) {
-                setMotorPowers(false, true, 1, -1, 1, -1, -Math.abs(RjoystickX) * rotationSpeed); // clockwise rotation
+                setMotorPowers(1, -1, 1, -1, -Math.abs(RjoystickX) * rotationSpeed); // clockwise rotation
                 telemetry.addData("Right Stick rotating LEFT: ", RjoystickX);
 
             } else if (RjoystickX > 0) {
-                setMotorPowers(false, true, -1, 1, -1, 1, -Math.abs(RjoystickX) * rotationSpeed); // counter-clockwise rotation
+                setMotorPowers(-1, 1, -1, 1, -Math.abs(RjoystickX) * rotationSpeed); // counter-clockwise rotation
                 telemetry.addData("Right Stick rotating RIGHT: ", RjoystickX);
                 
             }
