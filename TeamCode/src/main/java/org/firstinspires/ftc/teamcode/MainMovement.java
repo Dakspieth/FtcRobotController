@@ -41,6 +41,8 @@ public class MainMovement extends LinearOpMode {
     private  Servo hArmOpen;
     boolean hClawOpen = false;
 
+    float bl = 0f, br = 0f, fl = 0f, fr = 0f;
+
 
 
 
@@ -89,8 +91,14 @@ public class MainMovement extends LinearOpMode {
 
             telemetry.addData("Status", "Run Time: " + Runtime.getRuntime()); // tracks how long program has been running
             telemetry.update(); //update output screen
+
+            bl = 0f;
+            br = 0f;
+            fl = 0f;
+            fr = 0f;
         }
 
+
     }
 
     //////////////////////// START OF MOVEMENT CODE ////////////////////////
@@ -99,18 +107,7 @@ public class MainMovement extends LinearOpMode {
     
     //////////////////////// START OF MOVEMENT CODE ////////////////////////
     
-    private void setMotorPowers(float BL, float BR, float FL, float FR, float speed) {
 
-            // set all the motor powers to the floats defined
-            leftBack.setPower(BL * speed * 0.5);
-
-            rightFront.setPower(FR * speed * 0.5);
-
-            leftFront.setPower(FL * speed * 0.5);
-
-            rightBack.setPower(BR * speed * 0.5);
-
-    }
 
     private void epicRotationMovement() {
         // rotates the robot if left stick is not being used (movement takes priorities)
@@ -318,5 +315,22 @@ public class MainMovement extends LinearOpMode {
         }
 
     }
+    private void setMotorPowers(float BL, float BR, float FL, float FR, float speed) {
 
+        bl += BL;
+        br += BR;
+        fl += FL;
+        fr += FR;
+
+
+        // set all the motor powers to the floats defined
+        leftBack.setPower(bl * speed * 0.5);
+
+        rightFront.setPower(fr * speed * 0.5);
+
+        leftFront.setPower(fl * speed * 0.5);
+
+        rightBack.setPower(br * speed * 0.5);
+
+    }
 }
