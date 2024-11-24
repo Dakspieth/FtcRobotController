@@ -13,6 +13,7 @@ public class MainMovement extends LinearOpMode {
 
         // ROBOT MOVEMENT //
 
+    
     private DcMotor leftBack, rightBack, leftFront, rightFront; //Initializes all the direct current motors for the driving function of our robot, gary.
     final float speedSlow = 0.5f; // Slow mode for robot chassis movement
     final float speedFast = 1.5f; // Speedy mode for robot chassis movement
