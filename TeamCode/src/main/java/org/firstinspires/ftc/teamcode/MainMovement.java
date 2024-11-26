@@ -17,6 +17,8 @@ public class MainMovement extends LinearOpMode {
     private DcMotor leftBack, rightBack, leftFront, rightFront; //Initializes all the direct current motors for the driving function of our robot, gary.
     final float speedSlow = 0.5f; // Slow mode for robot chassis movement
     final float speedFast = 1.5f; // Speedy mode for robot chassis movement
+    float netS; // speed the motor actually uses
+
     float rotationSpeed = 1f; // Robot rotation speed multiplier, 1.5 for fast mode, 0.5 for slow mode
 
         // JOYSTICK and MOVEMENT CONTROLS //
@@ -89,9 +91,11 @@ public class MainMovement extends LinearOpMode {
             epicRotationMovement(); // rotation on gary, the robot
             legendaryStrafeMovement(); // movement on gary
             LimbMovement(); // controlling linear slide and claw on gary, OUR robot
-
+            setMotorPowers();
             telemetry.addData("Status", "Run Time: " + Runtime.getRuntime()); // tracks how long program has been running
             telemetry.update(); //update output screen
+
+
 
         }
 
@@ -110,7 +114,7 @@ public class MainMovement extends LinearOpMode {
         // rotates the robot if left stick is not being used (movement takes priorities)
         if ((Math.abs(RjoystickX) >= joystickDeadzone / 2) && !usingLStick) {
             if(RjoystickX < 0) {
-               // setMotorPowers(1, -1, 1, -1, -Math.abs(RjoystickX) * rotationSpeed); // clockwise rotation
+               // clockwise rotation
                 RotateBL = 1;
                 RotateBR = -1;
                 RotateFL = 1;
@@ -118,7 +122,7 @@ public class MainMovement extends LinearOpMode {
                 telemetry.addData("Right Stick rotating LEFT: ", RjoystickX);
 
             } else if (RjoystickX > 0) {
-                //setMotorPowers(-1, 1, -1, 1, -Math.abs(RjoystickX) * rotationSpeed); // counter-clockwise rotation
+                // counter-clockwise rotation
                 RotateBL = -1;
                 RotateBR = 1;
                 RotateFL = -1;
@@ -141,7 +145,6 @@ public class MainMovement extends LinearOpMode {
     private void legendaryStrafeMovement() {
         float maxSpeed = 1.0f; // Cap for speed robot can travel
         double addSpeed = Math.sqrt(LjoystickX * LjoystickX + LjoystickY * LjoystickY); // Added speed by calculating the distance the joystick is from the center
-        float netS; // speed the motor actually uses
 
         // Alternate between SLOW && FAST mode depending on which bumper is held :P
         if (gamepad1.left_bumper) {    // slow mode !
@@ -162,12 +165,10 @@ public class MainMovement extends LinearOpMode {
 
         // strafe based on joystick angle :D
         if (Math.abs(LjoystickX) > joystickDeadzone || Math.abs(LjoystickY) > joystickDeadzone) {
-            usingLStick = true;
-            
+
             //if stick is past the deadzone ->
             if (LangleInDegrees >= -22.5 && LangleInDegrees <= 22.5) {
                 // right quadrant
-                //setMotorPowers(-1, 1, 1, -1, netS);
                 StrafeBL = -1;
                 StrafeBR = 1;
                 StrafeFL = -1;
@@ -176,7 +177,6 @@ public class MainMovement extends LinearOpMode {
 
             } else if (LangleInDegrees > 22.5 && LangleInDegrees < 67.5) {
                 // top-right quadrant
-               // setMotorPowers(0, 1, 1, 0, netS);
                 StrafeBL = 0;
                 StrafeBR = 1;
                 StrafeFL = 1;
@@ -185,7 +185,6 @@ public class MainMovement extends LinearOpMode {
 
             } else if (LangleInDegrees > -67.5 && LangleInDegrees < -22.5) {
                 // bottom-right quadrant
-               // setMotorPowers(-1, 0, 0, -1, netS);
                 StrafeBL = -1;
                 StrafeBR = 0;
                 StrafeFL = 0;
@@ -194,7 +193,6 @@ public class MainMovement extends LinearOpMode {
 
             } else if (LangleInDegrees >= 67.5 && LangleInDegrees <= 112.5) {
                 // top quadrant
-               // setMotorPowers(1, 1, 1, 1, netS);
                 StrafeBL = 1;
                 StrafeBR = 1;
                 StrafeFL = 1;
@@ -203,7 +201,6 @@ public class MainMovement extends LinearOpMode {
 
             } else if (LangleInDegrees > -112.5 && LangleInDegrees < -67.5) {
                 // bottom quadrant
-               // setMotorPowers(-1, -1, -1, -1, netS);
                 StrafeBL = -1;
                 StrafeBR = -1;
                 StrafeFL = -1;
@@ -212,7 +209,6 @@ public class MainMovement extends LinearOpMode {
 
             } else if (LangleInDegrees > 112.5 && LangleInDegrees < 157.5) {
                 // top-left quadrant
-                //setMotorPowers(1, 0, 0, 1, netS);
                 StrafeBL = 1;
                 StrafeBR = 0;
                 StrafeFL = 0;
@@ -221,7 +217,6 @@ public class MainMovement extends LinearOpMode {
 
             } else if (LangleInDegrees > -157.5 && LangleInDegrees < -112.5) {
                 // bottom-left quadrant
-                //setMotorPowers(0, -1, -1, 0, netS);
                 StrafeBL = 1;
                 StrafeBR = -1;
                 StrafeFL = -1;
@@ -230,7 +225,6 @@ public class MainMovement extends LinearOpMode {
 
             } else if (LangleInDegrees >= 157.5 || LangleInDegrees <= -157.5) {
                 // left quadrant
-               // setMotorPowers(1, -1, -1, 1, netS);
                 StrafeBL = 1;
                 StrafeBR = -1;
                 StrafeFL = -1;
@@ -240,8 +234,6 @@ public class MainMovement extends LinearOpMode {
             }
 
         } else {
-            usingLStick = false;
-            //setMotorPowers(0, 0, 0, 0, 0); // zero all motor powers
             StrafeBL = 0;
             StrafeBR = 0;
             StrafeFL = 0;
@@ -356,44 +348,37 @@ public class MainMovement extends LinearOpMode {
         }
 
     }
-    private void setMotorPowers(float BL, float BR, float FL, float FR, float speed) {
+    private void setMotorPowers() {
 
 
         if(((Math.abs(LjoystickX) > joystickDeadzone || Math.abs(LjoystickY) > joystickDeadzone)) && !(Math.abs(RjoystickX) >= joystickDeadzone / 2)){
-            leftBack.setPower(StrafeBL * speed * 0.5);
+            leftBack.setPower(StrafeBL * netS * 0.5);
 
-            rightFront.setPower(StrafeFR * speed * 0.5);
+            rightFront.setPower(StrafeFR * netS * 0.5);
 
-            leftFront.setPower(StrafeFL * speed * 0.5);
+            leftFront.setPower(StrafeFL * netS * 0.5);
 
-            rightBack.setPower(StrafeBR * speed * 0.5);
+            rightBack.setPower(StrafeBR * netS * 0.5);
         }
         if(!(Math.abs(LjoystickX) > joystickDeadzone || Math.abs(LjoystickY) > joystickDeadzone) && (Math.abs(RjoystickX) >= joystickDeadzone / 2)){
-            leftBack.setPower(RotateBL * speed * 0.5);
+            leftBack.setPower(RotateBL * (-Math.abs(RjoystickX) * rotationSpeed) * 0.5);
 
-            rightFront.setPower(RotateFR * speed * 0.5);
+            rightFront.setPower(RotateFR * (-Math.abs(RjoystickX) * rotationSpeed) * 0.5);
 
-            leftFront.setPower(RotateFL * speed * 0.5);
+            leftFront.setPower(RotateFL * (-Math.abs(RjoystickX) * rotationSpeed) * 0.5);
 
-            rightBack.setPower(RotateBR * speed * 0.5);
+            rightBack.setPower(RotateBR * (-Math.abs(RjoystickX) * rotationSpeed) * 0.5);
         }
         if((Math.abs(LjoystickX) > joystickDeadzone || Math.abs(LjoystickY) > joystickDeadzone) && (Math.abs(RjoystickX) >= joystickDeadzone / 2)){
-            leftBack.setPower(((RotateBL + StrafeBL) / 2) * speed * 0.5);
+            leftBack.setPower(((RotateBL + StrafeBL) / 2) * ((netS + (-Math.abs(RjoystickX) * rotationSpeed)) / 2) * 0.5);
 
-            rightFront.setPower(((RotateFR + StrafeFR) / 2) * speed * 0.5);
+            rightFront.setPower(((RotateFR + StrafeFR) / 2) * ((netS + (-Math.abs(RjoystickX) * rotationSpeed)) / 2) * 0.5);
 
-            leftFront.setPower(((RotateFL + StrafeFL) / 2) * speed * 0.5);
+            leftFront.setPower(((RotateFL + StrafeFL) / 2) * ((netS + (-Math.abs(RjoystickX) * rotationSpeed)) / 2) * 0.5);
 
-            rightBack.setPower(((RotateBR + StrafeBR) / 2) * speed * 0.5);
+            rightBack.setPower(((RotateBR + StrafeBR) / 2) * ((netS + (-Math.abs(RjoystickX) * rotationSpeed)) / 2) * 0.5);
         }
-        // set all the motor powers to the floats defined
-       /* leftBack.setPower(BL * speed * 0.5);
 
-        rightFront.setPower(FR * speed * 0.5);
-
-        leftFront.setPower(FL * speed * 0.5);
-
-        rightBack.setPower(BR * speed * 0.5);*/
 
     }
 }
