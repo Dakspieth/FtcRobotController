@@ -266,6 +266,7 @@ public class MainMovement extends LinearOpMode {
         if(Math.abs(gamepad2.right_stick_y) > joystickDeadzone) {
             // moves the horizontal linear slide 
             hLinearSlide.setPosition(Math.min(1, Math.max(0, hLinearSlide.getPosition() + gamepad2.right_stick_y / 20)));
+            telemetry.addData("hls", hLinearSlide.getPosition());
         } else {
             // keep the movement of the slide as is when not changing its position (to prevent it from swinging back and forth while robot drives)
             hLinearSlide.setPosition(hLinearSlide.getPosition());
