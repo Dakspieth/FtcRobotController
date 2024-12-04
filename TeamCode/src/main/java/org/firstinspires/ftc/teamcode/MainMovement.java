@@ -46,6 +46,8 @@ public class MainMovement extends LinearOpMode {
     float StrafeBL = 0f, StrafeBR = 0f, StrafeFL = 0f, StrafeFR = 0f;
     float RotateBL = 0f, RotateBR = 0f, RotateFL = 0f, RotateFR = 0f;
 
+    boolean Strafing, Rotating;
+
 
 
 
@@ -94,9 +96,6 @@ public class MainMovement extends LinearOpMode {
             setMotorPowers();
             telemetry.addData("Status", "Run Time: " + Runtime.getRuntime()); // tracks how long program has been running
             telemetry.update(); //update output screen
-
-
-
         }
 
 
@@ -112,24 +111,31 @@ public class MainMovement extends LinearOpMode {
 
     private void epicRotationMovement() {
         // rotates the robot if left stick is not being used (movement takes priorities)
-        if ((Math.abs(RjoystickX) >= joystickDeadzone / 2) && !usingLStick) {
-            if(RjoystickX < 0) {
+        if (Math.abs(RjoystickX) >= joystickDeadzone / 2) {
+            Rotating = true;
+            if(RjoystickX > 0) {
                // clockwise rotation
-                RotateBL = 1;
-                RotateBR = -1;
-                RotateFL = 1;
-                RotateFR = -1;
+                RotateBL = Math.abs(RjoystickX);
+                RotateBR = -Math.abs(RjoystickX);
+                RotateFL = Math.abs(RjoystickX);
+                RotateFR = -Math.abs(RjoystickX);
                 telemetry.addData("Right Stick rotating LEFT: ", RjoystickX);
 
-            } else if (RjoystickX > 0) {
+            } else if (RjoystickX < 0) {
                 // counter-clockwise rotation
-                RotateBL = -1;
-                RotateBR = 1;
-                RotateFL = -1;
-                RotateFR = 1;
+                RotateBL = -Math.abs(RjoystickX);
+                RotateBR = Math.abs(RjoystickX);
+                RotateFL = -Math.abs(RjoystickX);
+                RotateFR = Math.abs(RjoystickX);
                 telemetry.addData("Right Stick rotating RIGHT: ", RjoystickX);
                 
             }
+        } else {
+            Rotating = false;
+            RotateBL = 0;
+            RotateBR = 0;
+            RotateFL = 0;
+            RotateFR = 0;
         }
     }
 
@@ -165,79 +171,83 @@ public class MainMovement extends LinearOpMode {
 
         // strafe based on joystick angle :D
         if (Math.abs(LjoystickX) > joystickDeadzone || Math.abs(LjoystickY) > joystickDeadzone) {
-
+            Strafing = true;
             //if stick is past the deadzone ->
             if (LangleInDegrees >= -22.5 && LangleInDegrees <= 22.5) {
                 // right quadrant
-                StrafeBL = -1;
-                StrafeBR = 1;
-                StrafeFL = -1;
-                StrafeFR = 1;
+                StrafeBL = -netS;
+                StrafeBR = netS;
+                StrafeFL = netS;
+                StrafeFR = -netS;
                 telemetry.addData("Left Stick quadrant: ", "RIGHT");
 
             } else if (LangleInDegrees > 22.5 && LangleInDegrees < 67.5) {
                 // top-right quadrant
                 StrafeBL = 0;
-                StrafeBR = 1;
-                StrafeFL = 1;
+                StrafeBR = netS;
+                StrafeFL = netS;
                 StrafeFR = 0;
                 telemetry.addData("Left Stick quadrant: ", "TOP RIGHT");
 
             } else if (LangleInDegrees > -67.5 && LangleInDegrees < -22.5) {
                 // bottom-right quadrant
-                StrafeBL = -1;
+                StrafeBL = -netS;
                 StrafeBR = 0;
                 StrafeFL = 0;
-                StrafeFR = -1;
+                StrafeFR = -netS;
                 telemetry.addData("Left Stick quadrant: ", "BOTTOM RIGHT");
 
             } else if (LangleInDegrees >= 67.5 && LangleInDegrees <= 112.5) {
                 // top quadrant
-                StrafeBL = 1;
-                StrafeBR = 1;
-                StrafeFL = 1;
-                StrafeFR = 1;
+                StrafeBL = netS;
+                StrafeBR = netS;
+                StrafeFL = netS;
+                StrafeFR = netS;
                 telemetry.addData("Left Stick quadrant: ", "TOP");
 
             } else if (LangleInDegrees > -112.5 && LangleInDegrees < -67.5) {
                 // bottom quadrant
-                StrafeBL = -1;
-                StrafeBR = -1;
-                StrafeFL = -1;
-                StrafeFR = -1;
+                StrafeBL = -netS;
+                StrafeBR = -netS;
+                StrafeFL = -netS;
+                StrafeFR = -netS;
                 telemetry.addData("Left Stick quadrant: ", "BOTTOM");
 
             } else if (LangleInDegrees > 112.5 && LangleInDegrees < 157.5) {
                 // top-left quadrant
-                StrafeBL = 1;
+                StrafeBL = netS;
                 StrafeBR = 0;
                 StrafeFL = 0;
-                StrafeFR = 1;
+                StrafeFR = netS;
                 telemetry.addData("Left Stick quadrant: ", "TOP LEFT");
 
             } else if (LangleInDegrees > -157.5 && LangleInDegrees < -112.5) {
                 // bottom-left quadrant
-                StrafeBL = 1;
-                StrafeBR = -1;
-                StrafeFL = -1;
-                StrafeFR = 1;
+                StrafeBL = netS;
+                StrafeBR = -netS;
+                StrafeFL = -netS;
+                StrafeFR = netS;
                 telemetry.addData("Left Stick quadrant: ", "BOTTOM LEFT");
 
             } else if (LangleInDegrees >= 157.5 || LangleInDegrees <= -157.5) {
                 // left quadrant
-                StrafeBL = 1;
-                StrafeBR = -1;
-                StrafeFL = -1;
-                StrafeFR = 1;
+                StrafeBL = netS;
+                StrafeBR = -netS;
+                StrafeFL = -netS;
+                StrafeFR = netS;
                 telemetry.addData("Left Stick quadrant: ", "LEFT");
 
             }
 
         } else {
+            Strafing = false;
+
             StrafeBL = 0;
             StrafeBR = 0;
             StrafeFL = 0;
             StrafeFR = 0;
+            telemetry.addData("not driving", null);
+
         }
 
 
@@ -254,10 +264,11 @@ public class MainMovement extends LinearOpMode {
 
     private void LimbMovement() {
 
+        print("HLS Pause: ", hLinearSlide.getPosition());
 
         if(Math.abs(gamepad2.right_stick_y) > joystickDeadzone) {
-            // moves the horizontal linear slide 
-            hLinearSlide.setPosition(Math.min(1, Math.max(0, hLinearSlide.getPosition() + gamepad2.right_stick_y / 20)));
+            // moves the horizontal linear slide
+            hLinearSlide.setPosition(Math.min(0.8, Math.max(0, hLinearSlide.getPosition() + gamepad2.right_stick_y / 800)));
         } else {
             // keep the movement of the slide as is when not changing its position (to prevent it from swinging back and forth while robot drives)
             hLinearSlide.setPosition(hLinearSlide.getPosition());
@@ -351,34 +362,44 @@ public class MainMovement extends LinearOpMode {
     private void setMotorPowers() {
 
 
-        if(((Math.abs(LjoystickX) > joystickDeadzone || Math.abs(LjoystickY) > joystickDeadzone)) && !(Math.abs(RjoystickX) >= joystickDeadzone / 2)){
-            leftBack.setPower(StrafeBL * netS * 0.5);
+        if(Strafing && Rotating){
+            leftBack.setPower(((RotateBL + StrafeBL) / 2) * rotationSpeed * 0.5);
 
-            rightFront.setPower(StrafeFR * netS * 0.5);
+            rightFront.setPower(((RotateFR + StrafeFR) / 2) * rotationSpeed * 0.5);
 
-            leftFront.setPower(StrafeFL * netS * 0.5);
+            leftFront.setPower(((RotateFL + StrafeFL) / 2) * rotationSpeed * 0.5);
 
-            rightBack.setPower(StrafeBR * netS * 0.5);
+            rightBack.setPower(((RotateBR + StrafeBR) / 2) * rotationSpeed * 0.5);
+
+
         }
-        if(!(Math.abs(LjoystickX) > joystickDeadzone || Math.abs(LjoystickY) > joystickDeadzone) && (Math.abs(RjoystickX) >= joystickDeadzone / 2)){
-            leftBack.setPower(RotateBL * (-Math.abs(RjoystickX) * rotationSpeed) * 0.5);
+        else if(Strafing && !Rotating){
+            leftBack.setPower(StrafeBL * 0.5);
 
-            rightFront.setPower(RotateFR * (-Math.abs(RjoystickX) * rotationSpeed) * 0.5);
+            rightFront.setPower(StrafeFR * 0.5);
 
-            leftFront.setPower(RotateFL * (-Math.abs(RjoystickX) * rotationSpeed) * 0.5);
+            leftFront.setPower(StrafeFL * 0.5);
 
-            rightBack.setPower(RotateBR * (-Math.abs(RjoystickX) * rotationSpeed) * 0.5);
+            rightBack.setPower(StrafeBR * 0.5);
+        } else if(!Strafing && Rotating){
+            leftBack.setPower(RotateBL * rotationSpeed * 0.5);
+
+            rightFront.setPower(RotateFR * rotationSpeed * 0.5);
+
+            leftFront.setPower(RotateFL * rotationSpeed * 0.5);
+
+            rightBack.setPower(RotateBR * rotationSpeed * 0.5);
+        } else {
+            leftBack.setPower(0);
+            leftFront.setPower(0);
+            rightBack.setPower(0);
+            rightFront.setPower(0);
         }
-        if((Math.abs(LjoystickX) > joystickDeadzone || Math.abs(LjoystickY) > joystickDeadzone) && (Math.abs(RjoystickX) >= joystickDeadzone / 2)){
-            leftBack.setPower(((RotateBL + StrafeBL) / 2) * ((netS + (-Math.abs(RjoystickX) * rotationSpeed)) / 2) * 0.5);
-
-            rightFront.setPower(((RotateFR + StrafeFR) / 2) * ((netS + (-Math.abs(RjoystickX) * rotationSpeed)) / 2) * 0.5);
-
-            leftFront.setPower(((RotateFL + StrafeFL) / 2) * ((netS + (-Math.abs(RjoystickX) * rotationSpeed)) / 2) * 0.5);
-
-            rightBack.setPower(((RotateBR + StrafeBR) / 2) * ((netS + (-Math.abs(RjoystickX) * rotationSpeed)) / 2) * 0.5);
-        }
 
 
+    }
+
+    public void print(String str, double num){
+        telemetry.addData(str, num);
     }
 }
