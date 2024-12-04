@@ -268,7 +268,7 @@ public class MainMovement extends LinearOpMode {
 
         if(Math.abs(gamepad2.right_stick_y) > joystickDeadzone) {
             // moves the horizontal linear slide
-            hLinearSlide.setPosition(Math.min(0.8, Math.max(0, hLinearSlide.getPosition() + gamepad2.right_stick_y / 800)));
+            hLinearSlide.setPosition(Math.min(0.475, Math.max(0.25, hLinearSlide.getPosition() + (gamepad2.right_stick_y / 800))));
         } else {
             // keep the movement of the slide as is when not changing its position (to prevent it from swinging back and forth while robot drives)
             hLinearSlide.setPosition(hLinearSlide.getPosition());
@@ -276,12 +276,12 @@ public class MainMovement extends LinearOpMode {
 
         //snaps horizontal linear slide to fully extended
         if(gamepad2.dpad_up){
-            hLinearSlide.setPosition(0.8);
+            hLinearSlide.setPosition(0.25);
             sleep(100); // wait for teh motion to finish
         }
         //snaps horizontal linear slide to fully retracted
         if(gamepad2.dpad_down){
-            hLinearSlide.setPosition(0);
+            hLinearSlide.setPosition(0.475);
             sleep(100); // wait for the motion to finish
         }
 
