@@ -216,17 +216,17 @@ public class MainMovement extends LinearOpMode {
 
         }
     }
-    private void wheelStrafe(float backleft, float backright, float frontleft, float frontright) { // For setting the wheel strafe values
-        StrafeBL = backleft;
-        StrafeBR = backright;
-        StrafeFL = frontleft;
-        StrafeFR = frontright;
+    private void wheelStrafe(float bl, float br, float fl, float fr) { // For setting the wheel strafe values
+        StrafeBL = bl;
+        StrafeBR = br;
+        StrafeFL = fl;
+        StrafeFR = fr;
     }
-    private void wheelRotate(float backleft, float backright, float frontleft, float frontright) { // For setting the wheel rotation values
-        RotateBL = backleft;
-        RotateBR = backright;
-        RotateFL = frontleft;
-        RotateFR = frontright;
+    private void wheelRotate(float bl, float br, float fl, float fr) { // For setting the wheel rotation values
+        RotateBL = bl;
+        RotateBR = br;
+        RotateFL = fl;
+        RotateFR = fr;
     }
 
     //////////////////////// END OF MOVEMENT CODE ////////////////////////
@@ -234,6 +234,7 @@ public class MainMovement extends LinearOpMode {
     //////////////////////// END OF MOVEMENT CODE ////////////////////////
 
     //////////////////////// END OF MOVEMENT CODE ////////////////////////
+
     private void HorizontalSlideMovement() {
         double hsMinExtension = 0.475, hsMaxExtension = 0.25;
         // controls - horizontal slide
@@ -375,8 +376,11 @@ public class MainMovement extends LinearOpMode {
             rightBack.setPower(RotateBR * rotationSpeed * 0.5);
         } else {
             leftBack.setPower(0);
+
             leftFront.setPower(0);
+
             rightBack.setPower(0);
+
             rightFront.setPower(0);
         }
     }
