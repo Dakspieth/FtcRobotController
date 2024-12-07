@@ -12,8 +12,6 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class MainMovement extends LinearOpMode {
 
         // ROBOT MOVEMENT //
-
-    
     private DcMotor leftBack, rightBack, leftFront, rightFront; //Initializes all the direct current motors for the driving function of our robot, gary.
     final float speedSlow = 0.5f; // Slow mode for robot chassis movement
     final float speedFast = 1.5f; // Speedy mode for robot chassis movement
@@ -39,8 +37,8 @@ public class MainMovement extends LinearOpMode {
 
         // horizontal slide
     boolean hArmUp = false;
-    private Servo hClawServo, hLinearSlide, hClawRotate; // h is slang for horizontal btw
-    private  Servo hArmOpen;
+    private Servo hClawServo, hLinearSlide, hClawRotate; // h is short for horizontal btw
+    private Servo hArmOpen;
     boolean hClawOpen = false;
 
     float StrafeBL = 0f, StrafeBR = 0f, StrafeFL = 0f, StrafeFR = 0f;
@@ -106,8 +104,6 @@ public class MainMovement extends LinearOpMode {
     //////////////////////// START OF MOVEMENT CODE ////////////////////////
     
     //////////////////////// START OF MOVEMENT CODE ////////////////////////
-    
-
 
     private void epicRotationMovement() {
         // rotates the robot if left stick is not being used (movement takes priorities)
@@ -115,27 +111,18 @@ public class MainMovement extends LinearOpMode {
             Rotating = true;
             if(RjoystickX > 0) {
                // clockwise rotation
-                RotateBL = Math.abs(RjoystickX);
-                RotateBR = -Math.abs(RjoystickX);
-                RotateFL = Math.abs(RjoystickX);
-                RotateFR = -Math.abs(RjoystickX);
+                wheelRotate(Math.abs(RjoystickX), -Math.abs(RjoystickX), Math.abs(RjoystickX), -Math.abs(RjoystickX));
                 telemetry.addData("Right Stick rotating LEFT: ", RjoystickX);
 
             } else if (RjoystickX < 0) {
                 // counter-clockwise rotation
-                RotateBL = -Math.abs(RjoystickX);
-                RotateBR = Math.abs(RjoystickX);
-                RotateFL = -Math.abs(RjoystickX);
-                RotateFR = Math.abs(RjoystickX);
+                wheelRotate(-Math.abs(RjoystickX), Math.abs(RjoystickX), -Math.abs(RjoystickX), Math.abs(RjoystickX));
                 telemetry.addData("Right Stick rotating RIGHT: ", RjoystickX);
                 
             }
         } else {
             Rotating = false;
-            RotateBL = 0;
-            RotateBR = 0;
-            RotateFL = 0;
-            RotateFR = 0;
+            wheelRotate(0, 0, 0, 0);
         }
     }
 
@@ -175,66 +162,42 @@ public class MainMovement extends LinearOpMode {
             //if stick is past the deadzone ->
             if (LangleInDegrees >= -22.5 && LangleInDegrees <= 22.5) {
                 // right quadrant
-                StrafeBL = -netS;
-                StrafeBR = netS;
-                StrafeFL = netS;
-                StrafeFR = -netS;
+                wheelStrafe(-netS, netS, netS, -netS);
                 telemetry.addData("Left Stick quadrant: ", "RIGHT");
 
             } else if (LangleInDegrees > 22.5 && LangleInDegrees < 67.5) {
                 // top-right quadrant
-                StrafeBL = 0;
-                StrafeBR = netS;
-                StrafeFL = netS;
-                StrafeFR = 0;
+                wheelStrafe(0, netS, netS, 0);
                 telemetry.addData("Left Stick quadrant: ", "TOP RIGHT");
 
             } else if (LangleInDegrees > -67.5 && LangleInDegrees < -22.5) {
                 // bottom-right quadrant
-                StrafeBL = -netS;
-                StrafeBR = 0;
-                StrafeFL = 0;
-                StrafeFR = -netS;
+                wheelStrafe(-netS, 0, 0, -netS);
                 telemetry.addData("Left Stick quadrant: ", "BOTTOM RIGHT");
 
             } else if (LangleInDegrees >= 67.5 && LangleInDegrees <= 112.5) {
                 // top quadrant
-                StrafeBL = netS;
-                StrafeBR = netS;
-                StrafeFL = netS;
-                StrafeFR = netS;
+                wheelStrafe(netS, netS, netS, netS);
                 telemetry.addData("Left Stick quadrant: ", "TOP");
 
             } else if (LangleInDegrees > -112.5 && LangleInDegrees < -67.5) {
                 // bottom quadrant
-                StrafeBL = -netS;
-                StrafeBR = -netS;
-                StrafeFL = -netS;
-                StrafeFR = -netS;
+                wheelStrafe(-netS, -netS, -netS, -netS);
                 telemetry.addData("Left Stick quadrant: ", "BOTTOM");
 
             } else if (LangleInDegrees > 112.5 && LangleInDegrees < 157.5) {
                 // top-left quadrant
-                StrafeBL = netS;
-                StrafeBR = 0;
-                StrafeFL = 0;
-                StrafeFR = netS;
+                wheelStrafe(netS, 0, 0, netS);
                 telemetry.addData("Left Stick quadrant: ", "TOP LEFT");
 
             } else if (LangleInDegrees > -157.5 && LangleInDegrees < -112.5) {
                 // bottom-left quadrant
-                StrafeBL = netS;
-                StrafeBR = -netS;
-                StrafeFL = -netS;
-                StrafeFR = netS;
+                wheelStrafe(netS, -netS, -netS, netS);
                 telemetry.addData("Left Stick quadrant: ", "BOTTOM LEFT");
 
             } else if (LangleInDegrees >= 157.5 || LangleInDegrees <= -157.5) {
                 // left quadrant
-                StrafeBL = netS;
-                StrafeBR = -netS;
-                StrafeFL = -netS;
-                StrafeFR = netS;
+                wheelStrafe(netS, -netS, -netS, netS);
                 telemetry.addData("Left Stick quadrant: ", "LEFT");
 
             }
@@ -242,18 +205,22 @@ public class MainMovement extends LinearOpMode {
         } else {
             Strafing = false;
 
-            StrafeBL = 0;
-            StrafeBR = 0;
-            StrafeFL = 0;
-            StrafeFR = 0;
-            telemetry.addData("not driving", null);
+            wheelStrafe(0, 0, 0, 0);
+            telemetry.addData("nut driving", null);
 
         }
-
-
-
-
-
+    }
+    private void wheelStrafe(float backleft, float backright, float frontleft, float frontright) { // For setting the wheel strafe values
+        StrafeBL = backleft;
+        StrafeBR = backright;
+        StrafeFL = frontleft;
+        StrafeFR = frontright;
+    }
+    private void wheelRotate(float backleft, float backright, float frontleft, float frontright) { // For setting the wheel rotation values
+        RotateBL = backleft;
+        RotateBR = backright;
+        RotateFL = frontleft;
+        RotateFR = frontright;
     }
 
     //////////////////////// END OF MOVEMENT CODE ////////////////////////
@@ -301,7 +268,7 @@ public class MainMovement extends LinearOpMode {
 
 
 
-        if(gamepad2.x){
+        if(gamepad2.x){  // TODO: make this thing for downwards farther so it can pick up stuff  (will do once claw is mounted)
             vSlideArmOut = !vSlideArmOut; // toggle between arm positions
             if(vSlideArmOut){
                 vArmServo.setPosition(0); //Arm swings out
