@@ -42,6 +42,7 @@ public class MainMovement extends LinearOpMode {
     private Servo hClawServo, hLinearSlide, hClawRotate; // h is short for horizontal btw
     private Servo hArmOpen;
     boolean hClawOpen = false;
+    boolean vArmToggle = true;
 
 
 
@@ -267,7 +268,7 @@ public class MainMovement extends LinearOpMode {
 
     private void HorizontalClawAndArm() {
         double hClawOpenValue = 1, hClawClosedValue = 0;
-        double hArmUpValue = 0.75, hArmDownValue = 0.1; // hArmDownValue WAS 0.25 - - - - -  - - - -  - - - - - - - - - - ! ! ! !! ! (working on this rn  )
+        double hArmUpValue = 0.95, hArmDownValue = 0.25; // hArmDownValue WAS 0.25 - - - - -  - - - -  - - - - - - - - - - ! ! ! !! ! (working on this rn  )
         // controls - horizontal claw and arm
         boolean hClawToggleBtn = gamepad2.b; // open/close claw
         boolean hArmToggleBtn = gamepad2.y; // swing horizontal arm out/in
@@ -326,9 +327,9 @@ public class MainMovement extends LinearOpMode {
     private void VerticalArmAndClaw() {
         double vArmOutValue = 0, vArmInValue = 0.75;
         // controls - vertical arm
-        boolean vArmToggleBtn = gamepad2.x;
 
-        if (vArmToggleBtn) {
+        if (gamepad2.x) {
+            vSlideArmOut = !vSlideArmOut;
             if (vSlideArmOut) {
                 vArmServo.setPosition(vArmOutValue); //Arm swings out
                 telemetry.addData("1", null);
