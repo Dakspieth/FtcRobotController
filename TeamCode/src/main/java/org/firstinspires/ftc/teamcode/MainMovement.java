@@ -13,8 +13,8 @@ public class MainMovement extends LinearOpMode {
 
         // ROBOT MOVEMENT //
     private DcMotor leftBack, rightBack, leftFront, rightFront; //Initializes all the direct current motors for the driving function of our robot, gary.
-    final float speedSlow = 0.5f; // Slow mode for robot chassis movement
-    final float speedFast = 1.5f; // Speedy mode for robot chassis movement
+    final float speedSlow = 0.45f; // Slow mode for robot chassis movement
+    float speedFast = 1f; // Speedy mode for robot chassis movement
     float netS; // speed the motor actually uses
     float StrafeBL = 0f, StrafeBR = 0f, StrafeFL = 0f, StrafeFR = 0f;
     float RotateBL = 0f, RotateBR = 0f, RotateFL = 0f, RotateFR = 0f;
@@ -28,7 +28,7 @@ public class MainMovement extends LinearOpMode {
 
         // ROBOT OTHER STUFF //
 
-    private final float clawSpeed = 1.0f;
+    //private final float clawSpeed = 1.0f; unused idk whats up w/ this
 
         // vertical slide
     private DcMotor linearSlide; // motor to control vertical linear slide
@@ -42,7 +42,6 @@ public class MainMovement extends LinearOpMode {
     private Servo hClawServo, hLinearSlide, hClawRotate; // h is short for horizontal btw
     private Servo hArmOpen;
     boolean hClawOpen = false;
-    boolean vArmToggle = true;
 
 
 
@@ -149,13 +148,14 @@ public class MainMovement extends LinearOpMode {
             rotationSpeed = speedSlow;
 
         } else if (gamepad1.right_bumper) {     // fast mode !
+            speedFast = (Math.max(1.5f, speedFast + 0.05f)); // for making the fast mode accelerate gradually instead of instantly going faster
             netS = (Math.min(maxSpeed, (float) (addSpeed - joystickDeadzone) / (1.0f - joystickDeadzone))) * speedFast; // Speed is multiplied by the speedFast variable
             rotationSpeed = speedFast;
 
-        } else {    // default- no bumpers are held !
+        } else { // default- no bumpers are held !
             netS = Math.min(maxSpeed, (float) (addSpeed - joystickDeadzone) / (1.0f - joystickDeadzone)); // Speed is set to default speed
             rotationSpeed = 1f;
-
+            speedFast = 1f;
         }
 
         // calculates the angle of the joystick in radians --> degrees..
@@ -268,7 +268,7 @@ public class MainMovement extends LinearOpMode {
 
     private void HorizontalClawAndArm() {
         double hClawOpenValue = 1, hClawClosedValue = 0;
-        double hArmUpValue = 0.95, hArmDownValue = 0.25; // hArmDownValue WAS 0.25 - - - - -  - - - -  - - - - - - - - - - ! ! ! !! ! (working on this rn  )
+        double hArmDownValue = 0.95, hArmUpValue = 0.25;
         // controls - horizontal claw and arm
         boolean hClawToggleBtn = gamepad2.b; // open/close claw
         boolean hArmToggleBtn = gamepad2.y; // swing horizontal arm out/in
@@ -296,7 +296,7 @@ public class MainMovement extends LinearOpMode {
                 // hClawRotate.setPosition(0.3);
                 // sleep(500);
                 hArmOpen.setPosition(hArmUpValue);
-                sleep(1000);
+                sleep(500);
                 // telemetry.addData(null,hClawRotate.getPosition());
 
             } else if (!hArmUp) {
@@ -327,8 +327,9 @@ public class MainMovement extends LinearOpMode {
     private void VerticalArmAndClaw() {
         double vArmOutValue = 0, vArmInValue = 0.75;
         // controls - vertical arm
+        boolean vArmToggleBtn = gamepad2.x;
 
-        if (gamepad2.x) {
+        if (vArmToggleBtn) {
             vSlideArmOut = !vSlideArmOut;
             if (vSlideArmOut) {
                 vArmServo.setPosition(vArmOutValue); //Arm swings out
@@ -337,24 +338,9 @@ public class MainMovement extends LinearOpMode {
                 vArmServo.setPosition(vArmInValue); //Arm swings in
                 telemetry.addData("0", null);
             }
-            sleep(100);
+            sleep(200);
         }
 
-        // DONT NEED THIS ATM BECAUSE THE BUCKET NOW YIPEE!!!!
-        //        //open or close chamber claw
-        //        if (gamepad2.a) {
-        //            if (vClawOpen) {
-        //                vClawServo.setPosition(0); //open vertical claw
-        //                telemetry.addData("Opening ", vClawServo.getPosition());
-        //                vClawOpen = false; // switch claws open state
-        //            } else {
-        //                vClawServo.setPosition(1); //close vertical claw
-        //                telemetry.addData("Closing  ", vClawServo.getPosition());
-        //                vClawOpen = true; // switch claws open state
-        //            }
-        //            sleep(100); //creates cooldown for switching claw positions
-        //
-        //        }
     }
 
 
