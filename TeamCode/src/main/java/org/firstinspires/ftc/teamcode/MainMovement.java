@@ -13,8 +13,7 @@ public class MainMovement extends LinearOpMode {
 
         // ROBOT MOVEMENT //
     private DcMotor leftBack, rightBack, leftFront, rightFront; //Initializes all the direct current motors for the driving function of our robot, gary.
-    final float speedSlow = 0.45f; // Slow mode for robot chassis movement
-    float speedFast = 1f; // Speedy mode for robot chassis movement
+    float speedSlow = 0.45f, speedFast = 1f; // slow and fast mode for movement
     float netS; // speed the motor actually uses
     float StrafeBL = 0f, StrafeBR = 0f, StrafeFL = 0f, StrafeFR = 0f;
     float RotateBL = 0f, RotateBR = 0f, RotateFL = 0f, RotateFR = 0f;
@@ -198,7 +197,7 @@ public class MainMovement extends LinearOpMode {
 
             } else if (LangleInDegrees > -157.5 && LangleInDegrees < -112.5) {
                 // bottom-left quadrant
-                wheelStrafe(netS, -netS, -netS, netS);
+                wheelStrafe(0, -netS, -netS, 0);
                 telemetry.addData("Left Stick quadrant: ", "BOTTOM LEFT");
 
             } else if (LangleInDegrees >= 157.5 || LangleInDegrees <= -157.5) {
