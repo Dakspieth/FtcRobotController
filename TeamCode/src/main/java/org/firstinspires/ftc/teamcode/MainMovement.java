@@ -61,7 +61,7 @@ public class MainMovement extends LinearOpMode {
         leftBack.setDirection(DcMotor.Direction.REVERSE);
         leftFront.setDirection(DcMotor.Direction.REVERSE);
 
-        vClawServo = hardwareMap.get(Servo.class, "vcs"); //    CH3
+        //vClawServo = hardwareMap.get(Servo.class, "vcs"); //    CH3
         vArmServo = hardwareMap.get(Servo.class, "vas"); //     CH2
         hClawRotate = hardwareMap.get(Servo.class, "hcr"); //   EH4
         hClawServo = hardwareMap.get(Servo.class, "hcs"); //    EH5
@@ -74,7 +74,7 @@ public class MainMovement extends LinearOpMode {
 
         linearSlide.setPower(0); // zero the linear slide's power so it doesn't move while not active
 
-        telemetry.addData("Status", "Initialized");
+        telemetry.addData("Status", "Initialized OwO");
         telemetry.update();
 
         waitForStart(); //waits for play on the driver hub :3
@@ -291,6 +291,7 @@ public class MainMovement extends LinearOpMode {
 
         if (hArmToggleBtn) {
             hArmUp = !hArmUp; // toggle arm rotation
+                sleep(100);
 
             if (hArmUp) {
                 // hClawRotate.setPosition(0.3);
@@ -317,7 +318,7 @@ public class MainMovement extends LinearOpMode {
 
         if (Math.abs(vsStickY) > joystickDeadzone) { // controls the vertical slide
             linearSlide.setPower(linearSlideSpeed * vsStickY / -2);
-            telemetry.addData("linear slide speed:", linearSlideSpeed * -vsStickY /2);
+            telemetry.addData("linear slide speed:", linearSlideSpeed * -vsStickY / 2);
         } else {
             linearSlide.setPower(0); // stop the linear slide from moving when joystick is centered
         }
@@ -347,8 +348,8 @@ public class MainMovement extends LinearOpMode {
 
 
     private void setMotorPowers() {
-
-        if(Strafing && Rotating) {
+            
+        if (Strafing && Rotating) {
             leftBack.setPower(((RotateBL + StrafeBL) / 2) * rotationSpeed * 0.5);
 
             rightFront.setPower(((RotateFR + StrafeFR) / 2) * rotationSpeed * 0.5);
