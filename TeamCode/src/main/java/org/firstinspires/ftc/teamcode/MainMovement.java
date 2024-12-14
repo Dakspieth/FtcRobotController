@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareDevice;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 @TeleOp(name="MainMovement", group="Linear OpMode")
 public class MainMovement extends LinearOpMode {
@@ -27,6 +28,15 @@ public class MainMovement extends LinearOpMode {
 
         // ROBOT OTHER STUFF //
 
+    private ElapsedTime hSlideTimer = new ElapsedTime();
+    private ElapsedTime hClawTimer = new ElapsedTime();
+    private ElapsedTime hArmTimer = new ElapsedTime();
+    private ElapsedTime vArmTimer = new ElapsedTime();
+    private ElapsedTime transferTimer = new ElapsedTime();
+
+
+
+
     //private final float clawSpeed = 1.0f; unused idk whats up w/ this
 
         // vertical slide
@@ -42,7 +52,7 @@ public class MainMovement extends LinearOpMode {
     private Servo hArmOpen;
     boolean hClawOpen = false;
 
-
+    int transferStep = 0;
 
 
 
@@ -70,11 +80,11 @@ public class MainMovement extends LinearOpMode {
 
         hArmOpen.setDirection(Servo.Direction.REVERSE);
 
-        hArmOpen.setPosition(0.8525);
+    //    hArmOpen.setPosition(0.8525);
 
 
 
-        linearSlide.setPower(0); // zero the linear slide's power so it doesn't move while not active
+       // linearSlide.setPower(0); // zero the linear slide's power so it doesn't move while not active
 
         telemetry.addData("Status", "Initialized OwO");
         telemetry.update();
@@ -256,15 +266,15 @@ public class MainMovement extends LinearOpMode {
         }
 
         // Snap horizontal slide to FULLY EXTENDED
-        if (hsExtendBtn) {
+        if (hsExtendBtn && hSlideTimer.milliseconds() >= 200) {
             hLinearSlide.setPosition(hsMaxExtension);
-            sleep(200); // waits for motion to complete
+            hSlideTimer.reset();// waits for motion to complete
         }
 
         // Snaps horizontal slide to FULLY RETRACTED
-        if (hsRetractBtn) {
+        if (hsRetractBtn && hSlideTimer.milliseconds() >= 200) {
             hLinearSlide.setPosition(hsMinExtension);
-            sleep(200); // waits for motion to complete
+            hSlideTimer.reset();// waits for motion to complete
         }
 
     }
@@ -279,32 +289,28 @@ public class MainMovement extends LinearOpMode {
 
         // HORIZONTAL CLAW OPEN ? CLOSE
 
-        if (hClawToggleBtn) {
+        if (hClawToggleBtn && hClawTimer.milliseconds() >= 200) {
             hClawOpen = !hClawOpen; // toggle state of claw
-            sleep(100);
             if (hClawOpen) {
                 hClawServo.setPosition(hClawOpenValue); // OPENS claw
             } else if (!hClawOpen) {
                 hClawServo.setPosition(hClawClosedValue); // CLOSES claw
             }
-            sleep(200);
+            hClawTimer.reset();
         }
 
         // HORIZONTAL ARM IN ? OUT
 
-        if (hArmToggleBtn) {
+        if (hArmToggleBtn && hArmTimer.milliseconds() >= 200) {
             hArmUp = !hArmUp; // toggle arm rotation
-                sleep(200);
 
             if (hArmUp) {
                 hArmOpen.setPosition(hArmUpValue);
-                sleep(400);
 
             } else if (!hArmUp) {
                 hArmOpen.setPosition(hArmDownValue);
-                sleep(400);
-
             }
+            hArmTimer.reset();
         }
     }
 
@@ -327,9 +333,8 @@ public class MainMovement extends LinearOpMode {
         // controls - vertical arm
         boolean vArmToggleBtn = gamepad2.x;
 
-        if (vArmToggleBtn) {
+        if (vArmToggleBtn && vArmTimer.milliseconds() >= 200) {
             vSlideArmOut = !vSlideArmOut;
-            sleep(200);
             if (vSlideArmOut) {
                 vArmServo.setPosition(vArmOutValue); //Arm swings out
                 telemetry.addData("1", null);
@@ -337,7 +342,7 @@ public class MainMovement extends LinearOpMode {
                 vArmServo.setPosition(vArmInValue); //Arm swings in
                 telemetry.addData("0", null);
             }
-            sleep(200);
+            vArmTimer.reset();
         }
 
     }
@@ -347,19 +352,29 @@ public class MainMovement extends LinearOpMode {
         boolean enableTransfer = false;
 
         if (transferBtn) {
+            transferStep = 0;
             enableTransfer = !enableTransfer;
-            sleep(300);
             if (enableTransfer) {
-                hArmOpen.setPosition(0.15);
-                hLinearSlide.setPosition(0.605);
-                print("linear position", hLinearSlide.getPosition());
-                sleep(1200);
-                hClawServo.setPosition(0.375); // OPENS claw
-                sleep(500);
-                hLinearSlide.setPosition(0.575);
-                sleep(200);
-                hClawServo.setPosition(0.75);
-                sleep(100);
+                if(transferStep == 0) {
+                    hArmOpen.setPosition(0.15);
+                    hLinearSlide.setPosition(0.605);
+                    transferTimer.reset();
+                    transferStep++;
+                } else if(transferStep == 1 && transferTimer.milliseconds() >= 1200) {
+                    hClawServo.setPosition(0.375); // OPENS claw
+                    transferTimer.reset();
+                    transferStep++;
+                } else if(transferStep == 2 && transferTimer.milliseconds() >= 500) {
+                    hLinearSlide.setPosition(0.575);
+                    transferTimer.reset();
+                    transferStep++;
+                } else if(transferStep == 3 && transferTimer.milliseconds() >= 200) {
+                    hClawServo.setPosition(0.75);
+                    transferTimer.reset();
+                    transferStep++;
+                } else if(transferStep == 4 && transferTimer.milliseconds() >= 100) {
+                    transferStep = 0;
+                }
             }
         }
     }
