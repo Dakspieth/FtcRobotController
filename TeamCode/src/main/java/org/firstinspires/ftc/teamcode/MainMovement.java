@@ -297,18 +297,12 @@ public class MainMovement extends LinearOpMode {
                 sleep(200);
 
             if (hArmUp) {
-                // hClawRotate.setPosition(0.3);
-                // sleep(500);
                 hArmOpen.setPosition(hArmUpValue);
                 sleep(400);
-                // telemetry.addData(null,hClawRotate.getPosition());
 
             } else if (!hArmUp) {
                 hArmOpen.setPosition(hArmDownValue);
                 sleep(400);
-                // hClawRotate.setPosition(0.9);
-                // sleep(1000);
-                // telemetry.addData(null,hClawRotate.getPosition());
 
             }
         }
@@ -335,6 +329,7 @@ public class MainMovement extends LinearOpMode {
 
         if (vArmToggleBtn) {
             vSlideArmOut = !vSlideArmOut;
+            sleep(200);
             if (vSlideArmOut) {
                 vArmServo.setPosition(vArmOutValue); //Arm swings out
                 telemetry.addData("1", null);
@@ -349,9 +344,23 @@ public class MainMovement extends LinearOpMode {
 
     private void TransferFunction() {
         boolean transferBtn = gamepad2.a;
+        boolean enableTransfer = false;
 
         if (transferBtn) {
-            hLinearSlide.setPosition(0.65);
+            enableTransfer = !enableTransfer;
+            sleep(300);
+            if (enableTransfer) {
+                hArmOpen.setPosition(0.15);
+                hLinearSlide.setPosition(0.605);
+                print("linear position", hLinearSlide.getPosition());
+                sleep(1200);
+                hClawServo.setPosition(0.375); // OPENS claw
+                sleep(500);
+                hLinearSlide.setPosition(0.575);
+                sleep(200);
+                hClawServo.setPosition(0.75);
+                sleep(100);
+            }
         }
     }
 
