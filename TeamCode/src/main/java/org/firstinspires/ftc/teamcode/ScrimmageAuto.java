@@ -29,10 +29,10 @@ public class ScrimmageAuto extends LinearOpMode {
     protected final double secondsPerInch = 1/15; //amount of seconds to move an inch at 0.25 speed
     protected final double slideConst = 1; //length for moveSlideSeconds
     //Motor and servo declaration
-    private DcMotor leftBack, rightBack, leftFront, rightFront; //Initializes direct current main wheel motors for the driving function of our robot, gary.
-    private DcMotor linearSlide;
+    protected DcMotor leftBack, rightBack, leftFront, rightFront; //Initializes direct current main wheel motors for the driving function of our robot, gary.
+    protected DcMotor linearSlide;
     //private Servo hLinearSlide;
-    private Servo vClawServo, vArmServo;
+    protected Servo vClawServo, vArmServo;
 
     @Override
     public void runOpMode() {
