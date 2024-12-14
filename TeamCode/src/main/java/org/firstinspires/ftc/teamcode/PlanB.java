@@ -10,10 +10,11 @@ public class PlanB extends ScrimmageAuto {
 
         //1.6s ≈ 2ft at 0.25speed
         //hang specimen
-        linearSlide.setPower(0.25f);
-        driveSeconds(24 * secondsPerInch, 0.25f, dir.FORWARD);
-        vArmServo.setPosition(0);
-        driveSeconds(6 * secondsPerInch, 0.2f, dir.BACKWARD);
+        linearSlide.setPower(0.5f);
+        driveSeconds(3, 0.25f, dir.BACKWARD);
+        moveArm(0);
+        sleep(200);
+        driveSeconds(6 * secondsPerInch, 0.25f, dir.FORWARD);
         linearSlide.setPower(0);
     }
 }

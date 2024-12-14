@@ -173,7 +173,7 @@ public class ScrimmageAuto extends LinearOpMode {
 
         }
 
-        sleep(500);
+        //sleep(500);
 
     }
 

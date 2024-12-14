@@ -28,12 +28,14 @@ public class MainMovement extends LinearOpMode {
 
         // ROBOT OTHER STUFF //
 
-    private ElapsedTime hSlideTimer = new ElapsedTime();
+    //private ElapsedTime hSlideTimer = new ElapsedTime();
     private ElapsedTime hClawTimer = new ElapsedTime();
     private ElapsedTime hArmTimer = new ElapsedTime();
     private ElapsedTime vArmTimer = new ElapsedTime();
     private ElapsedTime transferTimer = new ElapsedTime();
+    //private ElapsedTime transferCD = new ElapsedTime(); //cooldown 4 transfer
 
+    boolean enableTransfer = false;
 
 
 
@@ -80,11 +82,11 @@ public class MainMovement extends LinearOpMode {
 
         hArmOpen.setDirection(Servo.Direction.REVERSE);
 
-    //    hArmOpen.setPosition(0.8525);
+        hArmOpen.setPosition(0.8525);
 
 
 
-       // linearSlide.setPower(0); // zero the linear slide's power so it doesn't move while not active
+        linearSlide.setPower(0); // zero the linear slide's power so it doesn't move while not active
 
         telemetry.addData("Status", "Initialized OwO");
         telemetry.update();
@@ -109,6 +111,9 @@ public class MainMovement extends LinearOpMode {
 
 
             setMotorPowers();
+            telemetry.addData("transfer milli:", transferTimer.milliseconds());
+            telemetry.addData("transfer step:", transferStep);
+
             telemetry.update(); //update output screen
         }
 
@@ -262,19 +267,17 @@ public class MainMovement extends LinearOpMode {
             hLinearSlide.setPosition(Math.min(hsMinExtension, Math.max(hsMaxExtension, hLinearSlide.getPosition() + (hsStickY / 800))));
         } else {
             // make slide stay in place so it doesn't slide back and fourth while driving
-            //hLinearSlide.setPosition(hLinearSlide.getPosition());
+            hLinearSlide.setPosition(hLinearSlide.getPosition());
         }
 
         // Snap horizontal slide to FULLY EXTENDED
-        if (hsExtendBtn && hSlideTimer.milliseconds() >= 200) {
+        if (hsExtendBtn) {
             hLinearSlide.setPosition(hsMaxExtension);
-            hSlideTimer.reset();// waits for motion to complete
         }
 
         // Snaps horizontal slide to FULLY RETRACTED
-        if (hsRetractBtn && hSlideTimer.milliseconds() >= 200) {
+        if (hsRetractBtn) {
             hLinearSlide.setPosition(hsMinExtension);
-            hSlideTimer.reset();// waits for motion to complete
         }
 
     }
@@ -301,7 +304,7 @@ public class MainMovement extends LinearOpMode {
 
         // HORIZONTAL ARM IN ? OUT
 
-        if (hArmToggleBtn && hArmTimer.milliseconds() >= 200) {
+        if (hArmToggleBtn && hArmTimer.milliseconds() >= 100) {
             hArmUp = !hArmUp; // toggle arm rotation
 
             if (hArmUp) {
@@ -320,8 +323,8 @@ public class MainMovement extends LinearOpMode {
         double vsStickY = gamepad2.left_stick_y;
 
         if (Math.abs(vsStickY) > joystickDeadzone) { // controls the vertical slide
-            linearSlide.setPower(linearSlideSpeed * vsStickY / -1.25);
-            telemetry.addData("linear slide speed:", linearSlideSpeed * -vsStickY / 1.25);
+            linearSlide.setPower(linearSlideSpeed * vsStickY / -1);
+            telemetry.addData("linear slide speed:", linearSlideSpeed * -vsStickY / 1);
         } else {
             linearSlide.setPower(0); // stop the linear slide from moving when joystick is centered
         }
@@ -333,7 +336,7 @@ public class MainMovement extends LinearOpMode {
         // controls - vertical arm
         boolean vArmToggleBtn = gamepad2.x;
 
-        if (vArmToggleBtn && vArmTimer.milliseconds() >= 200) {
+        if (vArmToggleBtn && vArmTimer.milliseconds() >= 250) {
             vSlideArmOut = !vSlideArmOut;
             if (vSlideArmOut) {
                 vArmServo.setPosition(vArmOutValue); //Arm swings out
@@ -349,35 +352,40 @@ public class MainMovement extends LinearOpMode {
 
     private void TransferFunction() {
         boolean transferBtn = gamepad2.a;
-        boolean enableTransfer = false;
 
-        if (transferBtn) {
+
+        if (transferBtn && transferTimer.milliseconds() >= 200) {
             transferStep = 0;
-            enableTransfer = !enableTransfer;
-            if (enableTransfer) {
-                if(transferStep == 0) {
-                    hArmOpen.setPosition(0.15);
-                    hLinearSlide.setPosition(0.605);
-                    transferTimer.reset();
-                    transferStep++;
-                } else if(transferStep == 1 && transferTimer.milliseconds() >= 1200) {
-                    hClawServo.setPosition(0.375); // OPENS claw
-                    transferTimer.reset();
-                    transferStep++;
-                } else if(transferStep == 2 && transferTimer.milliseconds() >= 500) {
-                    hLinearSlide.setPosition(0.575);
-                    transferTimer.reset();
-                    transferStep++;
-                } else if(transferStep == 3 && transferTimer.milliseconds() >= 200) {
-                    hClawServo.setPosition(0.75);
-                    transferTimer.reset();
-                    transferStep++;
-                } else if(transferStep == 4 && transferTimer.milliseconds() >= 100) {
-                    transferStep = 0;
-                }
+            enableTransfer = true;
+            transferTimer.reset();
+        }
+
+        if (enableTransfer) {
+            if(transferStep == 0) {
+                hArmOpen.setPosition(0.15);
+                hLinearSlide.setPosition(0.605);
+                transferTimer.reset();
+                transferStep = 1;
+            } else if(transferStep == 1 && transferTimer.milliseconds() >= 1200) {
+                hClawServo.setPosition(0.375);
+                transferTimer.reset();
+                transferStep = 2;
+            } else if(transferStep == 2 && transferTimer.milliseconds() >= 500) {
+                hLinearSlide.setPosition(0.575);
+                transferTimer.reset();
+                transferStep = 3;
+            } else if(transferStep == 3 && transferTimer.milliseconds() >= 200) {
+                hClawServo.setPosition(0.75);
+                transferTimer.reset();
+                transferStep = 4;
+            } else if(transferStep == 4 && transferTimer.milliseconds() >= 100) {
+                transferStep = 0;
+                transferTimer.reset();
+                enableTransfer = false;
             }
         }
     }
+
 
 
 
