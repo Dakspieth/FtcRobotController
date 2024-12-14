@@ -94,7 +94,9 @@ public class MainMovement extends LinearOpMode {
             HorizontalSlideMovement();
             HorizontalClawAndArm();
             VerticalSlideMovement();
-            VerticalArmAndClaw(); // vertical arm and bucket IG now? i don't knaur
+            VerticalArmAndOuttake();
+            TransferFunction();
+
 
             setMotorPowers();
             telemetry.update(); //update output screen
@@ -326,8 +328,8 @@ public class MainMovement extends LinearOpMode {
     }
 
 
-    private void VerticalArmAndClaw() {
-        double vArmOutValue = 0, vArmInValue = 0.875;
+    private void VerticalArmAndOuttake() {
+        double vArmOutValue = 0, vArmInValue = 0.875; // 0 , .875
         // controls - vertical arm
         boolean vArmToggleBtn = gamepad2.x;
 
@@ -343,6 +345,14 @@ public class MainMovement extends LinearOpMode {
             sleep(200);
         }
 
+    }
+
+    private void TransferFunction() {
+        boolean transferBtn = gamepad2.a;
+
+        if (transferBtn) {
+            hLinearSlide.setPosition(0.65);
+        }
     }
 
 
