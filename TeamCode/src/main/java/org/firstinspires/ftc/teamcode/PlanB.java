@@ -21,10 +21,24 @@ public class PlanB extends ScrimmageAuto {
         sleep(2000);
         driveSeconds(1, 0.25f, dir.FORWARD);
         driveSeconds(1, 0.25f, dir.LEFTROT);
-        linearSlide.setPower(-0.5f);
-        driveSeconds(1, 0.25f, dir.FORWARD);
+        hLinearSlide.setPosition(0.475);
+        linearSlide.setPower(-0.3f);
+        hArmOpen.setPosition(0.13);
+        sleep(1000);
+        hClawServo.setPosition(0.375);
+        sleep(1000);
+        driveSeconds(0.5, 0.25f, dir.FORWARD);
         linearSlide.setPower(0);
-
+        hClawServo.setPosition(0.375);
+        sleep(1000);
+        hClawServo.setPosition(0.75);
+        sleep(1000);
         transferSample();
+        while(true) {
+            telemetry.addData("step:", transferStep);
+            telemetry.addData("timer:", transferTimer);
+            telemetry.update();
+        }
+
     }
 }
