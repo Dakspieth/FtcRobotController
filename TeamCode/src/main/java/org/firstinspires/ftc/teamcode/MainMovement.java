@@ -28,11 +28,16 @@ public class MainMovement extends LinearOpMode {
 
         // ROBOT OTHER STUFF //
 
+    private boolean sweep = false;
+
     //private ElapsedTime hSlideTimer = new ElapsedTime();
     private ElapsedTime hClawTimer = new ElapsedTime();
     private ElapsedTime hArmTimer = new ElapsedTime();
     private ElapsedTime vArmTimer = new ElapsedTime();
     private ElapsedTime transferTimer = new ElapsedTime();
+
+    private ElapsedTime sweeperTimer = new ElapsedTime();
+
     //private ElapsedTime transferCD = new ElapsedTime(); //cooldown 4 transfer
 
     boolean enableTransfer = false;
@@ -51,7 +56,7 @@ public class MainMovement extends LinearOpMode {
         // horizontal slide
     boolean hArmUp = false;
     private Servo hClawServo, hLinearSlide, hClawRotate; // h is short for horizontal btw
-    private Servo hArmOpen;
+    private Servo hArmOpen, sweeper;
     boolean hClawOpen = false;
 
     int transferStep = 0;
@@ -79,6 +84,8 @@ public class MainMovement extends LinearOpMode {
         hClawServo = hardwareMap.get(Servo.class, "hcs"); //    EH5
         hArmOpen = hardwareMap.get(Servo.class, "hao"); //      EH3
         hLinearSlide = hardwareMap.get(Servo.class, "hls"); //  EH1
+        sweeper = hardwareMap.get(Servo.class, "sweeper"); //  EH1
+
 
         hArmOpen.setDirection(Servo.Direction.REVERSE);
 
@@ -285,7 +292,7 @@ public class MainMovement extends LinearOpMode {
 
     private void HorizontalClawAndArm() {
         double hClawOpenValue = 0.375, hClawClosedValue = 0.75;
-        double hArmDownValue = 0.8525, hArmUpValue = 0.15; // .95 and 0.25 before
+        double hArmDownValue = 0.88, hArmUpValue = 0.15; // .95 and 0.25 before//////////////////////////////////////////////////////////////////////////////
         // controls - horizontal claw and arm
         boolean hClawToggleBtn = gamepad2.b; // open/close claw
         boolean hArmToggleBtn = gamepad2.y; // swing horizontal arm out/in
@@ -304,7 +311,7 @@ public class MainMovement extends LinearOpMode {
 
         // HORIZONTAL ARM IN ? OUT
 
-        if (hArmToggleBtn && hArmTimer.milliseconds() >= 100) {
+        if (hArmToggleBtn && hArmTimer.milliseconds() >= 250) {
             hArmUp = !hArmUp; // toggle arm rotation
 
             if (hArmUp) {
@@ -314,6 +321,30 @@ public class MainMovement extends LinearOpMode {
                 hArmOpen.setPosition(hArmDownValue);
             }
             hArmTimer.reset();
+        }
+    }
+
+
+    private void Sweeper() {
+        boolean sweepBtn = gamepad1.dpad_left;
+
+        //if left d-pad clicked
+        if(sweepBtn && sweeperTimer.milliseconds() <= 150){
+            sweep = true;
+        }
+
+        if(sweep){
+            //sweeps out
+            sweeper.setPosition(1);
+
+            sweeperTimer.reset();
+
+            if(sweeperTimer.milliseconds() <= 500){
+
+                //sweeps in
+                sweeper.setPosition(0);
+                sweep = false;
+            }
         }
     }
 

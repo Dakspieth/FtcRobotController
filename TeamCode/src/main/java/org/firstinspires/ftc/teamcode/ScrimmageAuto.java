@@ -32,7 +32,12 @@ public class ScrimmageAuto extends LinearOpMode {
     protected DcMotor leftBack, rightBack, leftFront, rightFront; //Initializes direct current main wheel motors for the driving function of our robot, gary.
     protected DcMotor linearSlide;
     //private Servo hLinearSlide;
-    protected Servo vClawServo, vArmServo;
+    protected Servo vClawServo, vArmServo, hArmOpen, hLinearSlide, hClawServo;
+
+
+    protected int transferStep;
+    protected boolean enableTransfer;
+    protected ElapsedTime transferTimer = new ElapsedTime();
 
     @Override
     public void runOpMode() {
@@ -49,6 +54,10 @@ public class ScrimmageAuto extends LinearOpMode {
 
         vClawServo = hardwareMap.get(Servo.class, "vcs");
         vArmServo = hardwareMap.get(Servo.class, "vas");
+
+        hArmOpen = hardwareMap.get(Servo.class, "hao");
+        hLinearSlide = hardwareMap.get(Servo.class, "hls");
+        hClawServo = hardwareMap.get(Servo.class, "hcs");
         waitForStart();
 
     }
@@ -56,7 +65,9 @@ public class ScrimmageAuto extends LinearOpMode {
         LEFT,
         RIGHT,
         FORWARD,
-        BACKWARD
+        BACKWARD,
+        LEFTROT,
+        RIGHTROT
 
     }
     protected void driveInches(float inches, float speed, dir direction, float timeoutS) {
@@ -153,6 +164,18 @@ public class ScrimmageAuto extends LinearOpMode {
                 lfDir = -1;
                 rfDir = -1;
                 break;
+            case LEFTROT:
+                lbDir = -1;
+                rbDir = 1;
+                lfDir = -1;
+                rfDir = 1;
+                break;
+            case RIGHTROT:
+                lbDir = 1;
+                rbDir = -1;
+                lfDir = 1;
+                rfDir = -1;
+                break;
         }
         if(opModeIsActive()) {
 
@@ -225,6 +248,37 @@ public class ScrimmageAuto extends LinearOpMode {
             linearSlide.setPower(0);
         }
     }
+
+    protected void transferSample() {
+        transferStep = 0;
+        enableTransfer = true;
+        transferTimer.reset();
+
+        if(enableTransfer) {
+        if(transferStep == 0) {
+            hArmOpen.setPosition(0.15);
+            hLinearSlide.setPosition(0.605);
+            transferTimer.reset();
+            transferStep = 1;
+        } else if(transferStep == 1 && transferTimer.milliseconds() >= 1200) {
+            hClawServo.setPosition(0.375);
+            transferTimer.reset();
+            transferStep = 2;
+        } else if(transferStep == 2 && transferTimer.milliseconds() >= 500) {
+            hLinearSlide.setPosition(0.575);
+            transferTimer.reset();
+            transferStep = 3;
+        } else if(transferStep == 3 && transferTimer.milliseconds() >= 200) {
+            hClawServo.setPosition(0.75);
+            transferTimer.reset();
+            transferStep = 4;
+        } else if(transferStep == 4 && transferTimer.milliseconds() >= 100) {
+            transferStep = 0;
+            transferTimer.reset();
+            enableTransfer = false;
+        }
+    }
+}
 
 }
 
