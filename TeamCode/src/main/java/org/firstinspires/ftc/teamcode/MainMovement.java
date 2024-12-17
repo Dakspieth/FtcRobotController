@@ -107,8 +107,7 @@ public class MainMovement extends LinearOpMode {
             HorizontalClawAndArm();
             VerticalSlideMovement();
             VerticalArmAndOuttake();
-            TransferFunction();
-
+            TransferFunction(); // automatically transfer sample from intake to outtake in one button
 
             setMotorPowers();
             telemetry.addData("transfer milli:", transferTimer.milliseconds());
@@ -259,7 +258,7 @@ public class MainMovement extends LinearOpMode {
         boolean hsExtendBtn = gamepad2.dpad_up, hsRetractBtn = gamepad2.dpad_down;
         double hsStickY = gamepad2.right_stick_y;
 
-        print("HLS Pos: ", hLinearSlide.getPosition());
+        telemetry.addData("HLS Pos: ", hLinearSlide.getPosition());
 
         // Gradual horizontal slide Movement
         if(Math.abs(hsStickY) > joystickDeadzone) {
@@ -353,7 +352,6 @@ public class MainMovement extends LinearOpMode {
     private void TransferFunction() {
         boolean transferBtn = gamepad2.a;
 
-
         if (transferBtn && transferTimer.milliseconds() >= 200) {
             transferStep = 0;
             enableTransfer = true;
@@ -387,11 +385,8 @@ public class MainMovement extends LinearOpMode {
     }
 
 
-
-
-
     private void setMotorPowers() {
-            
+        // allows for strafing while rotating
         if (Strafing && Rotating) {
             leftBack.setPower(((RotateBL + StrafeBL) / 2) * rotationSpeed * 0.5);
 
@@ -426,9 +421,5 @@ public class MainMovement extends LinearOpMode {
 
             rightFront.setPower(0);
         }
-    }
-
-    public void print(String str, double num){
-        telemetry.addData(str, num);
     }
 }
