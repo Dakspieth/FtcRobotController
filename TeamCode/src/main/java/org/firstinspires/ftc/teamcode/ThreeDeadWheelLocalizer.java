@@ -31,7 +31,7 @@ public final class ThreeDeadWheelLocalizer implements Localizer {
 
     public final double inPerTick;
 
-    private double lastPar0Pos, lastPar1Pos, lastPerpPos; //old were ints
+    private int lastPar0Pos, lastPar1Pos, lastPerpPos;
     private boolean initialized;
 
     public ThreeDeadWheelLocalizer(HardwareMap hardwareMap, double inPerTick) {
@@ -70,10 +70,9 @@ public final class ThreeDeadWheelLocalizer implements Localizer {
             );
         }
 
-
-        double par0PosDelta = par0PosVel.position - lastPar0Pos; //old was int
-        double par1PosDelta = par1PosVel.position - lastPar1Pos; //old was int
-        double perpPosDelta = perpPosVel.position - lastPerpPos; //old was int
+        int par0PosDelta = par0PosVel.position - lastPar0Pos;
+        int par1PosDelta = par1PosVel.position - lastPar1Pos;
+        int perpPosDelta = perpPosVel.position - lastPerpPos;
 
         Twist2dDual<Time> twist = new Twist2dDual<>(
                 new Vector2dDual<>(
