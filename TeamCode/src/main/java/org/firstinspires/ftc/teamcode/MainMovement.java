@@ -84,7 +84,7 @@ public class MainMovement extends LinearOpMode {
         hClawServo = hardwareMap.get(Servo.class, "hcs"); //    EH5
         hArmOpen = hardwareMap.get(Servo.class, "hao"); //      EH3
         hLinearSlide = hardwareMap.get(Servo.class, "hls"); //  EH1
-        sweeper = hardwareMap.get(Servo.class, "sweeper"); //  EH1
+        //sweeper = hardwareMap.get(Servo.class, "sweeper"); //  CH
 
 
         hArmOpen.setDirection(Servo.Direction.REVERSE);
@@ -261,13 +261,12 @@ public class MainMovement extends LinearOpMode {
     //////////////////////// END OF MOVEMENT CODE ////////////////////////
 
     private void HorizontalSlideMovement() {
-        double hsMinExtension = 0.9, hsMaxExtension = 0.475;
+        double hsMinExtension = 1, hsMaxExtension = 0.377;
         // controls - horizontal slide
         boolean hsExtendBtn = gamepad2.dpad_up, hsRetractBtn = gamepad2.dpad_down;
         double hsStickY = gamepad2.right_stick_y;
 
         print("HLS Pos: ", hLinearSlide.getPosition());
-
         // Gradual horizontal slide Movement
         if(Math.abs(hsStickY) > joystickDeadzone) {
             // moves the horizontal linear slide with joystick
@@ -393,16 +392,16 @@ public class MainMovement extends LinearOpMode {
 
         if (enableTransfer) {
             if(transferStep == 0) {
-                hArmOpen.setPosition(0.88);
-                hLinearSlide.setPosition(0.605);
+                hArmOpen.setPosition(0.15);
+                hLinearSlide.setPosition(0.6461);
                 transferTimer.reset();
                 transferStep = 1;
             } else if(transferStep == 1 && transferTimer.milliseconds() >= 1200) {
-                hClawServo.setPosition(0.375);
+                hClawServo.setPosition(0.6);
                 transferTimer.reset();
                 transferStep = 2;
             } else if(transferStep == 2 && transferTimer.milliseconds() >= 500) {
-                hLinearSlide.setPosition(0.575);
+                hLinearSlide.setPosition(0.7);
                 transferTimer.reset();
                 transferStep = 3;
             } else if(transferStep == 3 && transferTimer.milliseconds() >= 200) {
