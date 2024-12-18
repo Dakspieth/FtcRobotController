@@ -84,7 +84,7 @@ public class MainMovement extends LinearOpMode {
         hClawServo = hardwareMap.get(Servo.class, "hcs"); //    EH5
         hArmOpen = hardwareMap.get(Servo.class, "hao"); //      EH3
         hLinearSlide = hardwareMap.get(Servo.class, "hls"); //  EH1
-        //sweeper = hardwareMap.get(Servo.class, "sweeper"); //  CH
+        sweeper = hardwareMap.get(Servo.class, "sweeper"); //  CH0
 
 
         hArmOpen.setDirection(Servo.Direction.REVERSE);
@@ -115,11 +115,13 @@ public class MainMovement extends LinearOpMode {
             VerticalSlideMovement();
             VerticalArmAndOuttake();
             TransferFunction();
+            Sweeper();
 
 
             setMotorPowers();
             telemetry.addData("transfer milli:", transferTimer.milliseconds());
             telemetry.addData("transfer step:", transferStep);
+            telemetry.addData("sweeper:", sweeper.getPosition());
 
             telemetry.update(); //update output screen
         }
@@ -291,7 +293,7 @@ public class MainMovement extends LinearOpMode {
 
     private void HorizontalClawAndArm() {
         double hClawOpenValue = 0.375, hClawClosedValue = 0.75;
-        double hArmDownValue = 0.88, hArmUpValue = 0.15; // .95 and 0.25 before//////////////////////////////////////////////////////////////////////////////
+        double hArmDownValue = 0.84, hArmUpValue = 0.11; // .95 and 0.25 before//////////////////////////////////////////////////////////////////////////////
         // controls - horizontal claw and arm
         boolean hClawToggleBtn = gamepad2.b; // open/close claw
         boolean hArmToggleBtn = gamepad2.y; // swing horizontal arm out/in
@@ -325,23 +327,26 @@ public class MainMovement extends LinearOpMode {
 
 
     private void Sweeper() {
-        boolean sweepBtn = gamepad1.dpad_left;
+        boolean sweepBtn = gamepad2.dpad_left;
 
         //if left d-pad clicked
-        if(sweepBtn && sweeperTimer.milliseconds() <= 150){
+        if(sweepBtn && sweeperTimer.milliseconds() >= 150){
             sweep = true;
         }
 
         if(sweep){
             //sweeps out
-            sweeper.setPosition(1);
+            telemetry.addData("sweeping out", null);
+            telemetry.addData("SWEEPPOS", sweeper.getPosition());
+            sweeper.setPosition(0.5);
 
             sweeperTimer.reset();
 
-            if(sweeperTimer.milliseconds() <= 500){
+            if(sweeperTimer.milliseconds() >= 300){
 
                 //sweeps in
                 sweeper.setPosition(0);
+            } else if(sweeperTimer.milliseconds() >= 500) {
                 sweep = false;
             }
         }
