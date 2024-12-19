@@ -264,7 +264,7 @@ public class MainMovement extends LinearOpMode {
     //////////////////////// END OF MOVEMENT CODE ////////////////////////
 
     private void HorizontalSlideMovement() {
-        double hsMinExtension = 1, hsMaxExtension = 0.377;
+        double hsMinExtension = 0.7511, hsMaxExtension = 0.377;
         // controls - horizontal slide
         boolean hsExtendBtn = gamepad2.dpad_up, hsRetractBtn = gamepad2.dpad_down;
         double hsStickY = gamepad2.right_stick_y;

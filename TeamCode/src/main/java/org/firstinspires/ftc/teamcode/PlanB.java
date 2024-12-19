@@ -17,39 +17,37 @@ public class PlanB extends ScrimmageAuto {
         hClawServo.setPosition(0.75);
         driveSeconds(0.05f, 0.25f, dir.LEFT);
         linearSlide.setPower(0.5f);
-        driveSeconds(3.75f, 0.25f, dir.BACKWARD);
+        driveSeconds(3.5f, 0.25f, dir.BACKWARD);
         driveSeconds(1, 0.25f, dir.LEFTROT);
-        driveSeconds(0.25f, 0.25f, dir.BACKWARD);
+        driveSeconds(0.5f, 0.25f, dir.BACKWARD);
         hLinearSlide.setPosition(0.475);
-        hArmOpen.setPosition(0.82);
-        sleep(2000);
+        sleep(250);
+        hArmOpen.setPosition(0.15);
         vArmServo.setPosition(0);
-        sleep(2000);
+        sleep(1750);
         //get spec 2
         hClawServo.setPosition(0.377);
         vArmServo.setPosition(0.82);
         sleep(1000);
         driveSeconds(1, 0.25f, dir.FORWARD);
-        driveSeconds(1, 0.25f, dir.LEFTROT);
+        driveSeconds(1.1, 0.25f, dir.LEFTROT);
         hLinearSlide.setPosition(0.475);
         linearSlide.setPower(-0.3f);
         sleep(1000);
         driveSeconds(1, 0.25f, dir.FORWARD);
         linearSlide.setPower(0);
-        hClawServo.setPosition(0.75);
+        //hClawServo.setPosition(0.75);
         sleep(1000);
 
         //transfer spec 2
-            hArmOpen.setPosition(0.82);
             hLinearSlide.setPosition(0.6461);
             sleep(1200);
             hClawServo.setPosition(0.6);
             sleep(500);
             hLinearSlide.setPosition(0.7);
             sleep(200);
-            //hClawServo.setPosition(0.75);
-            sleep(100);
-            hArmOpen.setPosition(0.15);
+            hClawServo.setPosition(0.75);
+            hArmOpen.setPosition(0.82);
             sleep(400);
 
         //basket spec 2
@@ -58,7 +56,7 @@ public class PlanB extends ScrimmageAuto {
         driveSeconds(3, 0.25f, dir.BACKWARD);
         linearSlide.setPower(0.5f);
         driveSeconds(0.5, 0.25f, dir.FORWARD);
-        driveSeconds(1, 0.25f, dir.RIGHTROT);
+        driveSeconds(1.1, 0.25f, dir.RIGHTROT);
         driveSeconds(1, 0.25f, dir.BACKWARD);
         vArmServo.setPosition(0);
         sleep(1000);
