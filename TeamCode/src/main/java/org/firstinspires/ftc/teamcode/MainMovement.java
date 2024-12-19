@@ -89,7 +89,7 @@ public class MainMovement extends LinearOpMode {
 
         hArmOpen.setDirection(Servo.Direction.REVERSE);
 
-        hArmOpen.setPosition(0.8525);
+        hArmOpen.setPosition(0.84);
 
 
 
@@ -332,22 +332,23 @@ public class MainMovement extends LinearOpMode {
         //if left d-pad clicked
         if(sweepBtn && sweeperTimer.milliseconds() >= 150){
             sweep = true;
+            sweeperTimer.reset();
         }
 
         if(sweep){
             //sweeps out
-            telemetry.addData("sweeping out", null);
+            telemetry.addData("sweep timer", sweeperTimer.milliseconds());
             telemetry.addData("SWEEPPOS", sweeper.getPosition());
             sweeper.setPosition(0.5);
 
-            sweeperTimer.reset();
-
-            if(sweeperTimer.milliseconds() >= 300){
+            if(sweeperTimer.milliseconds() >= 300 && sweeperTimer.milliseconds() < 500){
 
                 //sweeps in
                 sweeper.setPosition(0);
+                telemetry.addData("back", true);
             } else if(sweeperTimer.milliseconds() >= 500) {
                 sweep = false;
+                sweeperTimer.reset();
             }
         }
     }
