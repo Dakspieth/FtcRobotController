@@ -44,6 +44,7 @@ public class MainMovement extends LinearOpMode {
 
 
 
+
     //private final float clawSpeed = 1.0f; unused idk whats up w/ this
 
         // vertical slide
@@ -293,7 +294,7 @@ public class MainMovement extends LinearOpMode {
 
     private void HorizontalClawAndArm() {
         double hClawOpenValue = 0.375, hClawClosedValue = 0.75;
-        double hArmDownValue = 0.84, hArmUpValue = 0.11; // .95 and 0.25 before//////////////////////////////////////////////////////////////////////////////
+        double hArmDownValue = 0.82, hArmUpValue = 0.11; // .95 and 0.25 before//////////////////////////////////////////////////////////////////////////////
         // controls - horizontal claw and arm
         boolean hClawToggleBtn = gamepad2.b; // open/close claw
         boolean hArmToggleBtn = gamepad2.y; // swing horizontal arm out/in
@@ -339,16 +340,15 @@ public class MainMovement extends LinearOpMode {
             //sweeps out
             telemetry.addData("sweep timer", sweeperTimer.milliseconds());
             telemetry.addData("SWEEPPOS", sweeper.getPosition());
-            sweeper.setPosition(0.5);
-
-            if(sweeperTimer.milliseconds() >= 300 && sweeperTimer.milliseconds() < 500){
-
+            if(sweeperTimer.milliseconds() < 1000) {
+                sweeper.setPosition(0.725);
+            } else if(sweeperTimer.milliseconds() >= 1000 ) {
                 //sweeps in
                 sweeper.setPosition(0);
-                telemetry.addData("back", true);
-            } else if(sweeperTimer.milliseconds() >= 500) {
+            } else if(sweeperTimer.milliseconds() >= 1500) {
                 sweep = false;
                 sweeperTimer.reset();
+                telemetry.addData("back", true);
             }
         }
     }
@@ -398,7 +398,7 @@ public class MainMovement extends LinearOpMode {
 
         if (enableTransfer) {
             if(transferStep == 0) {
-                hArmOpen.setPosition(0.15);
+                hArmOpen.setPosition(0.11);
                 hLinearSlide.setPosition(0.6461);
                 transferTimer.reset();
                 transferStep = 1;
@@ -412,12 +412,14 @@ public class MainMovement extends LinearOpMode {
                 transferStep = 3;
             } else if(transferStep == 3 && transferTimer.milliseconds() >= 200) {
                 hClawServo.setPosition(0.75);
+                hArmOpen.setPosition(0.82);
                 transferTimer.reset();
                 transferStep = 4;
             } else if(transferStep == 4 && transferTimer.milliseconds() >= 100) {
                 transferStep = 0;
                 transferTimer.reset();
                 enableTransfer = false;
+
             }
         }
     }

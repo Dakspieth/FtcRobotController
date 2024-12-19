@@ -14,17 +14,20 @@ public class PlanB extends ScrimmageAuto {
         //1.6s ≈ 2ft at 0.25speed
         //ROTATION: 6.5S ≈ 360 °
         //basket specimen 1
-        driveSeconds(0.2, 0.25f, dir.LEFT);
+        hClawServo.setPosition(0.75);
+        driveSeconds(0.05f, 0.25f, dir.LEFT);
         linearSlide.setPower(0.5f);
-        driveSeconds(3, 0.25f, dir.BACKWARD);
+        driveSeconds(3.75f, 0.25f, dir.BACKWARD);
         driveSeconds(1, 0.25f, dir.LEFTROT);
-        moveArm(0);
-        hArmOpen.setPosition(0.13);
-        hClawServo.setPosition(0.375);
-        sleep(1000);
-
+        driveSeconds(0.25f, 0.25f, dir.BACKWARD);
+        hLinearSlide.setPosition(0.475);
+        hArmOpen.setPosition(0.82);
+        sleep(2000);
+        vArmServo.setPosition(0);
+        sleep(2000);
         //get spec 2
-        moveArm(0.875);
+        hClawServo.setPosition(0.377);
+        vArmServo.setPosition(0.82);
         sleep(1000);
         driveSeconds(1, 0.25f, dir.FORWARD);
         driveSeconds(1, 0.25f, dir.LEFTROT);
@@ -37,7 +40,7 @@ public class PlanB extends ScrimmageAuto {
         sleep(1000);
 
         //transfer spec 2
-            hArmOpen.setPosition(0.88);
+            hArmOpen.setPosition(0.82);
             hLinearSlide.setPosition(0.6461);
             sleep(1200);
             hClawServo.setPosition(0.6);
@@ -57,9 +60,9 @@ public class PlanB extends ScrimmageAuto {
         driveSeconds(0.5, 0.25f, dir.FORWARD);
         driveSeconds(1, 0.25f, dir.RIGHTROT);
         driveSeconds(1, 0.25f, dir.BACKWARD);
-        moveArm(0);
+        vArmServo.setPosition(0);
         sleep(1000);
-        moveArm(0.875);
+        vArmServo.setPosition(0.875);
         driveSeconds(0.5, 0.25f, dir.FORWARD);
         sleep(1000);
         linearSlide.setPower(0);
@@ -70,7 +73,7 @@ public class PlanB extends ScrimmageAuto {
 
 
 /*
-    tonomous(name="PlanB", group="Robot")
+@Autonomous(name="PlanB", group="Robot")
 public class PlanB extends ScrimmageAuto {
     public void runOpMode() {
         // Call the parent class method to use its setup
@@ -83,11 +86,11 @@ public class PlanB extends ScrimmageAuto {
         linearSlide.setPower(0.5f);
         driveSeconds(3, 0.25f, dir.BACKWARD);
         driveSeconds(1, 0.25f, dir.LEFTROT);
-        moveArm(0);
+        vArmServo.setPosition(0);
         sleep(1000);
 
         //get spec 2
-        moveArm(0.875);
+        vArmServo.setPosition(0.875);
         sleep(2000);
         driveSeconds(1, 0.25f, dir.FORWARD);
         driveSeconds(1, 0.25f, dir.LEFTROT);
@@ -124,9 +127,9 @@ public class PlanB extends ScrimmageAuto {
         linearSlide.setPower(0.5f);
         driveSeconds(1, 0.25f, dir.RIGHTROT);
         driveSeconds(1, 0.25f, dir.BACKWARD);
-        moveArm(0);
+        vArmServo.setPosition(0);
         sleep(1000);
-        moveArm(0.875);
+        vArmServo.setPosition(0.875);
         driveSeconds(0.5, 0.25f, dir.FORWARD);
         sleep(1000);
         linearSlide.setPower(0);
