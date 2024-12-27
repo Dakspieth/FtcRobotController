@@ -209,7 +209,7 @@ public class ScrimmageAuto extends LinearOpMode {
         }
     }
 
-    //protected void moveArm(double pos) {
+    //protected void vArmServo.setPosition(double pos) {
      //   vArmServo.setPosition(pos);
     //}
 
