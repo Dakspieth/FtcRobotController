@@ -283,8 +283,8 @@ public class MainMovement extends LinearOpMode {
 
 
     private void HorizontalClawAndArm() {
-        double hClawOpenValue = 0.375, hClawClosedValue = 0.75;
-        double hArmDownValue = 0.8535, hArmUpValue = 0.15; // .95 and 0.25 before
+        double hClawOpenValue = 0.377, hClawClosedValue = 0.75;
+        double hArmDownValue = 0.88, hArmUpValue = 0.15; // .95 and 0.25 before
         // controls - horizontal claw and arm
         boolean hClawToggleBtn = gamepad2.b; // open/close claw
         boolean hArmToggleBtn = gamepad2.y; // swing horizontal arm out/in
