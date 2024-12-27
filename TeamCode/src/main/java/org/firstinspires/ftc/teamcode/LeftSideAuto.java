@@ -101,7 +101,7 @@ public class LeftSideAuto extends ScrimmageAuto {
         sleep(1000);
 
         //transfer spec 2
-        hArmOpen.setPosition(0.88);
+        hArmOpen.setPosition(0.835);
         hLinearSlide.setPosition(0.6461);
         sleep(1200);
         hClawServo.setPosition(0.6);

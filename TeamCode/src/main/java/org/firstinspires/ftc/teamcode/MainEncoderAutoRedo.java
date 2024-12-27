@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+/*package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
@@ -199,7 +199,7 @@ public class MainEncoderAutoRedo extends LinearOpMode {
             }
             linearSlide.setPower(0);
         }
-    }*/
+    }
 
     protected void moveSlideSeconds(double seconds, float speed, boolean up) {
         int dir = 1;
@@ -218,4 +218,4 @@ public class MainEncoderAutoRedo extends LinearOpMode {
         }
     }
 
-}
+}*/
