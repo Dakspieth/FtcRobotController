@@ -99,6 +99,12 @@ public class MainEncoderAutoRedo extends LinearOpMode {
             rightBack.setTargetPosition(targetPos + rightBack.getCurrentPosition());
             leftFront.setTargetPosition(targetPos + leftFront.getCurrentPosition());
             rightFront.setTargetPosition(targetPos + rightFront.getCurrentPosition());
+            
+            //TODO: tweek tolerance
+            leftBack.setTargetPositionTolerance(3);
+            rightBack.setTargetPositionTolerance(3);
+            leftFront.setTargetPositionTolerance(3);
+            rightFront.setTargetPositionTolerance(3);
 
             leftBack.setPower(lbDir * speed);
             rightBack.setPower(rbDir * speed);
