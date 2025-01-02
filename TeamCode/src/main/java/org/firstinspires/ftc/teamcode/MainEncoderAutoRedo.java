@@ -67,7 +67,7 @@ public class MainEncoderAutoRedo extends LinearOpMode {
 
         //sets some motors to negative power depending on direction
         //^^^ pretty sure we dont need negs for encoder
-        //TODO: fix left & right values
+        //TODO: fix left & right values + add rotate
         switch(direction) {
             case LEFT:
                 rbDir = -1.5;
@@ -92,13 +92,16 @@ public class MainEncoderAutoRedo extends LinearOpMode {
         }
          if(opModeIsActive()) {
             runtime.reset();
-            targetPos = (int)(inches * countsPerInch);
+            lbTargetPos = (int)(inches * countsPerInch * lbDir);
+            rbTargetPos = (int)(inches * countsPerInch * rbDir);
+            lfTargetPos = (int)(inches * countsPerInch * lfDir);
+            rfTargetPos = (int)(inches * countsPerInch * rfDir);
 
             //comment motors here depending on if they have encoders
-            leftBack.setTargetPosition(targetPos + leftBack.getCurrentPosition());
-            rightBack.setTargetPosition(targetPos + rightBack.getCurrentPosition());
-            leftFront.setTargetPosition(targetPos + leftFront.getCurrentPosition());
-            rightFront.setTargetPosition(targetPos + rightFront.getCurrentPosition());
+            leftBack.setTargetPosition(lbTargetPos + leftBack.getCurrentPosition());
+            rightBack.setTargetPosition(rbTargetPos + rightBack.getCurrentPosition());
+            leftFront.setTargetPosition(lfTargetPos + leftFront.getCurrentPosition());
+            rightFront.setTargetPosition(rfTargetPos + rightFront.getCurrentPosition());
             
             //TODO: tweek tolerance
             leftBack.setTargetPositionTolerance(3);
@@ -106,19 +109,20 @@ public class MainEncoderAutoRedo extends LinearOpMode {
             leftFront.setTargetPositionTolerance(3);
             rightFront.setTargetPositionTolerance(3);
 
-            leftBack.setPower(lbDir * speed);
-            rightBack.setPower(rbDir * speed);
-            leftFront.setPower(lfDir * speed);
-            rightFront.setPower(rfDir * speed);
+            leftBack.setPower(speed);
+            rightBack.setPower(speed);
+            leftFront.setPower(speed);
+            rightFront.setPower(speed);
+
+            leftBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            rightBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            
             while(opModeIsActive() && timeoutS < runtime.seconds() && (leftBack.isBusy() && rightBack.isBusy() && leftFront.isBusy() && rightFront.isBusy())) {
                 telemetry.addData("currently going", String.valueOf(direction), " to ", targetPos);
                 telemetry.update();
             }
-            leftBack.setPower(0);
-            rightBack.setPower(0);
-            leftFront.setPower(0);
-            rightFront.setPower(0);
-            sleep(100);
         }
             leftBack.setPower(0);
             rightBack.setPower(0);
