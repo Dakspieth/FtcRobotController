@@ -21,7 +21,7 @@ public class MainEncoderAutoRedo extends LinearOpMode {
     ///////////////////////////////code///////////////////////////////
     private ElapsedTime runtime = new ElapsedTime();
     //constants for inch functions
-    static final double ticksPerRev = 1.043;
+    static final double ticksPerRev = 1440;
     static final double wheelDiameter = 3.5;     // For figuring circumference (in inches)
     static final double ticksPerInch  = ticksPerRev / (wheelDiameter * Math.PI);
     static final double slideTicksPerInch = 1;
@@ -49,6 +49,7 @@ public class MainEncoderAutoRedo extends LinearOpMode {
         waitForStart();
 
     }
+
     protected enum dir { // dir is short for direction btw
         LEFT,
         RIGHT,
@@ -56,17 +57,17 @@ public class MainEncoderAutoRedo extends LinearOpMode {
         BACKWARD
 
     }
+
     protected void driveInches(float inches, float speed, dir direction, float timeoutS) {
         double lbDir = 1;
         double rbDir = 1;
         double lfDir = 1;
         double rfDir = 1;
         double targetPos = 0;
-        double ticks = 0;
-        double deltaTime = 0;
-        double lastRuntimeSeconds = 0;
 
         //sets some motors to negative power depending on direction
+        //^^^ pretty sure we dont need negs for encoder
+        //TODO: fix left & right values
         switch(direction) {
             case LEFT:
                 rbDir = -1.5;
@@ -89,24 +90,30 @@ public class MainEncoderAutoRedo extends LinearOpMode {
                 rfDir = -1;
                 break;
         }
-        if(opModeIsActive()) {
+         if(opModeIsActive()) {
             runtime.reset();
+            targetPos = (int)(inches * countsPerInch);
+
+            //comment motors here depending on if they have encoders
+            leftBack.setTargetPosition(targetPos + leftBack.getCurrentPosition());
+            rightBack.setTargetPosition(targetPos + rightBack.getCurrentPosition());
+            leftFront.setTargetPosition(targetPos + leftFront.getCurrentPosition());
+            rightFront.setTargetPosition(targetPos + rightFront.getCurrentPosition());
+
             leftBack.setPower(lbDir * speed);
             rightBack.setPower(rbDir * speed);
             leftFront.setPower(lfDir * speed);
             rightFront.setPower(rfDir * speed);
-            targetPos = inches * ticksPerInch;
-
-            while(ticks < targetPos) {
-                deltaTime = runtime.seconds() - lastRuntimeSeconds;
-                lastRuntimeSeconds = runtime.seconds();
-                ticks += deltaTime * speed;
-                telemetry.addData("currently going", String.valueOf(direction), " to ", ticks);
-                telemetry.addData("Current Pos  ", ticks);
-                telemetry.addData("target Pos  ", targetPos);
+            while(opModeIsActive() && timeoutS < runtime.seconds() && (leftBack.isBusy() && rightBack.isBusy() && leftFront.isBusy() && rightFront.isBusy())) {
+                telemetry.addData("currently going", String.valueOf(direction), " to ", targetPos);
                 telemetry.update();
-
             }
+            leftBack.setPower(0);
+            rightBack.setPower(0);
+            leftFront.setPower(0);
+            rightFront.setPower(0);
+            sleep(100);
+        }
             leftBack.setPower(0);
             rightBack.setPower(0);
             leftFront.setPower(0);
@@ -118,6 +125,14 @@ public class MainEncoderAutoRedo extends LinearOpMode {
 
     }
 
+}*/
+
+
+
+
+
+/* delete?
+ * 
     protected void driveSeconds(double seconds, float speed, dir direction) {
         double lbDir = 1;
         double rbDir = 1;
@@ -218,4 +233,4 @@ public class MainEncoderAutoRedo extends LinearOpMode {
         }
     }
 
-}*/
+ */
