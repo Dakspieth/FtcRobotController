@@ -414,7 +414,7 @@ public class MainMovement extends LinearOpMode {
         if (enableTransfer) {
             if(transferStep == 0) {
                 hArmOpen.setPosition(0.11);
-                hLinearSlide.setPosition(0.66);
+                hLinearSlide.setPosition(0.65);
                 transferTimer.reset();
                 transferStep = 1;
             } else if(transferStep == 1 && transferTimer.milliseconds() >= 1200) {
