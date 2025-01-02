@@ -29,6 +29,7 @@ public class MainMovement extends LinearOpMode {
         // ROBOT OTHER STUFF //
 
     private boolean sweep = false;
+    private boolean chamber = false;
 
     //private ElapsedTime hSlideTimer = new ElapsedTime();
     private ElapsedTime hClawTimer = new ElapsedTime();
@@ -37,6 +38,8 @@ public class MainMovement extends LinearOpMode {
     private ElapsedTime transferTimer = new ElapsedTime();
 
     private ElapsedTime sweeperTimer = new ElapsedTime();
+
+    private  ElapsedTime chamberTimer = new ElapsedTime();
 
     //private ElapsedTime transferCD = new ElapsedTime(); //cooldown 4 transfer
 
@@ -351,6 +354,30 @@ public class MainMovement extends LinearOpMode {
                 telemetry.addData("back", true);
             }
         }
+    }
+
+    private void AutoChamber() {
+        boolean chamberBtn = gamepad2.dpad_right;
+
+        if(chamberBtn && chamberTimer.milliseconds() >= 150){
+            chamber = true;
+            chamberTimer.reset();
+        }
+
+        if (chamber) {
+
+            if(chamberTimer.milliseconds() < 250){
+                sweep = true;
+                hLinearSlide.setPosition(0.65);
+            } else if (chamberTimer.milliseconds() >= 750) {
+                 hArmOpen.setPosition(0.835);
+                 hClawServo.setPosition(0.377);
+            }
+
+
+        }
+
+
     }
 
 
