@@ -29,7 +29,6 @@ public class MainMovement extends LinearOpMode {
         // ROBOT OTHER STUFF //
 
     private boolean sweep = false;
-    private boolean chamber = false;
 
     //private ElapsedTime hSlideTimer = new ElapsedTime();
     private ElapsedTime hClawTimer = new ElapsedTime();
@@ -64,6 +63,7 @@ public class MainMovement extends LinearOpMode {
     boolean hClawOpen = false;
 
     int transferStep = 0;
+    int chamberStep = 0;
 
 
 
@@ -94,6 +94,8 @@ public class MainMovement extends LinearOpMode {
         hArmOpen.setDirection(Servo.Direction.REVERSE);
 
         hArmOpen.setPosition(0.84);
+
+        sweeper.setPosition(0);
 
 
 
@@ -267,7 +269,7 @@ public class MainMovement extends LinearOpMode {
     //////////////////////// END OF MOVEMENT CODE ////////////////////////
 
     private void HorizontalSlideMovement() {
-        double hsMinExtension = 0.7511, hsMaxExtension = 0.377;
+        double hsMinExtension = 0.69, hsMaxExtension = 0.377;
         // controls - horizontal slide
         boolean hsExtendBtn = gamepad2.dpad_up, hsRetractBtn = gamepad2.dpad_down;
         double hsStickY = gamepad2.right_stick_y;
@@ -337,51 +339,34 @@ public class MainMovement extends LinearOpMode {
         if(sweepBtn && sweeperTimer.milliseconds() >= 150){
             sweep = true;
             sweeperTimer.reset();
+            chamberStep = 0;
         }
 
         if(sweep){
             //sweeps out
             telemetry.addData("sweep timer", sweeperTimer.milliseconds());
             telemetry.addData("SWEEPPOS", sweeper.getPosition());
-            if(sweeperTimer.milliseconds() < 1000) {
-                sweeper.setPosition(0.725);
-            } else if(sweeperTimer.milliseconds() >= 1000 ) {
+            if(chamberStep == 0) {
+                sweeper.setPosition(0.875);
+                hLinearSlide.setPosition(0.65);
+
+                chamberStep = 1;
+            } else if(chamberStep == 1 && sweeperTimer.milliseconds() >= 1000 ) {
                 //sweeps in
                 sweeper.setPosition(0);
-            } else if(sweeperTimer.milliseconds() >= 1500) {
+                hArmOpen.setPosition(0.835);
+                hClawServo.setPosition(0.377);
+                chamberStep = 2;
+            } else if(chamberStep == 2 && sweeperTimer.milliseconds() >= 1250) {
                 sweep = false;
                 sweeperTimer.reset();
                 telemetry.addData("back", true);
+                chamberStep = 0;
             }
         }
     }
 
-    private void AutoChamber() {
-        boolean chamberBtn = gamepad2.dpad_right;
 
-        if(chamberBtn && chamberTimer.milliseconds() >= 150){
-            chamber = true;
-            chamberTimer.reset();
-        }
-
-        if (chamber) {
-
-            if(chamberTimer.milliseconds() < 250){
-                sweep = true;
-                hLinearSlide.setPosition(0.65);
-            } else if (chamberTimer.milliseconds() >= 750) {
-                 hArmOpen.setPosition(0.835);
-                 hClawServo.setPosition(0.377);
-            } else if(chamberTimer.milliseconds() >= 1250){
-                chamber = false;
-                chamberTimer.reset();
-            }
-
-
-        }
-
-
-    }
 
 
     private void VerticalSlideMovement() {
@@ -429,7 +414,7 @@ public class MainMovement extends LinearOpMode {
         if (enableTransfer) {
             if(transferStep == 0) {
                 hArmOpen.setPosition(0.11);
-                hLinearSlide.setPosition(0.68);
+                hLinearSlide.setPosition(0.66);
                 transferTimer.reset();
                 transferStep = 1;
             } else if(transferStep == 1 && transferTimer.milliseconds() >= 1200) {
