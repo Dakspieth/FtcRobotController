@@ -372,6 +372,9 @@ public class MainMovement extends LinearOpMode {
             } else if (chamberTimer.milliseconds() >= 750) {
                  hArmOpen.setPosition(0.835);
                  hClawServo.setPosition(0.377);
+            } else if(chamberTimer.milliseconds() >= 1250){
+                chamber = false;
+                chamberTimer.reset();
             }
 
 
