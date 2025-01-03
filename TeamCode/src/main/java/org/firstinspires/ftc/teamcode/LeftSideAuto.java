@@ -77,7 +77,7 @@ public class LeftSideAuto extends ScrimmageAuto {
         //basket specimen 1
         driveSeconds(0.35f, 0.25f, dir.LEFT);
         hClawServo.setPosition(0.75);
-        linearSlide.setPower(0.5f);
+        linearSlide.setPower(0.75f);
         driveSeconds(3.25, 0.25f, dir.BACKWARD);
         driveSeconds(1, 0.25f, dir.LEFTROT);
         driveSeconds(0.25, 0.25f, dir.BACKWARD);
@@ -120,7 +120,7 @@ public class LeftSideAuto extends ScrimmageAuto {
         hLinearSlide.setPosition(0.475);
         sleep(1000);
         driveSeconds(1, 0.25f, dir.BACKWARD);
-        linearSlide.setPower(0.5f);
+        linearSlide.setPower(0.75f);
         driveSeconds(1.1, 0.25f, dir.RIGHTROT);
         driveSeconds(2, 0.25f, dir.BACKWARD);
         vArmServo.setPosition(0);
