@@ -115,7 +115,7 @@ public class DebugMenu extends LinearOpMode {
         //sets motor power
         currentMotor = Motors[currentMotorNum];
         currentMotor.setPower(LjoystickY);
-        telemetry.addData("Moving motor", MotorNames[currentMotorNum], "at speed", currentMotor.getPower());
+        telemetry.addData("Moving motor:", MotorNames[currentMotorNum], ", at speed:", currentMotor.getPower());
     }
     private void ServoMode() {
         //changes servo if dpad pressed
@@ -137,7 +137,7 @@ public class DebugMenu extends LinearOpMode {
         //sets servo pos
         float newServoPos =  (float)currentServo.getPosition() + (LjoystickY/5)* (1-Ltrigger);
         currentServo.setPosition(newServoPos);
-        telemetry.addData("Moving Servo", ServoNames[currentServoNum], "at speed", currentServo.getPosition());
+        telemetry.addData("Moving Servo:", ServoNames[currentServoNum], ", at speed:", currentServo.getPosition());
     }
     private void DriveMode() {
         //reset motors from last update
@@ -166,6 +166,6 @@ public class DebugMenu extends LinearOpMode {
             motorIndex++;
         }
 
-        telemetry.addData("Doing/Going", DriveNames[currentDriveNum], "At speed", LjoystickY);
+        telemetry.addData("Doing/Going:", DriveNames[currentDriveNum], ", at speed:", LjoystickY);
     }
 }
