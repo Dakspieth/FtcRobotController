@@ -1,0 +1,419 @@
+package org.firstinspires.ftc.teamcode;
+
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.HardwareDevice;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
+@TeleOp(name="DebugMenu", group="Linear OpMode")
+public class DebugMenu extends LinearOpMode {
+
+        // ROBOT MOVEMENT //
+    private DcMotor[] Motors = {leftBack, rightBack, leftFront, rightFront, linearSlide}; //Initializes all the direct current motors for the driving function of our robot, gary.
+    private Servo[] Servos = {vArmServo, hArmOpen, hClawServo, hLinearSlide, sweeper};
+    private String[] MotorNames = {"left back wheel", "right back wheel", "left front wheel", "right front wheel", "linear slide"};
+    private String[] ServoNames = {"vertical arm", "horizontal arm", "horizontal claw", "horizontal slide", "sweeper"};
+    private String[] DriveNames = {"forward", "backward", "left", "right", "left rotate", "right rotate"};
+    private int currentMotor, currentServo, currentDrive;
+
+
+        // JOYSTICK and MOVEMENT CONTROLS //
+    public float LjoystickX, LjoystickY, RjoystickX, RjoystickY, Ltrigger;
+    public boolean Lbumper, Rbumper;
+    final float joystickDeadzone = 0.1f; // Area where joystick will not detect input
+    
+
+
+
+    @Override
+    public void runOpMode() {
+        // initializing the motors (pseudocode) (:skull:, :fire:, :splash:, :articulated-lorry:, :flushed:, :weary:, :sob:);
+        Motors[0]  = hardwareMap.get(DcMotor.class, "bl"); //    CH0
+        Motors[1]  = hardwareMap.get(DcMotor.class, "br"); //   EH0
+        Motors[2]  = hardwareMap.get(DcMotor.class, "fl"); //   CH1
+        Motors[3]  = hardwareMap.get(DcMotor.class, "fr"); //  EH1
+        Motors[4] = hardwareMap.get(DcMotor.class, "ls"); //  EH2
+
+        Motors[0].setDirection(DcMotor.Direction.REVERSE);
+        Motor[2].setDirection(DcMotor.Direction.REVERSE);
+
+        Servos[0] = hardwareMap.get(Servo.class, "vas"); //     CH2
+        Servos[1] = hardwareMap.get(Servo.class, "hao"); //      EH3
+        Servos[2] = hardwareMap.get(Servo.class, "hcs"); //    EH5
+        Servos[3] = hardwareMap.get(Servo.class, "hls"); //  EH1
+        Servos[4] = hardwareMap.get(Servo.class, "sweeper"); //  CH0
+
+
+
+        waitForStart(); //waits for play on the driver hub :3
+
+        while (opModeIsActive()) {
+            LjoystickX = gamepad1.left_stick_x;
+            LjoystickY = gamepad1.left_stick_y;
+            RjoystickX = gamepad1.right_stick_x;
+            RjoystickY = gamepad1.right_stick_y;
+            Lbumper = gamepad1.left_bumper;
+            Rbumper = gamepad1.right_bumper;
+            Ltrigger = gamepad1.trigger;
+
+            if()
+
+            setMotorPowers();
+            telemetry.addData("CONTROLS: (Gamepad1) Use left stick y to increase/decrease position/speed,", "hold left trigger to slow down speed change, switch modes with dPad up/down, switch motors/servos with left/right bumper");
+            telemetry.update(); //update output screen
+        }
+
+
+    }
+
+    //////////////////////// START OF MOVEMENT CODE ////////////////////////
+
+    //////////////////////// START OF MOVEMENT CODE ////////////////////////
+    
+    //////////////////////// START OF MOVEMENT CODE ////////////////////////
+
+    private void epicRotationMovement() {
+        // rotates the robot if left stick is not being used (movement takes priorities)
+        if (Math.abs(RjoystickX) >= joystickDeadzone / 2) {
+            Rotating = true;
+            if(RjoystickX > 0) {
+               // clockwise rotation
+                wheelRotate(Math.abs(RjoystickX), -Math.abs(RjoystickX), Math.abs(RjoystickX), -Math.abs(RjoystickX));
+                telemetry.addData("Right Stick rotating LEFT: ", RjoystickX);
+
+            } else if (RjoystickX < 0) {
+                // counter-clockwise rotation
+                wheelRotate(-Math.abs(RjoystickX), Math.abs(RjoystickX), -Math.abs(RjoystickX), Math.abs(RjoystickX));
+                telemetry.addData("Right Stick rotating RIGHT: ", RjoystickX);
+                
+            }
+        } else {
+            Rotating = false;
+            wheelRotate(0, 0, 0, 0);
+        }
+    }
+
+    //    _                 _        _    _ _             _         _     _                                 __ _
+    //   (_)               | |      ( )  (_|_)           | |       ( )   | |                               / _| |
+    //    _  __ _  ___ ___ | |__    |/    _ _  __ _  __ _| |_   _  |/    | |__   __ _ _ __   ___ _ __ ___ | |_| |_
+    //   | |/ _` |/ __/ _ \| '_ \        | | |/ _` |/ _` | | | | |       | '_ \ / _` | '_ \ / __| '__/ _ \|  _| __|
+    //   | | (_| | (_| (_) | |_) |       | | | (_| | (_| | | |_| |       | |_) | (_| | | | | (__| | | (_) | | | |_
+    //   | |\__,_|\___\___/|_.__/        | |_|\__, |\__, |_|\__, |       |_.__/ \__,_|_| |_|\___|_|  \___/|_|  \__|
+    //  _/ |                            _/ |   __/ | __/ |   __/ |
+    // |__/                            |__/   |___/ |___/   |___/
+
+    private void legendaryStrafeMovement() {
+        float maxSpeed = 1.0f; // Cap for speed robot can travel
+        double addSpeed = Math.sqrt(LjoystickX * LjoystickX + LjoystickY * LjoystickY); // Added speed by calculating the distance the joystick is from the center
+
+        // Alternate between SLOW && FAST mode depending on which bumper is held :P
+        if (gamepad1.left_bumper) {    // slow mode !
+            netS = speedSlow;    // Speed is set to a slow constant speed for more precise movements 
+            rotationSpeed = speedSlow;
+
+        } else if (gamepad1.right_bumper) {     // fast mode !
+            speedFast = (Math.max(1.5f, speedFast + 0.05f)); // for making the fast mode accelerate gradually instead of instantly going faster
+            netS = (Math.min(maxSpeed, (float) (addSpeed - joystickDeadzone) / (1.0f - joystickDeadzone))) * speedFast; // Speed is multiplied by the speedFast variable
+            rotationSpeed = speedFast;
+
+        } else { // default- no bumpers are held !
+            netS = Math.min(maxSpeed, (float) (addSpeed - joystickDeadzone) / (1.0f - joystickDeadzone)); // Speed is set to default speed
+            rotationSpeed = 1f;
+            speedFast = 1f;
+        }
+
+        // calculates the angle of the joystick in radians --> degrees..
+        double LangleInRadians = Math.atan2(-LjoystickY, LjoystickX);
+        double LangleInDegrees = LangleInRadians * (180 / Math.PI);
+
+        // strafe based on joystick angle :D
+        if (Math.abs(LjoystickX) > joystickDeadzone || Math.abs(LjoystickY) > joystickDeadzone) {
+            Strafing = true;
+            //if stick is past the dead zone ->
+            if (LangleInDegrees >= -22.5 && LangleInDegrees <= 22.5) {
+                // right quadrant
+                wheelStrafe(-netS, netS, netS, -netS);
+                telemetry.addData("Left Stick quadrant: ", "RIGHT");
+
+            } else if (LangleInDegrees > 22.5 && LangleInDegrees < 67.5) {
+                // top-right quadrant
+                wheelStrafe(0, netS, netS, 0);
+                telemetry.addData("Left Stick quadrant: ", "TOP RIGHT");
+
+            } else if (LangleInDegrees > -67.5 && LangleInDegrees < -22.5) {
+                // bottom-right quadrant
+                wheelStrafe(-netS, 0, 0, -netS);
+                telemetry.addData("Left Stick quadrant: ", "BOTTOM RIGHT");
+
+            } else if (LangleInDegrees >= 67.5 && LangleInDegrees <= 112.5) {
+                // top quadrant
+                wheelStrafe(netS, netS, netS, netS);
+                telemetry.addData("Left Stick quadrant: ", "TOP");
+
+            } else if (LangleInDegrees > -112.5 && LangleInDegrees < -67.5) {
+                // bottom quadrant
+                wheelStrafe(-netS, -netS, -netS, -netS);
+                telemetry.addData("Left Stick quadrant: ", "BOTTOM");
+
+            } else if (LangleInDegrees > 112.5 && LangleInDegrees < 157.5) {
+                // top-left quadrant
+                wheelStrafe(netS, 0, 0, netS);
+                telemetry.addData("Left Stick quadrant: ", "TOP LEFT");
+
+            } else if (LangleInDegrees > -157.5 && LangleInDegrees < -112.5) {
+                // bottom-left quadrant
+                wheelStrafe(0, -netS, -netS, 0);
+                telemetry.addData("Left Stick quadrant: ", "BOTTOM LEFT");
+
+            } else if (LangleInDegrees >= 157.5 || LangleInDegrees <= -157.5) {
+                // left quadrant
+                wheelStrafe(netS, -netS, -netS, netS);
+                telemetry.addData("Left Stick quadrant: ", "LEFT");
+
+            }
+
+        } else {
+            Strafing = false;
+
+            wheelStrafe(0, 0, 0, 0);
+            telemetry.addData("nut driving", null);
+
+        }
+    }
+    private void wheelStrafe(float bl, float br, float fl, float fr) { // For setting the wheel strafe values
+        StrafeBL = bl;
+        StrafeBR = br;
+        StrafeFL = fl;
+        StrafeFR = fr;
+    }
+    private void wheelRotate(float bl, float br, float fl, float fr) { // For setting the wheel rotation values
+        RotateBL = bl;
+        RotateBR = br;
+        RotateFL = fl;
+        RotateFR = fr;
+    }
+
+    //////////////////////// END OF MOVEMENT CODE ////////////////////////
+
+    //////////////////////// END OF MOVEMENT CODE ////////////////////////
+
+    //////////////////////// END OF MOVEMENT CODE ////////////////////////
+
+    private void HorizontalSlideMovement() {
+        double hsMinExtension = 0.69, hsMaxExtension = 0.377;
+        // controls - horizontal slide
+        boolean hsExtendBtn = gamepad2.dpad_up, hsRetractBtn = gamepad2.dpad_down;
+        double hsStickY = gamepad2.right_stick_y;
+
+        print("HLS Pos: ", hLinearSlide.getPosition());
+        // Gradual horizontal slide Movement
+        if(Math.abs(hsStickY) > joystickDeadzone) {
+            // moves the horizontal linear slide with joystick
+            hLinearSlide.setPosition(Math.min(hsMinExtension, Math.max(hsMaxExtension, hLinearSlide.getPosition() + (hsStickY / 800))));
+        } else {
+            // make slide stay in place so it doesn't slide back and fourth while driving
+            hLinearSlide.setPosition(hLinearSlide.getPosition());
+        }
+
+        // Snap horizontal slide to FULLY EXTENDED
+        if (hsExtendBtn) {
+            hLinearSlide.setPosition(hsMaxExtension);
+        }
+
+        // Snaps horizontal slide to FULLY RETRACTED
+        if (hsRetractBtn) {
+            hLinearSlide.setPosition(hsMinExtension);
+        }
+
+    }
+
+
+    private void HorizontalClawAndArm() {
+        double hClawOpenValue = 0.377, hClawClosedValue = 0.75;
+        double hArmDownValue = 0.835, hArmUpValue = 0.11; // .95 and 0.25 before//////////////////////////////////////////////////////////////////////////////
+        // controls - horizontal claw and arm
+        boolean hClawToggleBtn = gamepad2.b; // open/close claw
+        boolean hArmToggleBtn = gamepad2.y; // swing horizontal arm out/in
+
+        // HORIZONTAL CLAW OPEN ? CLOSE
+
+        if (hClawToggleBtn && hClawTimer.milliseconds() >= 200) {
+            hClawOpen = !hClawOpen; // toggle state of claw
+            if (hClawOpen) {
+                hClawServo.setPosition(hClawOpenValue); // OPENS claw
+            } else if (!hClawOpen) {
+                hClawServo.setPosition(hClawClosedValue); // CLOSES claw
+            }
+            hClawTimer.reset();
+        }
+
+        // HORIZONTAL ARM IN ? OUT
+
+        if (hArmToggleBtn && hArmTimer.milliseconds() >= 250) {
+            hArmUp = !hArmUp; // toggle arm rotation
+
+            if (hArmUp) {
+                hArmOpen.setPosition(hArmUpValue);
+
+            } else if (!hArmUp) {
+                hArmOpen.setPosition(hArmDownValue);
+            }
+            hArmTimer.reset();
+        }
+    }
+
+
+    private void Sweeper() {
+        boolean sweepBtn = gamepad2.dpad_left;
+
+        //if left d-pad clicked
+        if(sweepBtn && sweeperTimer.milliseconds() >= 150){
+            sweep = true;
+            sweeperTimer.reset();
+            chamberStep = 0;
+        }
+
+        if(sweep){
+            //sweeps out
+            telemetry.addData("sweep timer", sweeperTimer.milliseconds());
+            telemetry.addData("SWEEPPOS", sweeper.getPosition());
+            if(chamberStep == 0) {
+                sweeper.setPosition(0.875);
+                hLinearSlide.setPosition(0.65);
+
+                chamberStep = 1;
+            } else if(chamberStep == 1 && sweeperTimer.milliseconds() >= 1000 ) {
+                //sweeps in
+                sweeper.setPosition(0);
+                hArmOpen.setPosition(0.835);
+                hClawServo.setPosition(0.377);
+                chamberStep = 2;
+            } else if(chamberStep == 2 && sweeperTimer.milliseconds() >= 1250) {
+                sweep = false;
+                sweeperTimer.reset();
+                telemetry.addData("back", true);
+                chamberStep = 0;
+            }
+        }
+    }
+
+
+
+
+    private void VerticalSlideMovement() {
+        // controls - vertical slide
+        double vsStickY = gamepad2.left_stick_y;
+
+        if (Math.abs(vsStickY) > joystickDeadzone) { // controls the vertical slide
+            linearSlide.setPower(linearSlideSpeed * vsStickY / -1);
+            telemetry.addData("linear slide speed:", linearSlideSpeed * -vsStickY / 1);
+        } else {
+            linearSlide.setPower(0); // stop the linear slide from moving when joystick is centered
+        }
+    }
+
+
+    private void VerticalArmAndOuttake() {
+        double vArmOutValue = 0, vArmInValue = 0.875; // 0 , .875
+        // controls - vertical arm
+        boolean vArmToggleBtn = gamepad2.x;
+
+        if (vArmToggleBtn && vArmTimer.milliseconds() >= 250) {
+            vSlideArmOut = !vSlideArmOut;
+            if (vSlideArmOut) {
+                vArmServo.setPosition(vArmOutValue); //Arm swings out
+                telemetry.addData("1", null);
+            } else {
+                vArmServo.setPosition(vArmInValue); //Arm swings in
+                telemetry.addData("0", null);
+            }
+            vArmTimer.reset();
+        }
+
+    }
+
+    private void TransferFunction() {
+        boolean transferBtn = gamepad2.a;
+
+
+        if (transferBtn && transferTimer.milliseconds() >= 200) {
+            transferStep = 0;
+            enableTransfer = true;
+            transferTimer.reset();
+        }
+
+        if (enableTransfer) {
+            if(transferStep == 0) {
+                hArmOpen.setPosition(0.11);
+                hLinearSlide.setPosition(0.67);
+                transferTimer.reset();
+                transferStep = 1;
+            } else if(transferStep == 1 && transferTimer.milliseconds() >= 1200) {
+                hClawServo.setPosition(0.6);
+                transferTimer.reset();
+                transferStep = 2;
+            } else if(transferStep == 2 && transferTimer.milliseconds() >= 500) {
+                hLinearSlide.setPosition(0.7);
+                transferTimer.reset();
+                transferStep = 3;
+            } else if(transferStep == 3 && transferTimer.milliseconds() >= 200) {
+                hClawServo.setPosition(0.75);
+                hArmOpen.setPosition(0.835);
+                transferTimer.reset();
+                transferStep = 4;
+            } else if(transferStep == 4 && transferTimer.milliseconds() >= 100) {
+                transferStep = 0;
+                transferTimer.reset();
+                enableTransfer = false;
+
+            }
+        }
+    }
+
+
+
+
+
+    private void setMotorPowers() {
+            
+        if (Strafing && Rotating) {
+            leftBack.setPower(((RotateBL + StrafeBL) / 2) * rotationSpeed * 0.5);
+
+            rightFront.setPower(((RotateFR + StrafeFR) / 2) * rotationSpeed * 0.5);
+
+            leftFront.setPower(((RotateFL + StrafeFL) / 2) * rotationSpeed * 0.5);
+
+            rightBack.setPower(((RotateBR + StrafeBR) / 2) * rotationSpeed * 0.5);
+
+        } else if (Strafing && !Rotating) {
+            leftBack.setPower(StrafeBL * 0.5);
+
+            rightFront.setPower(StrafeFR * 0.5);
+
+            leftFront.setPower(StrafeFL * 0.5);
+
+            rightBack.setPower(StrafeBR * 0.5);
+        } else if (!Strafing && Rotating) {
+            leftBack.setPower(RotateBL * rotationSpeed * 0.5);
+
+            rightFront.setPower(RotateFR * rotationSpeed * 0.5);
+
+            leftFront.setPower(RotateFL * rotationSpeed * 0.5);
+
+            rightBack.setPower(RotateBR * rotationSpeed * 0.5);
+        } else {
+            leftBack.setPower(0);
+
+            leftFront.setPower(0);
+
+            rightBack.setPower(0);
+
+            rightFront.setPower(0);
+        }
+    }
+
+}
