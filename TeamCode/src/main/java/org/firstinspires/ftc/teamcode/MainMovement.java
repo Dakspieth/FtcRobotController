@@ -50,7 +50,7 @@ public class MainMovement extends LinearOpMode {
     //private final float clawSpeed = 1.0f; unused idk whats up w/ this
 
         // vertical slide
-    private DcMotor linearSlide; // motor to control vertical linear slide
+    private DcMotor vLinearSlideOne, vLinearSlideTwo; // motor to control vertical linear slide
     private Servo vClawServo, vArmServo;  // v is slang for vertical btw
     boolean vClawOpen = false; // is the claw open? False = closed, true = open
     boolean vSlideArmOut = false; // mounted onto the linear slide
@@ -73,21 +73,24 @@ public class MainMovement extends LinearOpMode {
     @Override
     public void runOpMode() {
         // initializing the motors (pseudocode) (:skull:, :fire:, :splash:, :articulated-lorry:, :flushed:, :weary:, :sob:);
-        leftBack  = hardwareMap.get(DcMotor.class, "bl"); //    CH0
-        rightBack  = hardwareMap.get(DcMotor.class, "br"); //   EH0
-        leftFront  = hardwareMap.get(DcMotor.class, "fl"); //   CH1
-        rightFront  = hardwareMap.get(DcMotor.class, "fr"); //  EH1
-        linearSlide = hardwareMap.get(DcMotor.class, "ls"); //  EH2
+        leftBack  = hardwareMap.get(DcMotor.class, "left_back"); //    CH0
+        rightBack  = hardwareMap.get(DcMotor.class, "right_back"); //   EH0
+        leftFront  = hardwareMap.get(DcMotor.class, "left_front"); //   CH1
+        rightFront  = hardwareMap.get(DcMotor.class, "right_front"); //  EH1
+        vLinearSlideOne = hardwareMap.get(DcMotor.class, "vSlide1"); //  EH2
+        vLinearSlideTwo = hardwareMap.get(DcMotor.class, "vSlide2"); //  EH2
+
 
         leftBack.setDirection(DcMotor.Direction.REVERSE);
         leftFront.setDirection(DcMotor.Direction.REVERSE);
+        vLinearSlideTwo.setDirection(DcMotor.Direction.REVERSE);
 
         //vClawServo = hardwareMap.get(Servo.class, "vcs"); //    CH3
-        vArmServo = hardwareMap.get(Servo.class, "vas"); //     CH2
-        hClawRotate = hardwareMap.get(Servo.class, "hcr"); //   EH4
-        hClawServo = hardwareMap.get(Servo.class, "hcs"); //    EH5
-        hArmOpen = hardwareMap.get(Servo.class, "hao"); //      EH3
-        hLinearSlide = hardwareMap.get(Servo.class, "hls"); //  EH1
+        vArmServo = hardwareMap.get(Servo.class, "bucket_arm"); //     CH2
+        hClawRotate = hardwareMap.get(Servo.class, "hcr"); //   EH4 (is this even used anymore?)
+        hClawServo = hardwareMap.get(Servo.class, "horizontal_claw"); //    EH5
+        hArmOpen = hardwareMap.get(Servo.class, "horizontal_arm"); //      EH3
+        hLinearSlide = hardwareMap.get(Servo.class, "horizontal_slide"); //  EH1
         sweeper = hardwareMap.get(Servo.class, "sweeper"); //  CH0
 
 
@@ -99,7 +102,7 @@ public class MainMovement extends LinearOpMode {
 
 
 
-        linearSlide.setPower(0); // zero the linear slide's power so it doesn't move while not active
+        SetVSlideSpeed(0); // zero the linear slide's power so it doesn't move while not active
 
         telemetry.addData("Status", "Initialized OwO");
         telemetry.update();
@@ -374,11 +377,16 @@ public class MainMovement extends LinearOpMode {
         double vsStickY = gamepad2.left_stick_y;
 
         if (Math.abs(vsStickY) > joystickDeadzone) { // controls the vertical slide
-            linearSlide.setPower(linearSlideSpeed * vsStickY / -1);
+            SetVSlideSpeed(linearSlideSpeed * vsStickY / -1);
             telemetry.addData("linear slide speed:", linearSlideSpeed * -vsStickY / 1);
         } else {
-            linearSlide.setPower(0); // stop the linear slide from moving when joystick is centered
+            SetVSlideSpeed(0); // stop the linear slide from moving when joystick is centered
         }
+    }
+
+    private void SetVSlideSpeed(double speed) {
+        vLinearSlideOne.setPower(speed);
+        vLinearSlideTwo.setPower(speed);
     }
 
 
