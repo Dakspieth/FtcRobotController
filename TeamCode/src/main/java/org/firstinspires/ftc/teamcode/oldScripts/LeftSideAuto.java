@@ -1,9 +1,9 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.oldScripts;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-@Autonomous(name="LeftSideAutoHV", group="Robot")
-public class LeftSideAutoHV extends ScrimmageAuto {
+@Autonomous(name="LeftSideAuto", group="Robot")
+public class LeftSideAuto extends ScrimmageAuto {
     public void runOpMode() {
         // Call the parent class method to use its setup
         super.runOpMode();
@@ -88,7 +88,7 @@ public class LeftSideAutoHV extends ScrimmageAuto {
         vArmServo.setPosition(0.82);
         sleep(2000);
         driveSeconds(1, 0.25f, dir.FORWARD);
-        driveSeconds(1, 0.25f, dir.LEFTROT);
+        driveSeconds(1.1, 0.25f, dir.LEFTROT);
         hLinearSlide.setPosition(0.625);
         linearSlide.setPower(-0.3f);
         hArmOpen.setPosition(0.18);
@@ -120,8 +120,8 @@ public class LeftSideAutoHV extends ScrimmageAuto {
         hLinearSlide.setPosition(0.475);
         sleep(1000);
         driveSeconds(1, 0.25f, dir.BACKWARD);
-        linearSlide.setPower(0.7 5f);
-        driveSeconds(1, 0.25f, dir.RIGHTROT);
+        linearSlide.setPower(0.75f);
+        driveSeconds(1.1, 0.25f, dir.RIGHTROT);
         driveSeconds(2, 0.25f, dir.BACKWARD);
         vArmServo.setPosition(0);
         sleep(3000);

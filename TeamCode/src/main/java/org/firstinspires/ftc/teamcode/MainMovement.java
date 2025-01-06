@@ -85,9 +85,7 @@ public class MainMovement extends LinearOpMode {
         leftFront.setDirection(DcMotor.Direction.REVERSE);
         vLinearSlideTwo.setDirection(DcMotor.Direction.REVERSE);
 
-        //vClawServo = hardwareMap.get(Servo.class, "vcs"); //    CH3
         vArmServo = hardwareMap.get(Servo.class, "bucket_arm"); //     CH2
-        hClawRotate = hardwareMap.get(Servo.class, "hcr"); //   EH4 (is this even used anymore?)
         hClawServo = hardwareMap.get(Servo.class, "horizontal_claw"); //    EH5
         hArmOpen = hardwareMap.get(Servo.class, "horizontal_arm"); //      EH3
         hLinearSlide = hardwareMap.get(Servo.class, "horizontal_slide"); //  EH1

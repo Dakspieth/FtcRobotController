@@ -8,9 +8,9 @@ import com.acmerobotics.roadrunner.PoseVelocity2d;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.Drawing;
-import org.firstinspires.ftc.teamcode.MecanumDrive;
-import org.firstinspires.ftc.teamcode.TankDrive;
+import org.firstinspires.ftc.teamcode.oldScripts.Drawing;
+import org.firstinspires.ftc.teamcode.oldScripts.MecanumDrive;
+import org.firstinspires.ftc.teamcode.oldScripts.TankDrive;
 
 public class LocalizationTest extends LinearOpMode {
     @Override
