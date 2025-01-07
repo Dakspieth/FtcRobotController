@@ -12,7 +12,7 @@ public class StatesAuto extends LinearOpMode {
     ///////////////////////////////code///////////////////////////////
     final private ElapsedTime runtime = new ElapsedTime();
     //constants for inch functions
-    static final double ticksPerRev = 1440;
+    static final double ticksPerRev = 384.5;
     static final double wheelDiameter = 3.5;     // For figuring circumference (in inches)
     static final double ticksPerInch  = ticksPerRev / (wheelDiameter * Math.PI);
 

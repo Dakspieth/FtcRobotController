@@ -77,10 +77,10 @@ public class MainMovement extends LinearOpMode {
     @Override
     public void runOpMode() {
         // initializing the motors (pseudocode) (:skull:, :fire:, :splash:, :articulated-lorry:, :flushed:, :weary:, :sob:);
-        leftBack  = hardwareMap.get(DcMotor.class, "left_back"); //    CH0
-        rightBack  = hardwareMap.get(DcMotor.class, "right_back"); //   EH0
-        leftFront  = hardwareMap.get(DcMotor.class, "left_front"); //   CH1
-        rightFront  = hardwareMap.get(DcMotor.class, "right_front"); //  EH1
+        leftBack = hardwareMap.get(DcMotor.class, "left_back"); //    CH0
+        rightBack = hardwareMap.get(DcMotor.class, "right_back"); //   EH0
+        leftFront = hardwareMap.get(DcMotor.class, "left_front"); //   CH1
+        rightFront = hardwareMap.get(DcMotor.class, "right_front"); //  EH1
         vLinearSlideLeft = hardwareMap.get(DcMotor.class, "vertical_slide_left"); // CH2
         vLinearSlideRight = hardwareMap.get(DcMotor.class, "vertical_slide_right"); //  EH2
         hangMotorLeft = hardwareMap.get(DcMotor.class, "hang_motor_left"); // CH3
@@ -94,7 +94,7 @@ public class MainMovement extends LinearOpMode {
 
 
         sweeper = hardwareMap.get(Servo.class, "sweeper"); //  CH0
-        vArmServo = hardwareMap.get(Servo.class, "bucket_arm"); //     CH2
+        vArmServo = hardwareMap.get(Servo.class, "bucket_arm_woohoo"); //     CH2
         hLinearSlide = hardwareMap.get(Servo.class, "horizontal_slide"); //  EH1
         hArmOpen = hardwareMap.get(Servo.class, "horizontal_arm"); //      EH3
         hClawServo = hardwareMap.get(Servo.class, "horizontal_claw"); //    EH5
@@ -426,14 +426,8 @@ public class MainMovement extends LinearOpMode {
 
         if (hangMotorsOn){
 
-            // toggles between the hang motors moving up or down
-            if(gamepad2.dpad_up && hangTimer2.milliseconds() >= 200){
-                hangDirection *= -1;
-                hangTimer2.reset();
-            }
-
-            hangMotorLeft.setPower(hangDirection * 0.4);
-            hangMotorRight.setPower(hangDirection * 0.4);
+            hangMotorLeft.setPower(1);
+            hangMotorRight.setPower(1);
 
         } else {
             // sets hang motors to be off when hang mode is off
