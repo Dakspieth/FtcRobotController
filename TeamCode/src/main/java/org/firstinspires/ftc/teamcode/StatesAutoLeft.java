@@ -20,7 +20,7 @@ public class StatesAutoLeft extends StatesAuto {
         //basket specimen 1
         driveSeconds(0.35f, 0.25f, dir.LEFT);
         hClawServo.setPosition(0.75);
-        linearSlide.setPower(0.75f);
+        SetVSlideSpeed(0.75f);
         driveSeconds(3.25, 0.25f, dir.BACKWARD);
         driveSeconds(1, 0.25f, dir.LEFTROT);
         driveSeconds(0.25, 0.25f, dir.BACKWARD);
@@ -33,13 +33,13 @@ public class StatesAutoLeft extends StatesAuto {
         driveSeconds(1, 0.25f, dir.FORWARD);
         driveSeconds(1.1, 0.25f, dir.LEFTROT);
         hLinearSlide.setPosition(0.625);
-        linearSlide.setPower(-0.3f);
+        SetVSlideSpeed(-0.3f);
         hArmOpen.setPosition(0.18);
         sleep(1000);
         hClawServo.setPosition(0.377);
         sleep(1000);
         driveSeconds(1, 0.25f, dir.FORWARD);
-        linearSlide.setPower(0);
+        SetVSlideSpeed(0);
         //hClawServo.setPosition(0.375);
         //sleep(1000);
         hClawServo.setPosition(0.75);
@@ -63,7 +63,7 @@ public class StatesAutoLeft extends StatesAuto {
         hLinearSlide.setPosition(0.475);
         sleep(1000);
         driveSeconds(1, 0.25f, dir.BACKWARD);
-        linearSlide.setPower(0.75f);
+        SetVSlideSpeed(0.75f);
         driveSeconds(1.1, 0.25f, dir.RIGHTROT);
         driveSeconds(2, 0.25f, dir.BACKWARD);
         vArmServo.setPosition(0);
@@ -71,7 +71,7 @@ public class StatesAutoLeft extends StatesAuto {
         vArmServo.setPosition(0.875);
         driveSeconds(0.5, 0.25f, dir.FORWARD);
         sleep(1000);
-        linearSlide.setPower(0);
+        SetVSlideSpeed(0);
          */
     }
 }

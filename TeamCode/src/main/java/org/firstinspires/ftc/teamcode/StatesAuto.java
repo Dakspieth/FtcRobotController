@@ -17,7 +17,7 @@ public class StatesAuto extends LinearOpMode {
     static final double ticksPerInch  = ticksPerRev / (wheelDiameter * Math.PI);
 
     protected DcMotor leftBack, rightBack, leftFront, rightFront; //Initializes direct current main wheel motors for the driving function of our robot, gary.
-    protected DcMotor linearSlide;
+    protected DcMotor vLinearSlideLeft, vLinearSlideRight, hangMotorLeft, hangMotorRight;
     //private Servo hLinearSlide;
     protected Servo vArmServo, hArmOpen, hLinearSlide, hClawServo;
 
@@ -33,11 +33,14 @@ public class StatesAuto extends LinearOpMode {
         rightBack   = hardwareMap.get(DcMotor.class, "br");
         leftFront   = hardwareMap.get(DcMotor.class, "fl");
         rightFront  = hardwareMap.get(DcMotor.class, "fr");
-        linearSlide = hardwareMap.get(DcMotor.class, "ls");
+        vLinearSlideLeft = hardwareMap.get(DcMotor.class, "vertical_slide_left"); //
+        vLinearSlideRight = hardwareMap.get(DcMotor.class, "vertical_slide_right"); //  EH2
+        hangMotorLeft = hardwareMap.get(DcMotor.class, "hang_motor_left"); // CH3
+        hangMotorRight = hardwareMap.get(DcMotor.class, "hang_motor_right"); // EH3
 
         leftBack.setDirection(DcMotor.Direction.REVERSE);
         leftFront.setDirection(DcMotor.Direction.REVERSE);
-        linearSlide.setDirection(DcMotor.Direction.FORWARD);
+
 
         vArmServo = hardwareMap.get(Servo.class, "vas");
 
@@ -251,6 +254,10 @@ public class StatesAuto extends LinearOpMode {
         } else {
             hClawServo.setPosition(0.75);
         }
+    }
+    protected void SetVSlideSpeed(double speed) {
+        vLinearSlideRight.setPower(speed);
+        vLinearSlideLeft.setPower(speed);
     }
 
     protected void transferSample() {

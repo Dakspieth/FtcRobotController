@@ -14,7 +14,7 @@ public class LeftSideAutoHV extends ScrimmageAuto {
         //basket specimen 1
       /*  hClawServo.setPosition(0.75);
         driveSeconds(0.05f, 0.25f, dir.LEFT);
-        linearSlide.setPower(0.5f);
+        SetVSlideSpeed(0.5f);
         driveSeconds(3.5f, 0.25f, dir.BACKWARD);
         driveSeconds(1, 0.25f, dir.LEFTROT);
         driveSeconds(0.5f, 0.25f, dir.BACKWARD);
@@ -30,10 +30,10 @@ public class LeftSideAutoHV extends ScrimmageAuto {
         driveSeconds(1, 0.25f, dir.FORWARD);
         driveSeconds(1.1, 0.25f, dir.LEFTROT);
         hLinearSlide.setPosition(0.475);
-        linearSlide.setPower(-0.3f);
+        SetVSlideSpeed(-0.3f);
         sleep(1000);
         driveSeconds(1, 0.25f, dir.FORWARD);
-        linearSlide.setPower(0);
+        SetVSlideSpeed(0);
         //hClawServo.setPosition(0.75);
         sleep(1000);
 
@@ -52,7 +52,7 @@ public class LeftSideAutoHV extends ScrimmageAuto {
         hLinearSlide.setPosition(0.475);
         sleep(1000);
         driveSeconds(3, 0.25f, dir.BACKWARD);
-        linearSlide.setPower(0.5f);
+        SetVSlideSpeed(0.5f);
         driveSeconds(0.5, 0.25f, dir.FORWARD);
         driveSeconds(1.1, 0.25f, dir.RIGHTROT);
         driveSeconds(1, 0.25f, dir.BACKWARD);
@@ -61,7 +61,7 @@ public class LeftSideAutoHV extends ScrimmageAuto {
         vArmServo.setPosition(0.875);
         driveSeconds(0.5, 0.25f, dir.FORWARD);
         sleep(1000);
-        linearSlide.setPower(0);
+        SetVSlideSpeed(0);
 
     }
 }
@@ -153,7 +153,7 @@ public class PlanB extends ScrimmageAuto {
         //1.6s ≈ 2ft at 0.25speed
         //ROTATION: 6.5S ≈ 360 °
         //basket specimen 1
-        linearSlide.setPower(0.5f);
+        SetVSlideSpeed(0.5f);
         driveSeconds(3, 0.25f, dir.BACKWARD);
         driveSeconds(1, 0.25f, dir.LEFTROT);
         vArmServo.setPosition(0);
@@ -165,13 +165,13 @@ public class PlanB extends ScrimmageAuto {
         driveSeconds(1, 0.25f, dir.FORWARD);
         driveSeconds(1, 0.25f, dir.LEFTROT);
         hLinearSlide.setPosition(0.475);
-        linearSlide.setPower(-0.3f);
+        SetVSlideSpeed(-0.3f);
         hArmOpen.setPosition(0.13);
         sleep(1000);
         hClawServo.setPosition(0.377);
         sleep(1000);
         driveSeconds(0.25, 0.25f, dir.FORWARD);
-        linearSlide.setPower(0);
+        SetVSlideSpeed(0);
         //hClawServo.setPosition(0.375);
         //sleep(1000);
         hClawServo.setPosition(0.75);
@@ -194,7 +194,7 @@ public class PlanB extends ScrimmageAuto {
         hLinearSlide.setPosition(0.475);
         sleep(1000);
         driveSeconds(0.5, 0.25f, dir.BACKWARD);
-        linearSlide.setPower(0.5f);
+        SetVSlideSpeed(0.5f);
         driveSeconds(1, 0.25f, dir.RIGHTROT);
         driveSeconds(1, 0.25f, dir.BACKWARD);
         vArmServo.setPosition(0);
@@ -202,7 +202,7 @@ public class PlanB extends ScrimmageAuto {
         vArmServo.setPosition(0.875);
         driveSeconds(0.5, 0.25f, dir.FORWARD);
         sleep(1000);
-        linearSlide.setPower(0);
+        SetVSlideSpeed(0);
 
     }
 }

@@ -35,9 +35,7 @@ public class MainMovement extends LinearOpMode {
     private ElapsedTime hArmTimer = new ElapsedTime();
     private ElapsedTime vArmTimer = new ElapsedTime();
     private ElapsedTime transferTimer = new ElapsedTime();
-
     private ElapsedTime sweeperTimer = new ElapsedTime();
-
     private  ElapsedTime hangTimer1 = new ElapsedTime();
     private  ElapsedTime hangTimer2 = new ElapsedTime();
 
@@ -55,13 +53,12 @@ public class MainMovement extends LinearOpMode {
     //private final float clawSpeed = 1.0f; unused idk whats up w/ this
 
         // vertical slide
-    private DcMotor vLinearSlideOne, vLinearSlideTwo; // motor to control vertical linear slide
+    private DcMotor vLinearSlideRight, vLinearSlideLeft; // motor to control vertical linear slide
 
-    private DcMotor hangMotorOne, hangMotorTwo;
-    private Servo vClawServo, vArmServo;  // v is slang for vertical btw
-    boolean vClawOpen = false; // is the claw open? False = closed, true = open
+    private DcMotor hangMotorLeft, hangMotorRight;
+    private Servo vArmServo;  // v is slang for vertical btw
     boolean vSlideArmOut = false; // mounted onto the linear slide
-    private final float linearSlideSpeed = 0.75f;
+    private final float linearSlideSpeed = 0.75f; // if this becomes 1 it will make the speed faster O.-
 
         // horizontal slide
     boolean hArmUp = false;
@@ -84,23 +81,23 @@ public class MainMovement extends LinearOpMode {
         rightBack  = hardwareMap.get(DcMotor.class, "right_back"); //   EH0
         leftFront  = hardwareMap.get(DcMotor.class, "left_front"); //   CH1
         rightFront  = hardwareMap.get(DcMotor.class, "right_front"); //  EH1
-        vLinearSlideOne = hardwareMap.get(DcMotor.class, "vSlide1"); //  EH2
-        vLinearSlideTwo = hardwareMap.get(DcMotor.class, "vSlide2"); //
-        hangMotorOne = hardwareMap.get(DcMotor.class, "hang_motor1");
-        hangMotorOne = hardwareMap.get(DcMotor.class, "hang_motor2");
+        vLinearSlideLeft = hardwareMap.get(DcMotor.class, "vertical_slide_left"); // CH2
+        vLinearSlideRight = hardwareMap.get(DcMotor.class, "vertical_slide_right"); //  EH2
+        hangMotorLeft = hardwareMap.get(DcMotor.class, "hang_motor_left"); // CH3
+        hangMotorRight = hardwareMap.get(DcMotor.class, "hang_motor_right"); // EH3
 
 
         leftBack.setDirection(DcMotor.Direction.REVERSE);
         leftFront.setDirection(DcMotor.Direction.REVERSE);
-        vLinearSlideTwo.setDirection(DcMotor.Direction.REVERSE);
-        hangMotorTwo.setDirection(DcMotor.Direction.REVERSE);
+        vLinearSlideLeft.setDirection(DcMotor.Direction.REVERSE);
+        hangMotorRight.setDirection(DcMotor.Direction.REVERSE);
 
 
-        vArmServo = hardwareMap.get(Servo.class, "bucket_arm"); //     CH2
-        hClawServo = hardwareMap.get(Servo.class, "horizontal_claw"); //    EH5
-        hArmOpen = hardwareMap.get(Servo.class, "horizontal_arm"); //      EH3
-        hLinearSlide = hardwareMap.get(Servo.class, "horizontal_slide"); //  EH1
         sweeper = hardwareMap.get(Servo.class, "sweeper"); //  CH0
+        vArmServo = hardwareMap.get(Servo.class, "bucket_arm"); //     CH2
+        hLinearSlide = hardwareMap.get(Servo.class, "horizontal_slide"); //  EH1
+        hArmOpen = hardwareMap.get(Servo.class, "horizontal_arm"); //      EH3
+        hClawServo = hardwareMap.get(Servo.class, "horizontal_claw"); //    EH5
 
 
         hArmOpen.setDirection(Servo.Direction.REVERSE);
@@ -156,7 +153,7 @@ public class MainMovement extends LinearOpMode {
 
     private void epicRotationMovement() {
         // rotates the robot if left stick is not being used (movement takes priorities)
-        if (Math.abs(RjoystickX) >= joystickDeadzone / 2) {
+        if (Math.abs(RjoystickX) > joystickDeadzone / 2) {
             Rotating = true;
             if(RjoystickX > 0) {
                // clockwise rotation
@@ -190,7 +187,7 @@ public class MainMovement extends LinearOpMode {
 
         // Alternate between SLOW && FAST mode depending on which bumper is held :P
         if (gamepad1.left_bumper) {    // slow mode !
-            netS = speedSlow;    // Speed is set to a slow constant speed for more precise movements 
+            netS = speedSlow;    // speed is set to a slow constant speed for more precise movements
             rotationSpeed = speedSlow;
 
         } else if (gamepad1.right_bumper) {     // fast mode !
@@ -291,7 +288,7 @@ public class MainMovement extends LinearOpMode {
         // Gradual horizontal slide Movement
         if(Math.abs(hsStickY) > joystickDeadzone) {
             // moves the horizontal linear slide with joystick
-            hLinearSlide.setPosition(Math.min(hsMinExtension, Math.max(hsMaxExtension, hLinearSlide.getPosition() + (hsStickY / 800))));
+            hLinearSlide.setPosition(Math.min(hsMinExtension, Math.max(hsMaxExtension, hLinearSlide.getPosition() + (hsStickY / 400)))); //used to be division by 800
         } else {
             // make slide stay in place so it doesn't slide back and fourth while driving
             hLinearSlide.setPosition(hLinearSlide.getPosition());
@@ -312,7 +309,7 @@ public class MainMovement extends LinearOpMode {
 
     private void HorizontalClawAndArm() {
         double hClawOpenValue = 0.377, hClawClosedValue = 0.75;
-        double hArmDownValue = 0.835, hArmUpValue = 0.11; // .95 and 0.25 before//////////////////////////////////////////////////////////////////////////////
+        double hArmDownValue = 0.835, hArmUpValue = 0.11; // .95 and 0.25 before
         // controls - horizontal claw and arm
         boolean hClawToggleBtn = gamepad2.b; // open/close claw
         boolean hArmToggleBtn = gamepad2.y; // swing horizontal arm out/in
@@ -395,8 +392,8 @@ public class MainMovement extends LinearOpMode {
     }
 
     private void SetVSlideSpeed(double speed) {
-        vLinearSlideOne.setPower(speed);
-        vLinearSlideTwo.setPower(speed);
+        vLinearSlideRight.setPower(speed);
+        vLinearSlideLeft.setPower(speed);
     }
 
 
@@ -435,13 +432,13 @@ public class MainMovement extends LinearOpMode {
                 hangTimer2.reset();
             }
 
-            hangMotorOne.setPower(hangDirection * 0.4);
-            hangMotorTwo.setPower(hangDirection * 0.4);
+            hangMotorLeft.setPower(hangDirection * 0.4);
+            hangMotorRight.setPower(hangDirection * 0.4);
 
         } else {
             // sets hang motors to be off when hang mode is off
-            hangMotorOne.setPower(0);
-            hangMotorTwo.setPower(0);
+            hangMotorLeft.setPower(0);
+            hangMotorRight.setPower(0);
         }
 
 
@@ -501,7 +498,7 @@ public class MainMovement extends LinearOpMode {
             leftFront.setPower(((RotateFL + StrafeFL) / 2) * rotationSpeed * 0.5);
 
             rightBack.setPower(((RotateBR + StrafeBR) / 2) * rotationSpeed * 0.5);
-
+            // hello :3
         } else if (Strafing && !Rotating) {
             leftBack.setPower(StrafeBL * 0.5);
 
