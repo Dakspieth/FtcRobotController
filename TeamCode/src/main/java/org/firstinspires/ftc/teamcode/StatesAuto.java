@@ -137,6 +137,113 @@ public class StatesAuto extends LinearOpMode {
 
     }
 
+    protected void easeInches(float inches, float startSpeed, float endSpeed, dir direction, float timeoutS) {
+        double lbDir = 1;
+        double rbDir = 1;
+        double lfDir = 1;
+        double rfDir = 1;
+
+        int lbStartPos = leftBack.getCurrentPosition();
+        int rbStartPos = rightBack.getCurrentPosition();
+        int lfStartPos = leftFront.getCurrentPosition();
+        int rfStartPos = rightFront.getCurrentPosition();
+
+        int lbTargetPos = 0;
+        int rbTargetPos = 0;
+        int lfTargetPos = 0;
+        int rfTargetPos = 0;
+        float lbCurrentSpeed = startSpeed;
+        float rbCurrentSpeed = startSpeed;
+        float lfCurrentSpeed = startSpeed;
+        float rfCurrentSpeed = startSpeed;
+        float lbPercent = 0;
+        float rbPercent = 0;
+        float lfPercent = 0;
+        float rfPercent = 0;
+
+
+
+        //sets some motors to negative power depending on direction
+        //^^^ pretty sure we dont need negs for encoder
+        //TODO: fix left & right values + add rotate
+        switch(direction) {
+            case LEFT:
+                rbDir = -1.5;
+                lfDir = -1.5;
+                lbDir = 1.5;
+                rfDir = 1.5;
+                break;
+            case RIGHT:
+                lbDir = -1.5;
+                rfDir = -1.5;
+                lfDir = 1.5;
+                rbDir = 1.5;
+                break;
+            case FORWARD:
+                break;
+            case BACKWARD:
+                lbDir = -1;
+                rbDir = -1;
+                lfDir = -1;
+                rfDir = -1;
+                break;
+        }
+        if(opModeIsActive()) {
+            runtime.reset();
+
+            lbTargetPos = (int)(inches * ticksPerInch * lbDir);
+            rbTargetPos = (int)(inches * ticksPerInch * rbDir);
+            lfTargetPos = (int)(inches * ticksPerInch * lfDir);
+            rfTargetPos = (int)(inches * ticksPerInch * rfDir);
+
+            //comment motors here depending on if they have encoders
+            leftBack.setTargetPosition(lbTargetPos + leftBack.getCurrentPosition());
+            rightBack.setTargetPosition(rbTargetPos + rightBack.getCurrentPosition());
+            leftFront.setTargetPosition(lfTargetPos + leftFront.getCurrentPosition());
+            rightFront.setTargetPosition(rfTargetPos + rightFront.getCurrentPosition());
+
+            //TODO: tweek tolerance
+            //leftBack.setTargetPositionTolerance(3);
+            //rightBack.setTargetPositionTolerance(3);
+            //leftFront.setTargetPositionTolerance(3);
+            //rightFront.setTargetPositionTolerance(3);
+
+            leftBack.setPower(lbCurrentSpeed);
+            rightBack.setPower(rbCurrentSpeed);
+            leftFront.setPower(lfCurrentSpeed);
+            rightFront.setPower(rfCurrentSpeed);
+
+            leftBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            rightBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            while(opModeIsActive() && timeoutS < runtime.seconds() && (leftBack.isBusy() && rightBack.isBusy() && leftFront.isBusy() && rightFront.isBusy())) {
+
+                lbPercent = leftBack.getCurrentPosition()/ Math.abs(lbTargetPos - lbStartPos);
+                rbPercent = rightBack.getCurrentPosition()/ Math.abs(rbTargetPos - rbStartPos);
+                lfPercent = leftFront.getCurrentPosition()/ Math.abs(lfTargetPos - lfStartPos);
+                rfPercent = rightFront.getCurrentPosition()/ Math.abs(rfTargetPos - rfStartPos);
+                lbCurrentSpeed = startSpeed + (lbPercent * Math.abs(endSpeed - startSpeed));
+                rbCurrentSpeed = startSpeed + (rbPercent * Math.abs(endSpeed - startSpeed));
+                lfCurrentSpeed = startSpeed + (lfPercent * Math.abs(endSpeed - startSpeed));
+                rfCurrentSpeed = startSpeed + (rfPercent * Math.abs(endSpeed - startSpeed));
+
+                leftBack.setPower(lbCurrentSpeed);
+                rightBack.setPower(rbCurrentSpeed);
+                leftFront.setPower(lfCurrentSpeed);
+                rightFront.setPower(rfCurrentSpeed);
+                telemetry.addData("currently going", String.valueOf(direction));
+                telemetry.update();
+            }
+        }
+        leftBack.setPower(0);
+        rightBack.setPower(0);
+        leftFront.setPower(0);
+        rightFront.setPower(0);
+
+    }
+
 
     protected void moveClaw(boolean openClaw) {
         if(openClaw) {
