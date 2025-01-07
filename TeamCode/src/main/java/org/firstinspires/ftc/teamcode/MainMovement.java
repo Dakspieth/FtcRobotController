@@ -16,8 +16,8 @@ public class MainMovement extends LinearOpMode {
     private DcMotor leftBack, rightBack, leftFront, rightFront; //Initializes all the direct current motors for the driving function of our robot, gary.
     float speedSlow = 0.45f, speedFast = 1f; // slow and fast mode for movement
     float netS; // speed the motor actually uses
-    float StrafeBL = 0f, StrafeBR = 0f, StrafeFL = 0f, StrafeFR = 0f;
-    float RotateBL = 0f, RotateBR = 0f, RotateFL = 0f, RotateFR = 0f;
+    double StrafeBL = 0f, StrafeBR = 0f, StrafeFL = 0f, StrafeFR = 0f;
+    double RotateBL = 0f, RotateBR = 0f, RotateFL = 0f, RotateFR = 0f;
     boolean Strafing, Rotating;
 
     float rotationSpeed = 1f; // Robot rotation speed multiplier, 1.5 for fast mode, 0.5 for slow mode
@@ -38,12 +38,17 @@ public class MainMovement extends LinearOpMode {
 
     private ElapsedTime sweeperTimer = new ElapsedTime();
 
-    private  ElapsedTime chamberTimer = new ElapsedTime();
+    private  ElapsedTime hangTimer1 = new ElapsedTime();
+    private  ElapsedTime hangTimer2 = new ElapsedTime();
+
 
     //private ElapsedTime transferCD = new ElapsedTime(); //cooldown 4 transfer
 
     boolean enableTransfer = false;
 
+    // hang stuff
+    boolean hangMotorsOn = false;
+    private int hangDirection = -1;
 
 
 
@@ -51,6 +56,8 @@ public class MainMovement extends LinearOpMode {
 
         // vertical slide
     private DcMotor vLinearSlideOne, vLinearSlideTwo; // motor to control vertical linear slide
+
+    private DcMotor hangMotorOne, hangMotorTwo;
     private Servo vClawServo, vArmServo;  // v is slang for vertical btw
     boolean vClawOpen = false; // is the claw open? False = closed, true = open
     boolean vSlideArmOut = false; // mounted onto the linear slide
@@ -78,12 +85,16 @@ public class MainMovement extends LinearOpMode {
         leftFront  = hardwareMap.get(DcMotor.class, "left_front"); //   CH1
         rightFront  = hardwareMap.get(DcMotor.class, "right_front"); //  EH1
         vLinearSlideOne = hardwareMap.get(DcMotor.class, "vSlide1"); //  EH2
-        vLinearSlideTwo = hardwareMap.get(DcMotor.class, "vSlide2"); //  EH2
+        vLinearSlideTwo = hardwareMap.get(DcMotor.class, "vSlide2"); //
+        hangMotorOne = hardwareMap.get(DcMotor.class, "hang_motor1");
+        hangMotorOne = hardwareMap.get(DcMotor.class, "hang_motor2");
 
 
         leftBack.setDirection(DcMotor.Direction.REVERSE);
         leftFront.setDirection(DcMotor.Direction.REVERSE);
         vLinearSlideTwo.setDirection(DcMotor.Direction.REVERSE);
+        hangMotorTwo.setDirection(DcMotor.Direction.REVERSE);
+
 
         vArmServo = hardwareMap.get(Servo.class, "bucket_arm"); //     CH2
         hClawServo = hardwareMap.get(Servo.class, "horizontal_claw"); //    EH5
@@ -123,6 +134,7 @@ public class MainMovement extends LinearOpMode {
             VerticalArmAndOuttake();
             TransferFunction();
             Sweeper();
+            LevelTwoHang();
 
 
             setMotorPowers();
@@ -250,13 +262,13 @@ public class MainMovement extends LinearOpMode {
 
         }
     }
-    private void wheelStrafe(float bl, float br, float fl, float fr) { // For setting the wheel strafe values
+    private void wheelStrafe(double bl, double br, double fl, double fr) { // For setting the wheel strafe values
         StrafeBL = bl;
         StrafeBR = br;
         StrafeFL = fl;
         StrafeFR = fr;
     }
-    private void wheelRotate(float bl, float br, float fl, float fr) { // For setting the wheel rotation values
+    private void wheelRotate(double bl, double br, double fl, double fr) { // For setting the wheel rotation values
         RotateBL = bl;
         RotateBR = br;
         RotateFL = fl;
@@ -406,6 +418,36 @@ public class MainMovement extends LinearOpMode {
         }
 
     }
+
+    private void LevelTwoHang() {
+
+        //allows the player to move the hang motors
+        if(gamepad2.dpad_right && hangTimer1.milliseconds() >= 200){
+            hangMotorsOn = !hangMotorsOn;
+            hangTimer1.reset();
+        }
+
+        if (hangMotorsOn){
+
+            // toggles between the hang motors moving up or down
+            if(gamepad2.dpad_up && hangTimer2.milliseconds() >= 200){
+                hangDirection *= -1;
+                hangTimer2.reset();
+            }
+
+            hangMotorOne.setPower(hangDirection * 0.4);
+            hangMotorTwo.setPower(hangDirection * 0.4);
+
+        } else {
+            // sets hang motors to be off when hang mode is off
+            hangMotorOne.setPower(0);
+            hangMotorTwo.setPower(0);
+        }
+
+
+
+    }
+
 
     private void TransferFunction() {
         boolean transferBtn = gamepad2.a;
