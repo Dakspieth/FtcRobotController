@@ -37,7 +37,6 @@ public class MainMovement extends LinearOpMode {
     private ElapsedTime transferTimer = new ElapsedTime();
     private ElapsedTime sweeperTimer = new ElapsedTime();
     private  ElapsedTime hangTimer1 = new ElapsedTime();
-    private  ElapsedTime hangTimer2 = new ElapsedTime();
 
 
     //private ElapsedTime transferCD = new ElapsedTime(); //cooldown 4 transfer
@@ -284,13 +283,13 @@ public class MainMovement extends LinearOpMode {
         boolean hsExtendBtn = gamepad2.dpad_up, hsRetractBtn = gamepad2.dpad_down;
         double hsStickY = gamepad2.right_stick_y;
 
-        print("HLS Pos: ", hLinearSlide.getPosition());
+        telemetry.addData("HLS Pos: ", hLinearSlide.getPosition());
         // Gradual horizontal slide Movement
         if(Math.abs(hsStickY) > joystickDeadzone) {
             // moves the horizontal linear slide with joystick
             hLinearSlide.setPosition(Math.min(hsMinExtension, Math.max(hsMaxExtension, hLinearSlide.getPosition() + (hsStickY / 400)))); //used to be division by 800
         } else {
-            // make slide stay in place so it doesn't slide back and fourth while driving
+            // make slide stay in place so it doesn't slide back and forth while driving
             hLinearSlide.setPosition(hLinearSlide.getPosition());
         }
 
@@ -435,8 +434,6 @@ public class MainMovement extends LinearOpMode {
             hangMotorRight.setPower(0);
         }
 
-
-
     }
 
 
@@ -501,6 +498,7 @@ public class MainMovement extends LinearOpMode {
             leftFront.setPower(StrafeFL * 0.5);
 
             rightBack.setPower(StrafeBR * 0.5);
+
         } else if (!Strafing && Rotating) {
             leftBack.setPower(RotateBL * rotationSpeed * 0.5);
 
@@ -509,6 +507,7 @@ public class MainMovement extends LinearOpMode {
             leftFront.setPower(RotateFL * rotationSpeed * 0.5);
 
             rightBack.setPower(RotateBR * rotationSpeed * 0.5);
+
         } else {
             leftBack.setPower(0);
 
@@ -520,7 +519,4 @@ public class MainMovement extends LinearOpMode {
         }
     }
 
-    public void print(String str, double num){
-        telemetry.addData(str, num);
-    }
 }
