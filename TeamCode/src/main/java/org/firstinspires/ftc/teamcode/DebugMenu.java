@@ -14,11 +14,11 @@ public class DebugMenu extends LinearOpMode {
 
         // ROBOT MOVEMENT //
     //Initializes all the direct current motors for the driving function of our robot, gary.
-    private DcMotor[] Motors = {hardwareMap.get(DcMotor.class, "bl"), hardwareMap.get(DcMotor.class, "br"),
-                hardwareMap.get(DcMotor.class, "fl"), hardwareMap.get(DcMotor.class, "fr"), hardwareMap.get(DcMotor.class, "vlsl"),
-                hardwareMap.get(DcMotor.class, "vlsr"), hardwareMap.get(DcMotor.class, "hl"), hardwareMap.get(DcMotor.class, "hr")};
-    private Servo[] Servos = {hardwareMap.get(Servo.class, "vas"), hardwareMap.get(Servo.class, "hao"),
-                hardwareMap.get(Servo.class, "hcs"), hardwareMap.get(Servo.class, "hls"), hardwareMap.get(Servo.class, "sweeper")};
+    private DcMotor[] Motors = {hardwareMap.get(DcMotor.class, "left_back"), hardwareMap.get(DcMotor.class, "right_back"),
+                hardwareMap.get(DcMotor.class, "left_front"), hardwareMap.get(DcMotor.class, "right_front"), hardwareMap.get(DcMotor.class, "vertical_slide_left"),
+                hardwareMap.get(DcMotor.class, "vertical_slide_right"), hardwareMap.get(DcMotor.class, "hang_motor_left"), hardwareMap.get(DcMotor.class, "hang_motor_right")};
+    private Servo[] Servos = {hardwareMap.get(Servo.class, "bucket_arm_woohoo"), hardwareMap.get(Servo.class, "horizontal_arm"),
+                hardwareMap.get(Servo.class, "horizontal_claw"), hardwareMap.get(Servo.class, "horizontal_slide"), hardwareMap.get(Servo.class, "sweeper")};
     private DcMotor[][] driveMotors = {/*f*/{Motors[0], Motors[1], Motors[2], Motors[3]}, /*b*/{Motors[0], Motors[1], Motors[2], Motors[3]}, /*l*/{Motors[0], Motors[1], Motors[2], Motors[3]},
             /*r*/{Motors[0], Motors[1], Motors[2], Motors[3]}, /*lr*/{Motors[0], Motors[1], Motors[2], Motors[3]}, /*rr*/{Motors[0], Motors[1], Motors[2], Motors[3]},
             /*vls*/{Motors[4], Motors[5], null, null}, /*hang*/{Motors[6], Motors[7], null, null}};
@@ -35,7 +35,7 @@ public class DebugMenu extends LinearOpMode {
         // JOYSTICK and MOVEMENT CONTROLS //
     private float /*LjoystickX, */LjoystickY, /*RjoystickX, RjoystickY, */Ltrigger;
     private boolean Lbumper, Rbumper, LDpad, RDpad;
-    private boolean paused = false;
+    private boolean paused = true;
 
 
 
@@ -89,6 +89,14 @@ public class DebugMenu extends LinearOpMode {
                 }
             }
             telemetry.addData("paused =", paused);
+            telemetry.addData("Motor positions:", "");
+            telemetry.addData("left back motor:", Motors[0].getCurrentPosition());
+            telemetry.addData("right back motor:", Motors[1].getCurrentPosition());
+            telemetry.addData("left front motor:", Motors[2].getCurrentPosition());
+            telemetry.addData("right front motor:", Motors[3].getCurrentPosition());
+            telemetry.addData("right vls motor:", Motors[5].getCurrentPosition());
+
+
             telemetry.update(); //update output screen
         }
 

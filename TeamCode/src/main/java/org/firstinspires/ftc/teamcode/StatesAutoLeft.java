@@ -11,13 +11,26 @@ public class StatesAutoLeft extends StatesAuto {
         super.runOpMode();
 
         //tests
-        driveInches(140, 0.5f, dir.FORWARD, 30);
+        driveInches(24, 0.5f, dir.FORWARD, 30);
+        driveInches(24, 0.5f, dir.RIGHT, 30);
+        driveInches(24, 0.5f, dir.LEFT, 30);
+        driveInches(24, 0.5f, dir.BACKWARD, 30);
+
+        driveInches(24, 0.5f, dir.RIGHTROT, 30);
+        driveInches(24, 0.5f, dir.LEFTROT, 30);
+
+
+
+
+
+
         //driveInches(140, 0.5f, dir.RIGHT, 30);
         //easeInches(140, 1, 0.5f, dir.FORWARD, 30);
 
 
         /*
         //basket specimen 1
+
         driveSeconds(0.35f, 0.25f, dir.LEFT);
         hClawServo.setPosition(0.75);
         SetVSlideSpeed(0.75f);

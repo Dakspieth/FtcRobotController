@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.acmerobotics.roadrunner.ftc.Encoder;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -16,7 +17,11 @@ public class StatesAuto extends LinearOpMode {
     static final double wheelDiameter = 3.5;     // For figuring circumference (in inches)
     static final double ticksPerInch  = ticksPerRev / (wheelDiameter * Math.PI);
 
+    static final int maxSlideTicks = 1538;
+    static final int minSlideTicks = 0;
+
     protected DcMotor leftBack, rightBack, leftFront, rightFront; //Initializes direct current main wheel motors for the driving function of our robot, gary.
+    protected Encoder testEncoder;
     protected DcMotor vLinearSlideLeft, vLinearSlideRight, hangMotorLeft, hangMotorRight;
     //private Servo hLinearSlide;
     protected Servo vArmServo, hArmOpen, hLinearSlide, hClawServo;
@@ -29,10 +34,10 @@ public class StatesAuto extends LinearOpMode {
     @Override
     public void runOpMode() {
         //setting motors and servos
-        leftBack    = hardwareMap.get(DcMotor.class, "bl");
-        rightBack   = hardwareMap.get(DcMotor.class, "br");
-        leftFront   = hardwareMap.get(DcMotor.class, "fl");
-        rightFront  = hardwareMap.get(DcMotor.class, "fr");
+        leftBack    = hardwareMap.get(DcMotor.class, "left_back");
+        rightBack   = hardwareMap.get(DcMotor.class, "right_back");
+        leftFront   = hardwareMap.get(DcMotor.class, "left_front");
+        rightFront  = hardwareMap.get(DcMotor.class, "right_front");
         vLinearSlideLeft = hardwareMap.get(DcMotor.class, "vertical_slide_left"); //
         vLinearSlideRight = hardwareMap.get(DcMotor.class, "vertical_slide_right"); //  EH2
         hangMotorLeft = hardwareMap.get(DcMotor.class, "hang_motor_left"); // CH3
@@ -42,15 +47,47 @@ public class StatesAuto extends LinearOpMode {
         leftFront.setDirection(DcMotor.Direction.REVERSE);
 
 
-        vArmServo = hardwareMap.get(Servo.class, "vas");
+        vArmServo = hardwareMap.get(Servo.class, "bucket_arm_woohoo");
 
-        hArmOpen = hardwareMap.get(Servo.class, "hao");
-        hLinearSlide = hardwareMap.get(Servo.class, "hls");
-        hClawServo = hardwareMap.get(Servo.class, "hcs");
+        hArmOpen = hardwareMap.get(Servo.class, "horizontal_arm");
+        hLinearSlide = hardwareMap.get(Servo.class, "horizontal_slide");
+        hClawServo = hardwareMap.get(Servo.class, "horizontal_claw");
+
+        leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        vLinearSlideRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        vLinearSlideRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+
 
         telemetry.addData("Starting pos: ", leftBack.getCurrentPosition());
         telemetry.update();
         waitForStart();
+
+    }
+
+    protected void vSlidePos(float percentage, float speed) {
+        int targetPos = (int)(minSlideTicks + (percentage * (maxSlideTicks - minSlideTicks)));
+        vLinearSlideRight.setTargetPosition(targetPos);
+        vLinearSlideLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        vLinearSlideLeft.setPower(speed);
+        vLinearSlideRight.setPower(speed);
+        while (vLinearSlideRight.isBusy()) {
+            telemetry.addData("going to perecent", "" + percentage, "ad", speed);
+        }
+
+        vLinearSlideLeft.setPower(0);
+        vLinearSlideRight.setPower(0);
+
+
+
 
     }
     protected enum dir { // dir is short for direction btw
@@ -73,29 +110,44 @@ public class StatesAuto extends LinearOpMode {
         int lfTargetPos = 0;
         int rfTargetPos = 0;
 
-
         //sets some motors to negative power depending on direction
         //^^^ pretty sure we dont need negs for encoder
-        //TODO: fix left & right values + add rotate
+        //TODO: fix left, right, & rotate values
         switch(direction) {
             case LEFT:
-                rbDir = -1.5;
-                lfDir = -1.5;
-                lbDir = 1.5;
-                rfDir = 1.5;
+                rbDir = -1;
+                lfDir = -1;
+                lbDir = 1;
+                rfDir = 1;
                 break;
             case RIGHT:
-                lbDir = -1.5;
-                rfDir = -1.5;
-                lfDir = 1.5;
-                rbDir = 1.5;
+                lbDir = -1;
+                rfDir = -1;
+                lfDir = 1;
+                rbDir = 1;
                 break;
             case FORWARD:
+                lbDir = 1;
+                rbDir = 1;
+                lfDir = 1;
+                rfDir = 1;
                 break;
             case BACKWARD:
                 lbDir = -1;
                 rbDir = -1;
                 lfDir = -1;
+                rfDir = -1;
+                break;
+            case LEFTROT:
+                lbDir = -1;
+                rbDir = 1;
+                lfDir = -1;
+                rfDir = 1;
+                break;
+            case RIGHTROT:
+                lbDir = 1;
+                rbDir = -1;
+                lfDir = 1;
                 rfDir = -1;
                 break;
         }
@@ -112,21 +164,22 @@ public class StatesAuto extends LinearOpMode {
             leftFront.setTargetPosition(lfTargetPos + leftFront.getCurrentPosition());
             rightFront.setTargetPosition(rfTargetPos + rightFront.getCurrentPosition());
 
-            //TODO: tweek tolerance
+            //TODO: tweak tolerance
             //leftBack.setTargetPositionTolerance(3);
             //rightBack.setTargetPositionTolerance(3);
             //leftFront.setTargetPositionTolerance(3);
             //rightFront.setTargetPositionTolerance(3);
 
-            leftBack.setPower(speed);
-            rightBack.setPower(speed);
-            leftFront.setPower(speed);
-            rightFront.setPower(speed);
-
             leftBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             rightBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+
+            leftBack.setPower(speed);
+            rightBack.setPower(speed);
+            leftFront.setPower(speed);
+            rightFront.setPower(speed);
 
             while(opModeIsActive() && timeoutS < runtime.seconds() && (leftBack.isBusy() && rightBack.isBusy() && leftFront.isBusy() && rightFront.isBusy())) {
                 telemetry.addData("currently going", String.valueOf(direction));
@@ -168,21 +221,25 @@ public class StatesAuto extends LinearOpMode {
 
         //sets some motors to negative power depending on direction
         //^^^ pretty sure we dont need negs for encoder
-        //TODO: fix left & right values + add rotate
+        //TODO: fix left, right, & rotate values
         switch(direction) {
             case LEFT:
-                rbDir = -1.5;
-                lfDir = -1.5;
-                lbDir = 1.5;
-                rfDir = 1.5;
+                rbDir = -1;
+                lfDir = -1;
+                lbDir = 1;
+                rfDir = 1;
                 break;
             case RIGHT:
-                lbDir = -1.5;
-                rfDir = -1.5;
-                lfDir = 1.5;
-                rbDir = 1.5;
+                lbDir = -1;
+                rfDir = -1;
+                lfDir = 1;
+                rbDir = 1;
                 break;
             case FORWARD:
+                lbDir = 1;
+                rbDir = 1;
+                lfDir = 1;
+                rfDir = 1;
                 break;
             case BACKWARD:
                 lbDir = -1;
@@ -190,7 +247,20 @@ public class StatesAuto extends LinearOpMode {
                 lfDir = -1;
                 rfDir = -1;
                 break;
+            case LEFTROT:
+                lbDir = -1;
+                rbDir = 1;
+                lfDir = -1;
+                rfDir = 1;
+                break;
+            case RIGHTROT:
+                lbDir = 1;
+                rbDir = -1;
+                lfDir = 1;
+                rfDir = -1;
+                break;
         }
+
         if(opModeIsActive()) {
             runtime.reset();
 
@@ -211,15 +281,15 @@ public class StatesAuto extends LinearOpMode {
             //leftFront.setTargetPositionTolerance(3);
             //rightFront.setTargetPositionTolerance(3);
 
-            leftBack.setPower(lbCurrentSpeed);
-            rightBack.setPower(rbCurrentSpeed);
-            leftFront.setPower(lfCurrentSpeed);
-            rightFront.setPower(rfCurrentSpeed);
-
             leftBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             rightBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            leftBack.setPower(lbCurrentSpeed);
+            rightBack.setPower(rbCurrentSpeed);
+            leftFront.setPower(lfCurrentSpeed);
+            rightFront.setPower(rfCurrentSpeed);
 
             while(opModeIsActive() && timeoutS < runtime.seconds() && (leftBack.isBusy() && rightBack.isBusy() && leftFront.isBusy() && rightFront.isBusy())) {
 
@@ -258,6 +328,11 @@ public class StatesAuto extends LinearOpMode {
     protected void SetVSlideSpeed(double speed) {
         vLinearSlideRight.setPower(speed);
         vLinearSlideLeft.setPower(speed);
+    }
+
+    protected void SethSlidePos(double pos) {
+        vLinearSlideRight.setPower(pos);
+        vLinearSlideLeft.setPower(pos);
     }
 
     protected void transferSample() {
