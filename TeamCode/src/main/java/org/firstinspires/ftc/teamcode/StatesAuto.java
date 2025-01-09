@@ -181,7 +181,7 @@ public class StatesAuto extends LinearOpMode {
             leftFront.setPower(speed);
             rightFront.setPower(speed);
 
-            while(opModeIsActive() && timeoutS < runtime.seconds() && (leftBack.isBusy() && rightBack.isBusy() && leftFront.isBusy() && rightFront.isBusy())) {
+            while(/*opModeIsActive() && timeoutS < runtime.seconds() && */ (leftBack.isBusy() && rightBack.isBusy() && leftFront.isBusy() && rightFront.isBusy())) {
                 telemetry.addData("currently going", String.valueOf(direction));
                 telemetry.update();
             }
