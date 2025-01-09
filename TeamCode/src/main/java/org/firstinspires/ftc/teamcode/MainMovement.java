@@ -101,13 +101,25 @@ public class MainMovement extends LinearOpMode {
 
         hArmOpen.setDirection(Servo.Direction.REVERSE);
 
-        hArmOpen.setPosition(0.84);
+        //hArmOpen.setPosition(0.84);
 
         sweeper.setPosition(0);
 
 
 
         SetVSlideSpeed(0); // zero the linear slide's power so it doesn't move while not active
+
+        /*leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        vLinearSlideRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);*/
+
+        leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        vLinearSlideRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         telemetry.addData("Status", "Initialized OwO");
         telemetry.update();
