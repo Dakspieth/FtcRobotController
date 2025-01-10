@@ -21,7 +21,6 @@ public class StatesAuto extends LinearOpMode {
     static final int minSlideTicks = 0;
 
     protected DcMotor leftBack, rightBack, leftFront, rightFront; //Initializes direct current main wheel motors for the driving function of our robot, gary.
-    protected Encoder testEncoder;
     protected DcMotor vLinearSlideLeft, vLinearSlideRight, hangMotorLeft, hangMotorRight;
     //private Servo hLinearSlide;
     protected Servo vArmServo, hArmOpen, hLinearSlide, hClawServo;
@@ -119,16 +118,16 @@ public class StatesAuto extends LinearOpMode {
         //TODO: fix left, right, & rotate values
         switch(direction) {
             case LEFT:
+                lbDir = 1;
                 rbDir = -1;
                 lfDir = -1;
-                lbDir = 1;
                 rfDir = 1;
                 break;
             case RIGHT:
                 lbDir = -1;
-                rfDir = -1;
-                lfDir = 1;
                 rbDir = 1;
+                lfDir = 1;
+                rfDir = -1;
                 break;
             case FORWARD:
                 lbDir = 1;
