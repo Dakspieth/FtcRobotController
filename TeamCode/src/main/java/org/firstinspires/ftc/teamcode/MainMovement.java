@@ -86,6 +86,12 @@ public class MainMovement extends LinearOpMode {
         hangMotorLeft = hardwareMap.get(DcMotor.class, "hang_motor_left"); // CH3
         hangMotorRight = hardwareMap.get(DcMotor.class, "hang_motor_right"); // EH3
 
+        leftBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        vLinearSlideRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
 
         leftBack.setDirection(DcMotor.Direction.REVERSE);
         leftFront.setDirection(DcMotor.Direction.REVERSE);
@@ -99,12 +105,12 @@ public class MainMovement extends LinearOpMode {
         hArmOpen = hardwareMap.get(Servo.class, "horizontal_arm"); //      EH3
         hClawServo = hardwareMap.get(Servo.class, "horizontal_claw"); //    EH5
 
-
         hArmOpen.setDirection(Servo.Direction.REVERSE);
 
         //hArmOpen.setPosition(0.84);
 
         sweeper.setPosition(0);
+
 
 
 
