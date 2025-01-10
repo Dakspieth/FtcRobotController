@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.acmerobotics.roadrunner.ftc.Encoder;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -115,11 +116,11 @@ public class MainMovement extends LinearOpMode {
         rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         vLinearSlideRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);*/
 
-        leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        /*leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        vLinearSlideRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        vLinearSlideRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);*/
 
         telemetry.addData("Status", "Initialized OwO");
         telemetry.update();
