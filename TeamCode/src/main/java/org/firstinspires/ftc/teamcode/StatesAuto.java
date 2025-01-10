@@ -45,6 +45,7 @@ public class StatesAuto extends LinearOpMode {
 
         leftBack.setDirection(DcMotor.Direction.REVERSE);
         leftFront.setDirection(DcMotor.Direction.REVERSE);
+        vLinearSlideLeft.setDirection(DcMotor.Direction.REVERSE);
 
 
         vArmServo = hardwareMap.get(Servo.class, "bucket_arm_woohoo");
@@ -76,9 +77,12 @@ public class StatesAuto extends LinearOpMode {
     protected void vSlidePos(float percentage, float speed) {
         int targetPos = (int)(minSlideTicks + (percentage * (maxSlideTicks - minSlideTicks)));
         vLinearSlideRight.setTargetPosition(targetPos);
-        vLinearSlideLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        vLinearSlideRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         vLinearSlideLeft.setPower(speed);
         vLinearSlideRight.setPower(speed);
+        if(vLinearSlideRight.getCurrentPosition() > vLinearSlideRight.getTargetPosition()) {
+            vLinearSlideLeft.setPower(vLinearSlideLeft.getPower() * -1);
+        }
         while (vLinearSlideRight.isBusy()) {
             telemetry.addData("going to perecent", "" + percentage, "ad", speed);
         }
