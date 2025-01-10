@@ -11,25 +11,21 @@ public class StatesAutoLeft extends StatesAuto {
         super.runOpMode();
 
         //tests
-        vSlidePos(0.25f, 0.25f);
-        vSlidePos(1, 0.5f);
-        vSlidePos(0, 0.75f);
+        //vSlidePos(1f, 0.15f);
+        //vSlidePos(1, 0.5f);
+        //vSlidePos(0, 0.75f);
+//
+        //driveInches(24, 0.5f, dir.FORWARD, 30);
+        easeInches(96, 0.1f, 0.5f, dir.FORWARD, 30);
+        easeInches(96, 0.5f, 0.1f, dir.BACKWARD, 30);
 
-        /*driveInches(24, 0.5f, dir.FORWARD, 30);
-        driveInches(24, 0.5f, dir.RIGHT, 30);
-        driveInches(24, 0.5f, dir.LEFT, 30);
-        driveInches(24, 0.5f, dir.BACKWARD, 30);
+        //driveInches(96, 0.5f, dir.RIGHT, 30);
+        //driveInches(96, 0.5f, dir.LEFT, 30);
+        //driveInches(96, 0.5f, dir.BACKWARD, 30);
 
-        driveInches(24, 0.5f, dir.RIGHTROT, 30);
-        driveInches(24, 0.5f, dir.LEFTROT, 30);
-*/
+        //driveInches(240, 0.5f, dir.RIGHTROT, 30);
+        //driveInches(240, 0.5f, dir.LEFTROT, 30);
 
-
-
-
-
-        //driveInches(140, 0.5f, dir.RIGHT, 30);
-        //easeInches(140, 1, 0.5f, dir.FORWARD, 30);
 
 
         /*

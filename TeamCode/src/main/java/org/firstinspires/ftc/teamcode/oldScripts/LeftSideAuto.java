@@ -18,7 +18,7 @@ public class LeftSideAuto extends ScrimmageAuto {
         driveSeconds(3.5f, 0.25f, dir.BACKWARD);
         driveSeconds(1, 0.25f, dir.LEFTROT);
         driveSeconds(0.5f, 0.25f, dir.BACKWARD);
-        hLinearSlide.setPosition(0.475);
+        hLinearSlideRight.setPosition(0.475);
         sleep(250);
         hArmOpen.setPosition(0.15);
         vArmServo.setPosition(0);

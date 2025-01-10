@@ -62,7 +62,7 @@ public class MainMovement extends LinearOpMode {
 
         // horizontal slide
     boolean hArmUp = false;
-    private Servo hClawServo, hLinearSlide, hClawRotate; // h is short for horizontal btw
+    private Servo hClawServo, hLinearSlideLeft, hLinearSlideRight, hClawRotate; // h is short for horizontal btw
     private Servo hArmOpen, sweeper;
     boolean hClawOpen = false;
 
@@ -101,7 +101,8 @@ public class MainMovement extends LinearOpMode {
 
         sweeper = hardwareMap.get(Servo.class, "sweeper"); //  CH0
         vArmServo = hardwareMap.get(Servo.class, "bucket_arm_woohoo"); //     CH2
-        hLinearSlide = hardwareMap.get(Servo.class, "horizontal_slide"); //  EH1
+        hLinearSlideLeft = hardwareMap.get(Servo.class, "horizontal_slide_left"); //  CH1
+        hLinearSlideRight = hardwareMap.get(Servo.class, "horizontal_slide_right"); //  EH1
         hArmOpen = hardwareMap.get(Servo.class, "horizontal_arm"); //      EH3
         hClawServo = hardwareMap.get(Servo.class, "horizontal_claw"); //    EH5
 
@@ -229,7 +230,7 @@ public class MainMovement extends LinearOpMode {
             //if stick is past the dead zone ->
             if (LangleInDegrees >= -22.5 && LangleInDegrees <= 22.5) {
                 // right quadrant
-                wheelStrafe(-netS, netS, netS, -netS);
+                wheelStrafe(-netS, -netS, netS, netS);
                 telemetry.addData("Left Stick quadrant: ", "RIGHT");
 
             } else if (LangleInDegrees > 22.5 && LangleInDegrees < 67.5) {
@@ -264,7 +265,7 @@ public class MainMovement extends LinearOpMode {
 
             } else if (LangleInDegrees >= 157.5 || LangleInDegrees <= -157.5) {
                 // left quadrant
-                wheelStrafe(netS, -netS, -netS, netS);
+                wheelStrafe(netS, netS, -netS, -netS);
                 telemetry.addData("Left Stick quadrant: ", "LEFT");
 
             }
@@ -297,31 +298,38 @@ public class MainMovement extends LinearOpMode {
     //////////////////////// END OF MOVEMENT CODE ////////////////////////
 
     private void HorizontalSlideMovement() {
-        double hsMinExtension = 0.69, hsMaxExtension = 0.377;
+        double hsMinExtensionR = 0.69, hsMaxExtensionR = 0.377;
+        double hsMinExtensionL = 0.025, hsMaxExtensionL = 0.325;
         // controls - horizontal slide
         boolean hsExtendBtn = gamepad2.dpad_up, hsRetractBtn = gamepad2.dpad_down;
         double hsStickY = gamepad2.right_stick_y;
 
-        telemetry.addData("HLS Pos: ", hLinearSlide.getPosition());
+        telemetry.addData("HLS Right Pos: ", hLinearSlideRight.getPosition());
+        telemetry.addData("HLS Left Pos: ", hLinearSlideLeft.getPosition());
         // Gradual horizontal slide Movement
         if(Math.abs(hsStickY) > joystickDeadzone) {
             // moves the horizontal linear slide with joystick
-            hLinearSlide.setPosition(Math.min(hsMinExtension, Math.max(hsMaxExtension, hLinearSlide.getPosition() + (hsStickY / 400)))); //used to be division by 800
+            //hLinearSlideLeft.setPosition(Math.max(hsMinExtensionL, Math.min(hsMaxExtensionL, hLinearSlideLeft.getPosition() - (hsStickY / 400)))); //used to be division by 800
+            hLinearSlideRight.setPosition(Math.min(hsMinExtensionR, Math.max(hsMaxExtensionR, hLinearSlideRight.getPosition() + (hsStickY / 400)))); //used to be division by 800
         } else {
             // make slide stay in place so it doesn't slide back and forth while driving
-            hLinearSlide.setPosition(hLinearSlide.getPosition());
+            //hLinearSlideLeft.setPosition(hLinearSlideLeft.getPosition());
+            hLinearSlideRight.setPosition(hLinearSlideRight.getPosition());
         }
 
         // Snap horizontal slide to FULLY EXTENDED
         if (hsExtendBtn) {
-            hLinearSlide.setPosition(hsMaxExtension);
+            //hLinearSlideLeft.setPosition(hsMaxExtensionL);
+            hLinearSlideRight.setPosition(hsMaxExtensionR);
         }
 
         // Snaps horizontal slide to FULLY RETRACTED
         if (hsRetractBtn) {
-            hLinearSlide.setPosition(hsMinExtension);
+            //hLinearSlideLeft.setPosition(hsMinExtensionL);
+            hLinearSlideRight.setPosition(hsMinExtensionR);
         }
 
+        hLinearSlideLeft.setPosition((-0.64 * hLinearSlideRight.getPosition()) + 0.689);
     }
 
 
@@ -376,7 +384,7 @@ public class MainMovement extends LinearOpMode {
             telemetry.addData("SWEEPPOS", sweeper.getPosition());
             if(chamberStep == 0) {
                 sweeper.setPosition(0.875);
-                hLinearSlide.setPosition(0.65);
+                hLinearSlideRight.setPosition(0.65);
 
                 chamberStep = 1;
             } else if(chamberStep == 1 && sweeperTimer.milliseconds() >= 1000 ) {
@@ -416,7 +424,7 @@ public class MainMovement extends LinearOpMode {
 
 
     private void VerticalArmAndOuttake() {
-        double vArmOutValue = 0, vArmInValue = 0.875; // 0 , .875
+        double vArmOutValue = 0, vArmInValue = 0.775; // 0 , .875
         // controls - vertical arm
         boolean vArmToggleBtn = gamepad2.x;
 
@@ -469,7 +477,7 @@ public class MainMovement extends LinearOpMode {
         if (enableTransfer) {
             if(transferStep == 0) {
                 hArmOpen.setPosition(0.11);
-                hLinearSlide.setPosition(0.67);
+                hLinearSlideRight.setPosition(0.67);
                 transferTimer.reset();
                 transferStep = 1;
             } else if(transferStep == 1 && transferTimer.milliseconds() >= 1200) {
@@ -477,7 +485,7 @@ public class MainMovement extends LinearOpMode {
                 transferTimer.reset();
                 transferStep = 2;
             } else if(transferStep == 2 && transferTimer.milliseconds() >= 500) {
-                hLinearSlide.setPosition(0.7);
+                hLinearSlideRight.setPosition(0.7);
                 transferTimer.reset();
                 transferStep = 3;
             } else if(transferStep == 3 && transferTimer.milliseconds() >= 200) {

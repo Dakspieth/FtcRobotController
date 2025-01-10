@@ -13,17 +13,18 @@ public class StatesAuto extends LinearOpMode {
     ///////////////////////////////code///////////////////////////////
     final private ElapsedTime runtime = new ElapsedTime();
     //constants for inch functions
-    static final double ticksPerRev = 384.5;
-    static final double wheelDiameter = 3.5;     // For figuring circumference (in inches)
-    static final double ticksPerInch  = ticksPerRev / (wheelDiameter * Math.PI);
+    //static final double ticksPerRev = 384.5;
+    //static final double wheelDiameter = 3.5;     // For figuring circumference (in inches)
+    //static final double ticksPerInch  = ticksPerRev / (wheelDiameter * Math.PI);
+    static final double ticksPerInch = 29;
 
-    static final int maxSlideTicks = 1538;
+    static final int maxSlideTicks = 2000;
     static final int minSlideTicks = 0;
 
     protected DcMotor leftBack, rightBack, leftFront, rightFront; //Initializes direct current main wheel motors for the driving function of our robot, gary.
     protected DcMotor vLinearSlideLeft, vLinearSlideRight, hangMotorLeft, hangMotorRight;
-    //private Servo hLinearSlide;
-    protected Servo vArmServo, hArmOpen, hLinearSlide, hClawServo;
+    //private Servo hLinearSlideRight;
+    protected Servo vArmServo, hArmOpen, hLinearSlideLeft, hLinearSlideRight, hClawServo;
 
 
     protected int transferStep;
@@ -50,7 +51,8 @@ public class StatesAuto extends LinearOpMode {
         vArmServo = hardwareMap.get(Servo.class, "bucket_arm_woohoo");
 
         hArmOpen = hardwareMap.get(Servo.class, "horizontal_arm");
-        hLinearSlide = hardwareMap.get(Servo.class, "horizontal_slide");
+        hLinearSlideLeft = hardwareMap.get(Servo.class, "horizontal_slide_left");
+        hLinearSlideRight = hardwareMap.get(Servo.class, "horizontal_slide_right");
         hClawServo = hardwareMap.get(Servo.class, "horizontal_claw");
 
         leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -84,6 +86,8 @@ public class StatesAuto extends LinearOpMode {
         }
         while (vLinearSlideRight.isBusy()) {
             telemetry.addData("going to perecent", "" + percentage, "ad", speed);
+            telemetry.addData("current tick:", vLinearSlideRight.getCurrentPosition());
+            telemetry.update();
         }
 
         vLinearSlideLeft.setPower(0);
@@ -119,15 +123,15 @@ public class StatesAuto extends LinearOpMode {
         switch(direction) {
             case LEFT:
                 lbDir = 1;
-                rbDir = -1;
+                rbDir = 1;
                 lfDir = -1;
-                rfDir = 1;
+                rfDir = -1;
                 break;
             case RIGHT:
                 lbDir = -1;
-                rbDir = 1;
+                rbDir = -1;
                 lfDir = 1;
-                rfDir = -1;
+                rfDir = 1;
                 break;
             case FORWARD:
                 lbDir = 1;
@@ -184,8 +188,9 @@ public class StatesAuto extends LinearOpMode {
             leftFront.setPower(speed);
             rightFront.setPower(speed);
 
-            while(/*opModeIsActive() && timeoutS < runtime.seconds() && */ (leftBack.isBusy() && rightBack.isBusy() && leftFront.isBusy() && rightFront.isBusy())) {
-                telemetry.addData("currently going", String.valueOf(direction));
+            while(opModeIsActive() && timeoutS > runtime.seconds() && (leftBack.isBusy() && rightBack.isBusy() && leftFront.isBusy() && rightFront.isBusy())) {
+                telemetry.addData("ticks", leftBack.getCurrentPosition());
+                telemetry.addData("total ticks", lbTargetPos);
                 telemetry.update();
             }
         }
@@ -197,15 +202,20 @@ public class StatesAuto extends LinearOpMode {
     }
 
     protected void easeInches(float inches, float startSpeed, float endSpeed, dir direction, float timeoutS) {
+        leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        vLinearSlideRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         double lbDir = 1;
         double rbDir = 1;
         double lfDir = 1;
         double rfDir = 1;
 
-        int lbStartPos = leftBack.getCurrentPosition();
-        int rbStartPos = rightBack.getCurrentPosition();
-        int lfStartPos = leftFront.getCurrentPosition();
-        int rfStartPos = rightFront.getCurrentPosition();
+        final int lbStartPos = leftBack.getCurrentPosition();
+        final int rbStartPos = rightBack.getCurrentPosition();
+        final int lfStartPos = leftFront.getCurrentPosition();
+        final int rfStartPos = rightFront.getCurrentPosition();
 
         int lbTargetPos = 0;
         int rbTargetPos = 0;
@@ -227,16 +237,16 @@ public class StatesAuto extends LinearOpMode {
         //TODO: fix left, right, & rotate values
         switch(direction) {
             case LEFT:
+                lbDir = 1;
                 rbDir = -1;
                 lfDir = -1;
-                lbDir = 1;
                 rfDir = 1;
                 break;
             case RIGHT:
                 lbDir = -1;
-                rfDir = -1;
-                lfDir = 1;
                 rbDir = 1;
+                lfDir = 1;
+                rfDir = -1;
                 break;
             case FORWARD:
                 lbDir = 1;
@@ -294,30 +304,40 @@ public class StatesAuto extends LinearOpMode {
             leftFront.setPower(lfCurrentSpeed);
             rightFront.setPower(rfCurrentSpeed);
 
-            while(opModeIsActive() && timeoutS < runtime.seconds() && (leftBack.isBusy() && rightBack.isBusy() && leftFront.isBusy() && rightFront.isBusy())) {
+            while(opModeIsActive() && timeoutS > runtime.seconds() && (leftBack.isBusy() && rightBack.isBusy() && leftFront.isBusy() && rightFront.isBusy())) {
 
-                lbPercent = leftBack.getCurrentPosition()/ Math.abs(lbTargetPos - lbStartPos);
-                rbPercent = rightBack.getCurrentPosition()/ Math.abs(rbTargetPos - rbStartPos);
-                lfPercent = leftFront.getCurrentPosition()/ Math.abs(lfTargetPos - lfStartPos);
-                rfPercent = rightFront.getCurrentPosition()/ Math.abs(rfTargetPos - rfStartPos);
-                lbCurrentSpeed = startSpeed + (lbPercent * Math.abs(endSpeed - startSpeed));
-                rbCurrentSpeed = startSpeed + (rbPercent * Math.abs(endSpeed - startSpeed));
-                lfCurrentSpeed = startSpeed + (lfPercent * Math.abs(endSpeed - startSpeed));
-                rfCurrentSpeed = startSpeed + (rfPercent * Math.abs(endSpeed - startSpeed));
+                lbPercent = 100*leftBack.getCurrentPosition()/ (lbTargetPos - lbStartPos);
+                rbPercent = 100*rightBack.getCurrentPosition()/ (rbTargetPos - rbStartPos);
+                lfPercent = 100*leftFront.getCurrentPosition()/ (lfTargetPos - lfStartPos);
+                rfPercent = 100*rightFront.getCurrentPosition()/ (rfTargetPos - rfStartPos);
+                lbCurrentSpeed = startSpeed + (lbPercent/100 * (endSpeed - startSpeed));
+                rbCurrentSpeed = startSpeed + (rbPercent/100 * (endSpeed - startSpeed));
+                lfCurrentSpeed = startSpeed + (lfPercent/100 * (endSpeed - startSpeed));
+                rfCurrentSpeed = startSpeed + (rfPercent/100 * (endSpeed - startSpeed));
 
                 leftBack.setPower(lbCurrentSpeed);
                 rightBack.setPower(rbCurrentSpeed);
                 leftFront.setPower(lfCurrentSpeed);
                 rightFront.setPower(rfCurrentSpeed);
-                telemetry.addData("currently going", String.valueOf(direction));
+                telemetry.addData("lbPercent:", lbCurrentSpeed);
+                telemetry.addData("rbPercwerent:", rbCurrentSpeed);
+                telemetry.addData("lfPercent:", lfCurrentSpeed);
+                telemetry.addData("rfPercent:", rfCurrentSpeed);
+
+
                 telemetry.update();
             }
         }
-        leftBack.setPower(0);
+        leftBack.setPower(endSpeed);
+        rightBack.setPower(endSpeed);
+        leftFront.setPower(endSpeed);
+        rightFront.setPower(endSpeed);
+
+        /*leftBack.setPower(0);
         rightBack.setPower(0);
         leftFront.setPower(0);
         rightFront.setPower(0);
-
+*/
     }
 
 
@@ -334,8 +354,8 @@ public class StatesAuto extends LinearOpMode {
     }
 
     protected void SethSlidePos(double pos) {
-        vLinearSlideRight.setPower(pos);
-        vLinearSlideLeft.setPower(pos);
+        hLinearSlideLeft.setPosition(pos);
+        hLinearSlideRight.setPosition(pos);
     }
 
     protected void transferSample() {
@@ -346,7 +366,7 @@ public class StatesAuto extends LinearOpMode {
         if(enableTransfer) {
             if(transferStep == 0) {
                 hArmOpen.setPosition(0.15);
-                hLinearSlide.setPosition(0.605);
+                SethSlidePos(0.605);
                 transferTimer.reset();
                 transferStep = 1;
             } else if(transferStep == 1 && transferTimer.milliseconds() >= 1200) {
@@ -354,7 +374,7 @@ public class StatesAuto extends LinearOpMode {
                 transferTimer.reset();
                 transferStep = 2;
             } else if(transferStep == 2 && transferTimer.milliseconds() >= 500) {
-                hLinearSlide.setPosition(0.575);
+                SethSlidePos(0.575);
                 transferTimer.reset();
                 transferStep = 3;
             } else if(transferStep == 3 && transferTimer.milliseconds() >= 200) {
