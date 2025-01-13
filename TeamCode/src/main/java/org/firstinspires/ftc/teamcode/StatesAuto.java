@@ -310,6 +310,13 @@ public class StatesAuto extends LinearOpMode {
                 rbPercent = 100*rightBack.getCurrentPosition()/ (rbTargetPos - rbStartPos);
                 lfPercent = 100*leftFront.getCurrentPosition()/ (lfTargetPos - lfStartPos);
                 rfPercent = 100*rightFront.getCurrentPosition()/ (rfTargetPos - rfStartPos);
+                //linear speed: y=(M-m)x + m
+                //parabola speed: y= -4(M-m)x^2 + 4(M-m)x + m
+                // y is currentSpeed
+                // x is percent 
+    
+                // m is start speed
+                // M is end speed
                 lbCurrentSpeed = startSpeed + (lbPercent/100 * (endSpeed - startSpeed));
                 rbCurrentSpeed = startSpeed + (rbPercent/100 * (endSpeed - startSpeed));
                 lfCurrentSpeed = startSpeed + (lfPercent/100 * (endSpeed - startSpeed));
