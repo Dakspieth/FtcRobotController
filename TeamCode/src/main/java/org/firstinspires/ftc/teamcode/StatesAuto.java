@@ -152,10 +152,10 @@ public class StatesAuto extends LinearOpMode {
                 rfDir = 1;
                 break;
             case RIGHTROT:
-                lbDir = 1;
-                rbDir = -1;
-                lfDir = 1;
-                rfDir = -1;
+                lbDir = 0.26f;
+                rbDir = -0.26f;
+                lfDir = 0.26f;
+                rfDir = -0.26f;
                 break;
         }
         if(opModeIsActive()) {
@@ -321,10 +321,10 @@ public class StatesAuto extends LinearOpMode {
                     //lfCurrentSpeed = (endSpeed - startSpeed) * lfPercent/100 + startSpeed;
                     //rfCurrentSpeed = (endSpeed - startSpeed) * rfPercent/100 + startSpeed;
                 //parabola speed: y= -4(M-m)x^2 + 4(M-m)x + m
-                    lbCurrentSpeed = (-4*(endSpeed - startSpeed) * Math.pow((lbPercent/100), 2)) + (4*(endSpeed - startSpeed) * (lbPercent/100)) + startSpeed;
-                    rbCurrentSpeed = (-4*(endSpeed - startSpeed) * Math.pow((rbPercent/100), 2)) + (4*(endSpeed - startSpeed) * (rbPercent/100)) + startSpeed;
-                    lfCurrentSpeed = (-4*(endSpeed - startSpeed) * Math.pow((lfPercent/100), 2)) + (4*(endSpeed - startSpeed) * (lfPercent/100)) + startSpeed;
-                    rfCurrentSpeed = (-4*(endSpeed - startSpeed) * Math.pow((rfPercent/100), 2)) + (4*(endSpeed - startSpeed) * (rfPercent/100)) + startSpeed;
+                    lbCurrentSpeed = (float) (-4*(endSpeed - startSpeed) * Math.pow((lbPercent/100), 2)) + (4*(endSpeed - startSpeed) * (lbPercent/100)) + startSpeed;
+                    rbCurrentSpeed = (float) ((-4*(endSpeed - startSpeed) * Math.pow((rbPercent/100), 2)) + (4*(endSpeed - startSpeed) * (rbPercent/100)) + startSpeed);
+                    lfCurrentSpeed = (float) (-4*(endSpeed - startSpeed) * Math.pow((lfPercent/100), 2)) + (4*(endSpeed - startSpeed) * (lfPercent/100)) + startSpeed;
+                    rfCurrentSpeed = (float) (-4*(endSpeed - startSpeed) * Math.pow((rfPercent/100), 2)) + (4*(endSpeed - startSpeed) * (rfPercent/100)) + startSpeed;
 
 
                 leftBack.setPower(lbCurrentSpeed);

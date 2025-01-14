@@ -16,8 +16,8 @@ public class StatesAutoLeft extends StatesAuto {
         //vSlidePos(0, 0.75f);
 //
         //driveInches(24, 0.5f, dir.FORWARD, 30);
-        easeInches(96, 0.1f, 0.5f, dir.FORWARD, 30);
-        easeInches(96, 0.5f, 0.1f, dir.BACKWARD, 30);
+        driveInches(1080, 0.5f, dir.RIGHTROT, 30);
+        //easeInches(96, 0.5f, 0.1f, dir.BACKWARD, 30);
 
         //driveInches(96, 0.5f, dir.RIGHT, 30);
         //driveInches(96, 0.5f, dir.LEFT, 30);

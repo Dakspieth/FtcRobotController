@@ -154,6 +154,9 @@ public class MainMovement extends LinearOpMode {
 
 
             setMotorPowers();
+            hLinearSlideLeft.setPosition((-0.64 * hLinearSlideRight.getPosition()) + 0.689);
+            //TODO: values in gc ^^^^
+
             telemetry.addData("transfer milli:", transferTimer.milliseconds());
             telemetry.addData("transfer step:", transferStep);
             telemetry.addData("sweeper:", sweeper.getPosition());
