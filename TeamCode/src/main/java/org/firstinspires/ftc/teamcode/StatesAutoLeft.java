@@ -14,7 +14,7 @@ public class StatesAutoLeft extends StatesAuto {
         //vSlidePos(0, 0.75f);
 //
         //driveInches(24, 0.5f, dir.FORWARD, 30);
-        easeInches(40, 0.1f,  0.5f, dir.BACKWARD, 30);
+
 
 
         //easeInches(96, 0.5f, 0.1f, dir.BACKWARD, 30);
@@ -28,10 +28,18 @@ public class StatesAutoLeft extends StatesAuto {
 
 
 
-        /*
+
         ////////////////// main /////////////////////
         //basket specimen 1
+        SetVSlideSpeed(0.75);
+        easeInches(24, 0.3f, 0.7f, dir.BACKWARD, 30);
+        vArmServo.setPosition(0);
+        sleep(1000);
+        vArmServo.setPosition(0.82f);
+        SetVSlideSpeed(-0.75);
+        sleep(1000);
 
+        /*
         driveSeconds(0.35f, 0.25f, dir.LEFT);
         hClawServo.setPosition(0.75);
         SetVSlideSpeed(0.75f);

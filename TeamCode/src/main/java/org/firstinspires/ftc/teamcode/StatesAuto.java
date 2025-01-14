@@ -17,7 +17,7 @@ public class StatesAuto extends LinearOpMode {
     //static final double wheelDiameter = 3.5;     // For figuring circumference (in inches)
     //static final double ticksPerInch  = ticksPerRev / (wheelDiameter * Math.PI);
     static final double ticksPerInch = 29;
-    static final double rotConst = 0.27;
+    static final double rotConst = 0.275;
 
     static final int maxSlideTicks = 2000;
     static final int minSlideTicks = 0;
@@ -60,13 +60,21 @@ public class StatesAuto extends LinearOpMode {
         rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        vLinearSlideRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        //vLinearSlideRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        vLinearSlideRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //vLinearSlideRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        leftBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        //vLinearSlideRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+
 
 
 
@@ -300,10 +308,10 @@ public class StatesAuto extends LinearOpMode {
             leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-            leftBack.setPower(lbCurrentSpeed);
-            rightBack.setPower(rbCurrentSpeed);
-            leftFront.setPower(lfCurrentSpeed);
-            rightFront.setPower(rfCurrentSpeed);
+            //leftBack.setPower(lbCurrentSpeed);
+            //rightBack.setPower(rbCurrentSpeed);
+            //leftFront.setPower(lfCurrentSpeed);
+            //rightFront.setPower(rfCurrentSpeed);
 
             while(opModeIsActive() && timeoutS > runtime.seconds() && (leftBack.isBusy() && rightBack.isBusy() && leftFront.isBusy() && rightFront.isBusy())) {
 
@@ -317,15 +325,15 @@ public class StatesAuto extends LinearOpMode {
                 // m is start speed
                 // M is end speed
                 //linear speed: y=(M-m)x + m
-                    lbCurrentSpeed = (endSpeed - startSpeed) * lbPercent + startSpeed;
+                    /*lbCurrentSpeed = (endSpeed - startSpeed) * lbPercent + startSpeed;
                     rbCurrentSpeed = (endSpeed - startSpeed) * rbPercent + startSpeed;
                     lfCurrentSpeed = (endSpeed - startSpeed) * lfPercent + startSpeed;
-                    rfCurrentSpeed = (endSpeed - startSpeed) * rfPercent + startSpeed;
+                    rfCurrentSpeed = (endSpeed - startSpeed) * rfPercent + startSpeed;*/
                 //parabola speed: y= -4(M-m)x^2 + 4(M-m)x + m
-                    /*lbCurrentSpeed = (float) ((-4*(endSpeed - startSpeed) * Math.pow((lbPercent), 2)) + (4*(endSpeed - startSpeed) * (lbPercent)) + startSpeed);
+                    lbCurrentSpeed = (float) ((-4*(endSpeed - startSpeed) * Math.pow((lbPercent), 2)) + (4*(endSpeed - startSpeed) * (lbPercent)) + startSpeed);
                     rbCurrentSpeed = (float) ((-4*(endSpeed - startSpeed) * Math.pow((rbPercent), 2)) + (4*(endSpeed - startSpeed) * (rbPercent)) + startSpeed);
                     lfCurrentSpeed = (float) ((-4*(endSpeed - startSpeed) * Math.pow((lfPercent), 2)) + (4*(endSpeed - startSpeed) * (lfPercent)) + startSpeed);
-                    rfCurrentSpeed = (float) ((-4*(endSpeed - startSpeed) * Math.pow((rfPercent), 2)) + (4*(endSpeed - startSpeed) * (rfPercent)) + startSpeed);*/
+                    rfCurrentSpeed = (float) ((-4*(endSpeed - startSpeed) * Math.pow((rfPercent), 2)) + (4*(endSpeed - startSpeed) * (rfPercent)) + startSpeed);
 
                 if(leftBack.isBusy()) {
                     leftBack.setPower(lbCurrentSpeed);
@@ -347,10 +355,10 @@ public class StatesAuto extends LinearOpMode {
                 } else {
                     rightFront.setPower(0);
                 }
-                telemetry.addData("lbPercent:", lbPercent);
-                telemetry.addData("rbPercwerent:", rbPercent);
-                telemetry.addData("lfPercent:", lfPercent);
-                telemetry.addData("rfPercent:", rfPercent);
+                telemetry.addData("lbPercent:", leftBack.getPower());
+                telemetry.addData("rbPercwerent:", rightBack.getPower());
+                telemetry.addData("lfPercent:", leftFront.getPower());
+                telemetry.addData("rfPercent:", rightFront.getPower());
 
 
                 telemetry.update();
@@ -382,8 +390,9 @@ public class StatesAuto extends LinearOpMode {
     }
 
     protected void SethSlidePos(double pos) {
-        hLinearSlideLeft.setPosition(pos);
         hLinearSlideRight.setPosition(pos);
+        hLinearSlideLeft.setPosition((-0.95846 * hLinearSlideRight.getPosition()) + 0.68634);
+
     }
 
     protected void transferSample() {
