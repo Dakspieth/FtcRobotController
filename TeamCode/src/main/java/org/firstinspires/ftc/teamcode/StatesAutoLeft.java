@@ -2,21 +2,21 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import org.firstinspires.ftc.teamcode.oldScripts.ScrimmageAuto;
-
 @Autonomous(name="StatesAutoLeft", group="Robot")
 public class StatesAutoLeft extends StatesAuto {
     public void runOpMode() {
         // Call the parent class method to use its setup
         super.runOpMode();
 
-        //tests
+        //tests/////////////////////////////////////////
         //vSlidePos(1f, 0.15f);
         //vSlidePos(1, 0.5f);
         //vSlidePos(0, 0.75f);
 //
         //driveInches(24, 0.5f, dir.FORWARD, 30);
-        driveInches(1080, 0.5f, dir.RIGHTROT, 30);
+        easeInches(40, 0.1f,  0.5f, dir.BACKWARD, 30);
+
+
         //easeInches(96, 0.5f, 0.1f, dir.BACKWARD, 30);
 
         //driveInches(96, 0.5f, dir.RIGHT, 30);
@@ -29,6 +29,7 @@ public class StatesAutoLeft extends StatesAuto {
 
 
         /*
+        ////////////////// main /////////////////////
         //basket specimen 1
 
         driveSeconds(0.35f, 0.25f, dir.LEFT);

@@ -17,6 +17,7 @@ public class StatesAuto extends LinearOpMode {
     //static final double wheelDiameter = 3.5;     // For figuring circumference (in inches)
     //static final double ticksPerInch  = ticksPerRev / (wheelDiameter * Math.PI);
     static final double ticksPerInch = 29;
+    static final double rotConst = 0.27;
 
     static final int maxSlideTicks = 2000;
     static final int minSlideTicks = 0;
@@ -123,15 +124,15 @@ public class StatesAuto extends LinearOpMode {
         switch(direction) {
             case LEFT:
                 lbDir = 1;
-                rbDir = 1;
+                rbDir = -1;
                 lfDir = -1;
-                rfDir = -1;
+                rfDir = 1;
                 break;
             case RIGHT:
                 lbDir = -1;
-                rbDir = -1;
+                rbDir = 1;
                 lfDir = 1;
-                rfDir = 1;
+                rfDir = -1;
                 break;
             case FORWARD:
                 lbDir = 1;
@@ -146,16 +147,16 @@ public class StatesAuto extends LinearOpMode {
                 rfDir = -1;
                 break;
             case LEFTROT:
-                lbDir = -1;
-                rbDir = 1;
-                lfDir = -1;
-                rfDir = 1;
+                lbDir = -rotConst;
+                rbDir = rotConst;
+                lfDir = -rotConst;
+                rfDir = rotConst;
                 break;
             case RIGHTROT:
-                lbDir = 0.26f;
-                rbDir = -0.26f;
-                lfDir = 0.26f;
-                rfDir = -0.26f;
+                lbDir = rotConst;
+                rbDir = -rotConst;
+                lfDir = rotConst;
+                rfDir = -rotConst;
                 break;
         }
         if(opModeIsActive()) {
@@ -238,15 +239,15 @@ public class StatesAuto extends LinearOpMode {
         switch(direction) {
             case LEFT:
                 lbDir = 1;
-                rbDir = -1;
+                rbDir = 1;
                 lfDir = -1;
-                rfDir = 1;
+                rfDir = -1;
                 break;
             case RIGHT:
                 lbDir = -1;
-                rbDir = 1;
+                rbDir = -1;
                 lfDir = 1;
-                rfDir = -1;
+                rfDir = 1;
                 break;
             case FORWARD:
                 lbDir = 1;
@@ -261,16 +262,16 @@ public class StatesAuto extends LinearOpMode {
                 rfDir = -1;
                 break;
             case LEFTROT:
-                lbDir = -1;
-                rbDir = 1;
-                lfDir = -1;
-                rfDir = 1;
+                lbDir = -rotConst;
+                rbDir = rotConst;
+                lfDir = -rotConst;
+                rfDir = rotConst;
                 break;
             case RIGHTROT:
-                lbDir = 1;
-                rbDir = -1;
-                lfDir = 1;
-                rfDir = -1;
+                lbDir = rotConst;
+                rbDir = -rotConst;
+                lfDir = rotConst;
+                rfDir = -rotConst;
                 break;
         }
 
@@ -307,34 +308,49 @@ public class StatesAuto extends LinearOpMode {
             while(opModeIsActive() && timeoutS > runtime.seconds() && (leftBack.isBusy() && rightBack.isBusy() && leftFront.isBusy() && rightFront.isBusy())) {
 
                 //doesnt work at normal size, so multiply by 100 then divide
-                lbPercent = 100*leftBack.getCurrentPosition()/ (lbTargetPos - lbStartPos);
-                rbPercent = 100*rightBack.getCurrentPosition()/ (rbTargetPos - rbStartPos);
-                lfPercent = 100*leftFront.getCurrentPosition()/ (lfTargetPos - lfStartPos);
-                rfPercent = 100*rightFront.getCurrentPosition()/ (rfTargetPos - rfStartPos);
+                lbPercent = (float)leftBack.getCurrentPosition()/ (lbTargetPos - lbStartPos);
+                rbPercent = (float)rightBack.getCurrentPosition()/ (rbTargetPos - rbStartPos);
+                lfPercent = (float)leftFront.getCurrentPosition()/ (lfTargetPos - lfStartPos);
+                rfPercent = (float)rightFront.getCurrentPosition()/ (rfTargetPos - rfStartPos);
                 // y is currentSpeed
                 // x is percent 
                 // m is start speed
                 // M is end speed
                 //linear speed: y=(M-m)x + m
-                    //lbCurrentSpeed = (endSpeed - startSpeed) * lbPercent/100 + startSpeed;
-                    //rbCurrentSpeed = (endSpeed - startSpeed) * rbPercent/100 + startSpeed;
-                    //lfCurrentSpeed = (endSpeed - startSpeed) * lfPercent/100 + startSpeed;
-                    //rfCurrentSpeed = (endSpeed - startSpeed) * rfPercent/100 + startSpeed;
+                    lbCurrentSpeed = (endSpeed - startSpeed) * lbPercent + startSpeed;
+                    rbCurrentSpeed = (endSpeed - startSpeed) * rbPercent + startSpeed;
+                    lfCurrentSpeed = (endSpeed - startSpeed) * lfPercent + startSpeed;
+                    rfCurrentSpeed = (endSpeed - startSpeed) * rfPercent + startSpeed;
                 //parabola speed: y= -4(M-m)x^2 + 4(M-m)x + m
-                    lbCurrentSpeed = (float) (-4*(endSpeed - startSpeed) * Math.pow((lbPercent/100), 2)) + (4*(endSpeed - startSpeed) * (lbPercent/100)) + startSpeed;
-                    rbCurrentSpeed = (float) ((-4*(endSpeed - startSpeed) * Math.pow((rbPercent/100), 2)) + (4*(endSpeed - startSpeed) * (rbPercent/100)) + startSpeed);
-                    lfCurrentSpeed = (float) (-4*(endSpeed - startSpeed) * Math.pow((lfPercent/100), 2)) + (4*(endSpeed - startSpeed) * (lfPercent/100)) + startSpeed;
-                    rfCurrentSpeed = (float) (-4*(endSpeed - startSpeed) * Math.pow((rfPercent/100), 2)) + (4*(endSpeed - startSpeed) * (rfPercent/100)) + startSpeed;
+                    /*lbCurrentSpeed = (float) ((-4*(endSpeed - startSpeed) * Math.pow((lbPercent), 2)) + (4*(endSpeed - startSpeed) * (lbPercent)) + startSpeed);
+                    rbCurrentSpeed = (float) ((-4*(endSpeed - startSpeed) * Math.pow((rbPercent), 2)) + (4*(endSpeed - startSpeed) * (rbPercent)) + startSpeed);
+                    lfCurrentSpeed = (float) ((-4*(endSpeed - startSpeed) * Math.pow((lfPercent), 2)) + (4*(endSpeed - startSpeed) * (lfPercent)) + startSpeed);
+                    rfCurrentSpeed = (float) ((-4*(endSpeed - startSpeed) * Math.pow((rfPercent), 2)) + (4*(endSpeed - startSpeed) * (rfPercent)) + startSpeed);*/
 
-
-                leftBack.setPower(lbCurrentSpeed);
-                rightBack.setPower(rbCurrentSpeed);
-                leftFront.setPower(lfCurrentSpeed);
-                rightFront.setPower(rfCurrentSpeed);
-                telemetry.addData("lbPercent:", lbCurrentSpeed);
-                telemetry.addData("rbPercwerent:", rbCurrentSpeed);
-                telemetry.addData("lfPercent:", lfCurrentSpeed);
-                telemetry.addData("rfPercent:", rfCurrentSpeed);
+                if(leftBack.isBusy()) {
+                    leftBack.setPower(lbCurrentSpeed);
+                } else {
+                    leftBack.setPower(0);
+                }
+                if(rightBack.isBusy()) {
+                    rightBack.setPower(rbCurrentSpeed);
+                } else {
+                    rightBack.setPower(0);
+                }
+                if(leftFront.isBusy()) {
+                    leftFront.setPower(lfCurrentSpeed);
+                } else {
+                    leftFront.setPower(0);
+                }
+                if(rightFront.isBusy()) {
+                    rightFront.setPower(rfCurrentSpeed);
+                } else {
+                    rightFront.setPower(0);
+                }
+                telemetry.addData("lbPercent:", lbPercent);
+                telemetry.addData("rbPercwerent:", rbPercent);
+                telemetry.addData("lfPercent:", lfPercent);
+                telemetry.addData("rfPercent:", rfPercent);
 
 
                 telemetry.update();

@@ -27,6 +27,8 @@ public class MainMovement extends LinearOpMode {
     public float LjoystickX, LjoystickY, RjoystickX, RjoystickY;
     final float joystickDeadzone = 0.1f; // Area where joystick will not detect input
 
+    double hsMinExtensionR, hsMaxExtensionR;
+
         // ROBOT OTHER STUFF //
 
     private boolean sweep = false;
@@ -110,12 +112,12 @@ public class MainMovement extends LinearOpMode {
 
         //hArmOpen.setPosition(0.84);
 
-        sweeper.setPosition(0);
+        //sweeper.setPosition(0);
 
 
 
 
-        SetVSlideSpeed(0); // zero the linear slide's power so it doesn't move while not active
+       // SetVSlideSpeed(0); // zero the linear slide's power so it doesn't move while not active
 
         /*leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -154,7 +156,7 @@ public class MainMovement extends LinearOpMode {
 
 
             setMotorPowers();
-            hLinearSlideLeft.setPosition((-0.64 * hLinearSlideRight.getPosition()) + 0.689);
+            setHLSL();
             //TODO: values in gc ^^^^
 
             telemetry.addData("transfer milli:", transferTimer.milliseconds());
@@ -233,7 +235,7 @@ public class MainMovement extends LinearOpMode {
             //if stick is past the dead zone ->
             if (LangleInDegrees >= -22.5 && LangleInDegrees <= 22.5) {
                 // right quadrant
-                wheelStrafe(-netS, -netS, netS, netS);
+                wheelStrafe(-netS, netS, netS, -netS);
                 telemetry.addData("Left Stick quadrant: ", "RIGHT");
 
             } else if (LangleInDegrees > 22.5 && LangleInDegrees < 67.5) {
@@ -268,7 +270,7 @@ public class MainMovement extends LinearOpMode {
 
             } else if (LangleInDegrees >= 157.5 || LangleInDegrees <= -157.5) {
                 // left quadrant
-                wheelStrafe(netS, netS, -netS, -netS);
+                wheelStrafe(netS, -netS, -netS, netS);
                 telemetry.addData("Left Stick quadrant: ", "LEFT");
 
             }
@@ -301,10 +303,11 @@ public class MainMovement extends LinearOpMode {
     //////////////////////// END OF MOVEMENT CODE ////////////////////////
 
     private void HorizontalSlideMovement() {
-        double hsMinExtensionR = 0.69, hsMaxExtensionR = 0.377;
-        double hsMinExtensionL = 0.025, hsMaxExtensionL = 0.325;
+        hsMinExtensionR = 0.6078;
+        hsMaxExtensionR = 0.377;
+        //double hsMinExtensionL = 0.025, hsMaxExtensionL = 0.325;
         // controls - horizontal slide
-        boolean hsExtendBtn = gamepad2.dpad_up, hsRetractBtn = gamepad2.dpad_down;
+        boolean hsExtendBtn = gamepad2.left_bumper, hsRetractBtn = gamepad2.right_bumper;
         double hsStickY = gamepad2.right_stick_y;
 
         telemetry.addData("HLS Right Pos: ", hLinearSlideRight.getPosition());
@@ -332,10 +335,11 @@ public class MainMovement extends LinearOpMode {
             hLinearSlideRight.setPosition(hsMinExtensionR);
         }
 
-        hLinearSlideLeft.setPosition((-0.64 * hLinearSlideRight.getPosition()) + 0.689);
     }
 
-
+    private void setHLSL() {
+        hLinearSlideLeft.setPosition((-0.95846 * hLinearSlideRight.getPosition()) + 0.68634);
+    }
     private void HorizontalClawAndArm() {
         double hClawOpenValue = 0.377, hClawClosedValue = 0.75;
         double hArmDownValue = 0.835, hArmUpValue = 0.11; // .95 and 0.25 before
@@ -345,7 +349,12 @@ public class MainMovement extends LinearOpMode {
 
         // HORIZONTAL CLAW OPEN ? CLOSE
 
-        if (hClawToggleBtn && hClawTimer.milliseconds() >= 200) {
+        if(gamepad2.left_trigger > 0.5) {
+            hClawServo.setPosition(0.625); // OPENS claw slighty
+        } else if(gamepad2.right_trigger > 0.5) {
+            hClawServo.setPosition(hClawClosedValue); // OPENS claw
+        }
+        else if (hClawToggleBtn && hClawTimer.milliseconds() >= 200) {
             hClawOpen = !hClawOpen; // toggle state of claw
             if (hClawOpen) {
                 hClawServo.setPosition(hClawOpenValue); // OPENS claw
@@ -387,7 +396,7 @@ public class MainMovement extends LinearOpMode {
             telemetry.addData("SWEEPPOS", sweeper.getPosition());
             if(chamberStep == 0) {
                 sweeper.setPosition(0.875);
-                hLinearSlideRight.setPosition(0.65);
+                hLinearSlideRight.setPosition(0.55);
 
                 chamberStep = 1;
             } else if(chamberStep == 1 && sweeperTimer.milliseconds() >= 1000 ) {
@@ -480,23 +489,19 @@ public class MainMovement extends LinearOpMode {
         if (enableTransfer) {
             if(transferStep == 0) {
                 hArmOpen.setPosition(0.11);
-                hLinearSlideRight.setPosition(0.67);
+                hLinearSlideRight.setPosition(hsMinExtensionR);
                 transferTimer.reset();
                 transferStep = 1;
-            } else if(transferStep == 1 && transferTimer.milliseconds() >= 1200) {
+            } else if(transferStep == 1 && transferTimer.milliseconds() >= 1000) {
                 hClawServo.setPosition(0.6);
                 transferTimer.reset();
                 transferStep = 2;
-            } else if(transferStep == 2 && transferTimer.milliseconds() >= 500) {
-                hLinearSlideRight.setPosition(0.7);
+            } else if(transferStep == 2 && transferTimer.milliseconds() >= 200) {
+                hClawServo.setPosition(0.75);
+                hArmOpen.setPosition(0.7);
                 transferTimer.reset();
                 transferStep = 3;
-            } else if(transferStep == 3 && transferTimer.milliseconds() >= 200) {
-                hClawServo.setPosition(0.75);
-                hArmOpen.setPosition(0.835);
-                transferTimer.reset();
-                transferStep = 4;
-            } else if(transferStep == 4 && transferTimer.milliseconds() >= 100) {
+            } else if(transferStep == 3 && transferTimer.milliseconds() >= 100) {
                 transferStep = 0;
                 transferTimer.reset();
                 enableTransfer = false;
