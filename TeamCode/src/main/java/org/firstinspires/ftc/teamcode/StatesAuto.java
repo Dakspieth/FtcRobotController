@@ -321,10 +321,10 @@ public class StatesAuto extends LinearOpMode {
                     //lfCurrentSpeed = (endSpeed - startSpeed) * lfPercent/100 + startSpeed;
                     //rfCurrentSpeed = (endSpeed - startSpeed) * rfPercent/100 + startSpeed;
                 //parabola speed: y= -4(M-m)x^2 + 4(M-m)x + m
-                    lbCurrentSpeed = (4*(endSpeed - startSpeed) * (lbPercent/100)) + (-4*(endSpeed - startSpeed) * Math.pow((lbPercent/100), 2)) + startSpeed;
-                    rbCurrentSpeed = (4*(endSpeed - startSpeed) * (rbPercent/100)) + (-4*(endSpeed - startSpeed) * Math.pow((rbPercent/100), 2)) + startSpeed;
-                    lfCurrentSpeed = (4*(endSpeed - startSpeed) * (lfPercent/100)) + (-4*(endSpeed - startSpeed) * Math.pow((lfPercent/100), 2)) + startSpeed;
-                    rfCurrentSpeed = (4*(endSpeed - startSpeed) * (rfPercent/100)) + (-4*(endSpeed - startSpeed) * Math.pow((rfPercent/100), 2)) + startSpeed;
+                    lbCurrentSpeed = (-4*(endSpeed - startSpeed) * Math.pow((lbPercent/100), 2)) + (4*(endSpeed - startSpeed) * (lbPercent/100)) + startSpeed;
+                    rbCurrentSpeed = (-4*(endSpeed - startSpeed) * Math.pow((rbPercent/100), 2)) + (4*(endSpeed - startSpeed) * (rbPercent/100)) + startSpeed;
+                    lfCurrentSpeed = (-4*(endSpeed - startSpeed) * Math.pow((lfPercent/100), 2)) + (4*(endSpeed - startSpeed) * (lfPercent/100)) + startSpeed;
+                    rfCurrentSpeed = (-4*(endSpeed - startSpeed) * Math.pow((rfPercent/100), 2)) + (4*(endSpeed - startSpeed) * (rfPercent/100)) + startSpeed;
 
 
                 leftBack.setPower(lbCurrentSpeed);
