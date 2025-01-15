@@ -30,14 +30,63 @@ public class StatesAutoLeft extends StatesAuto {
 
 
         ////////////////// main /////////////////////
-        //basket specimen 1
+        easeInches(1000, 0.5f, 0.5f, dir.BLROT, 30);
+        //driveInches(1000, 0.5f, dir.BLROTNEG, 30);
+
+
+        /*SetVArmPos("down");
+        SetHArmPos("up");
+
+        //outtake preload sample
         SetVSlideSpeed(0.75);
-        easeInches(24, 0.3f, 0.7f, dir.BACKWARD, 30);
-        vArmServo.setPosition(0);
+        easeInches(6, 0.2f, 0.4f, dir.LEFT, 30);
+        easeInches(16, 0.2f, 0.4f, dir.BACKWARD, 30);
+        driveInches(50, 0.4f, dir.LEFTROT, 30);
+        driveInches(5, 0.4f, dir.BACKWARD, 30);
+        SetVArmPos("out");
         sleep(1000);
-        vArmServo.setPosition(0.82f);
-        SetVSlideSpeed(-0.75);
-        sleep(1000);
+        SetVArmPos("down");
+
+            //intake spike sample 1
+            driveInches(12, 0.4f, dir.FORWARD, 30);
+            driveInches(55, 0.4f, dir.LEFTROT, 30);
+            SetVSlideSpeed(-0.75);
+            SetHArmPos("down");
+            moveClaw(true);
+            SethSlidePos(0.5);
+            sleep(1000);
+            SetVSlideSpeed(0);
+            SethSlidePos(0.377);
+            sleep(450);//reduce this if low time(extra wait but dont feel like changing)
+            driveInches(4, 0.2f, dir.FORWARD, 30);
+            moveClaw(false);
+            sleep(500);
+
+        //transfer spike sample 1
+        SetHArmPos("up");
+        SethSlidePos(0.6078);
+
+        sleep(1200);
+        hClawServo.setPosition(0.625);
+
+        sleep(200);
+        hClawServo.setPosition(0.75);
+        SethSlidePos(0.377);
+
+        sleep(100);
+
+
+            //outtake spike sample 1
+            SetVSlideSpeed(0.75);
+            driveInches(4, 0.2f, dir.BACKWARD, 30);
+            driveInches(55, 0.4f, dir.RIGHTROT, 30);
+            driveInches(14, 0.4f, dir.BACKWARD, 30);
+            SetVArmPos("out");
+            sleep(1000);
+            SetVArmPos("down");
+            sleep(1000);*/
+
+
 
         /*
         driveSeconds(0.35f, 0.25f, dir.LEFT);

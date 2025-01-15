@@ -342,7 +342,7 @@ public class MainMovement extends LinearOpMode {
     }
     private void HorizontalClawAndArm() {
         double hClawOpenValue = 0.377, hClawClosedValue = 0.75;
-        double hArmDownValue = 0.835, hArmUpValue = 0.11; // .95 and 0.25 before
+        double hArmUpValue = 0.835, hArmDownValue = 0.135; // .95 and 0.25 before
         // controls - horizontal claw and arm
         boolean hClawToggleBtn = gamepad2.b; // open/close claw
         boolean hArmToggleBtn = gamepad2.y; // swing horizontal arm out/in
@@ -370,10 +370,10 @@ public class MainMovement extends LinearOpMode {
             hArmUp = !hArmUp; // toggle arm rotation
 
             if (hArmUp) {
-                hArmOpen.setPosition(hArmUpValue);
+                hArmOpen.setPosition(hArmDownValue);
 
             } else if (!hArmUp) {
-                hArmOpen.setPosition(hArmDownValue);
+                hArmOpen.setPosition(hArmUpValue);
             }
             hArmTimer.reset();
         }
@@ -498,7 +498,7 @@ public class MainMovement extends LinearOpMode {
                 transferStep = 2;
             } else if(transferStep == 2 && transferTimer.milliseconds() >= 200) {
                 hClawServo.setPosition(0.75);
-                hArmOpen.setPosition(0.7);
+                hLinearSlideRight.setPosition(hsMaxExtensionR);
                 transferTimer.reset();
                 transferStep = 3;
             } else if(transferStep == 3 && transferTimer.milliseconds() >= 100) {

@@ -17,7 +17,8 @@ public class StatesAuto extends LinearOpMode {
     //static final double wheelDiameter = 3.5;     // For figuring circumference (in inches)
     //static final double ticksPerInch  = ticksPerRev / (wheelDiameter * Math.PI);
     static final double ticksPerInch = 29;
-    static final double rotConst = 0.275;
+    static final double rotConst = 0.2797;
+    static final double blrotConst = 1;
 
     static final int maxSlideTicks = 2000;
     static final int minSlideTicks = 0;
@@ -112,7 +113,9 @@ public class StatesAuto extends LinearOpMode {
         FORWARD,
         BACKWARD,
         LEFTROT,
-        RIGHTROT
+        RIGHTROT,
+        BLROT,
+        BLROTNEG
 
     }
     protected void driveInches(float inches, float speed, dir direction, float timeoutS) {
@@ -165,6 +168,18 @@ public class StatesAuto extends LinearOpMode {
                 rbDir = -rotConst;
                 lfDir = rotConst;
                 rfDir = -rotConst;
+                break;
+            case BLROT:
+                lbDir = 0;
+                rbDir = blrotConst;
+                lfDir = 0;
+                rfDir = blrotConst;
+                break;
+            case BLROTNEG:
+                lbDir = 0;
+                rbDir = -blrotConst;
+                lfDir = 0;
+                rfDir = -blrotConst;
                 break;
         }
         if(opModeIsActive()) {
@@ -247,15 +262,15 @@ public class StatesAuto extends LinearOpMode {
         switch(direction) {
             case LEFT:
                 lbDir = 1;
-                rbDir = 1;
+                rbDir = -1;
                 lfDir = -1;
-                rfDir = -1;
+                rfDir = 1;
                 break;
             case RIGHT:
                 lbDir = -1;
-                rbDir = -1;
+                rbDir = 1;
                 lfDir = 1;
-                rfDir = 1;
+                rfDir = -1;
                 break;
             case FORWARD:
                 lbDir = 1;
@@ -281,6 +296,18 @@ public class StatesAuto extends LinearOpMode {
                 lfDir = rotConst;
                 rfDir = -rotConst;
                 break;
+            case BLROT:
+                lbDir = 0;
+                rbDir = blrotConst;
+                lfDir = 0;
+                rfDir = blrotConst;
+                break;
+            case BLROTNEG:
+                lbDir = 0;
+                rbDir = -blrotConst;
+                lfDir = 0;
+                rfDir = -blrotConst;
+                break;
         }
 
         if(opModeIsActive()) {
@@ -296,6 +323,10 @@ public class StatesAuto extends LinearOpMode {
             rightBack.setTargetPosition(rbTargetPos + rightBack.getCurrentPosition());
             leftFront.setTargetPosition(lfTargetPos + leftFront.getCurrentPosition());
             rightFront.setTargetPosition(rfTargetPos + rightFront.getCurrentPosition());
+            if(lbDir == 0 && lfDir == 0) {
+                leftBack.setTargetPosition(10);
+                leftFront.setTargetPosition(10);
+            }
 
             //TODO: tweek tolerance
             //leftBack.setTargetPositionTolerance(3);
@@ -335,30 +366,15 @@ public class StatesAuto extends LinearOpMode {
                     lfCurrentSpeed = (float) ((-4*(endSpeed - startSpeed) * Math.pow((lfPercent), 2)) + (4*(endSpeed - startSpeed) * (lfPercent)) + startSpeed);
                     rfCurrentSpeed = (float) ((-4*(endSpeed - startSpeed) * Math.pow((rfPercent), 2)) + (4*(endSpeed - startSpeed) * (rfPercent)) + startSpeed);
 
-                if(leftBack.isBusy()) {
                     leftBack.setPower(lbCurrentSpeed);
-                } else {
-                    leftBack.setPower(0);
-                }
-                if(rightBack.isBusy()) {
                     rightBack.setPower(rbCurrentSpeed);
-                } else {
-                    rightBack.setPower(0);
-                }
-                if(leftFront.isBusy()) {
                     leftFront.setPower(lfCurrentSpeed);
-                } else {
-                    leftFront.setPower(0);
-                }
-                if(rightFront.isBusy()) {
                     rightFront.setPower(rfCurrentSpeed);
-                } else {
-                    rightFront.setPower(0);
-                }
-                telemetry.addData("lbPercent:", leftBack.getPower());
-                telemetry.addData("rbPercwerent:", rightBack.getPower());
-                telemetry.addData("lfPercent:", leftFront.getPower());
-                telemetry.addData("rfPercent:", rightFront.getPower());
+
+                telemetry.addData("lbPower:", leftBack.getPower());
+                telemetry.addData("rbPower:", rightBack.getPower());
+                telemetry.addData("lfPower:", leftFront.getPower());
+                telemetry.addData("rfPower:", rightFront.getPower());
 
 
                 telemetry.update();
@@ -395,34 +411,45 @@ public class StatesAuto extends LinearOpMode {
 
     }
 
-    protected void transferSample() {
-        transferStep = 0;
-        enableTransfer = true;
-        transferTimer.reset();
+    protected void SetVArmPos(String down){
 
-        if(enableTransfer) {
-            if(transferStep == 0) {
-                hArmOpen.setPosition(0.15);
-                SethSlidePos(0.605);
-                transferTimer.reset();
-                transferStep = 1;
-            } else if(transferStep == 1 && transferTimer.milliseconds() >= 1200) {
-                hClawServo.setPosition(0.375);
-                transferTimer.reset();
-                transferStep = 2;
-            } else if(transferStep == 2 && transferTimer.milliseconds() >= 500) {
-                SethSlidePos(0.575);
-                transferTimer.reset();
-                transferStep = 3;
-            } else if(transferStep == 3 && transferTimer.milliseconds() >= 200) {
-                hClawServo.setPosition(0.75);
-                transferTimer.reset();
-                transferStep = 4;
-            } else if(transferStep == 4 && transferTimer.milliseconds() >= 100) {
-                transferStep = 0;
-                transferTimer.reset();
-                enableTransfer = false;
-            }
+        if(down == "down"){
+            vArmServo.setPosition(0.82f);
+        }
+
+        if(down == "out"){
+            vArmServo.setPosition(0);
+        }
+    }
+
+    protected void SetHArmPos(String down){
+
+        if(down == "up"){
+        hArmOpen.setPosition(0.9f);
+        }
+
+        if(down == "down"){
+            hArmOpen.setPosition(0.17f);
+        }
+    }
+
+    protected void transferSample() {
+
+        boolean transfering = true;
+        while(transfering) {
+            SetHArmPos("up");
+            SethSlidePos(0.6078);
+
+            sleep(1000);
+            hClawServo.setPosition(0.6);
+
+            sleep(200);
+            hClawServo.setPosition(0.75);
+            SethSlidePos(0.377);
+
+            sleep(100);
+            transferStep = 0;
+            transfering = false;
         }
     }
 
