@@ -280,7 +280,6 @@ public class MainMovement extends LinearOpMode {
 
             wheelStrafe(0, 0, 0, 0);
             telemetry.addData("nut driving", null);
-
         }
     }
     private void wheelStrafe(double bl, double br, double fl, double fr) { // For setting the wheel strafe values

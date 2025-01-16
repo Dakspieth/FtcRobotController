@@ -34,11 +34,10 @@ public class StatesAutoLeft extends StatesAuto {
 
         SetVArmPos("down");
         SetHArmPos("up");
-
         //outtake preload sample
         SetVSlideSpeed(0.75);
-        easeInches(6, 0.2f, 0.4f, dir.LEFT, 30);
-        easeInches(16, 0.2f, 0.4f, dir.BACKWARD, 30);
+        easeInches(7, 0.2f, 0.4f, dir.LEFT, 30);
+        easeInches(18.5f, 0.2f, 0.4f, dir.BACKWARD, 30);
         driveInches(50, 0.4f, dir.LEFTROT, 30);
         driveInches(5, 0.4f, dir.BACKWARD, 30);
         SetVArmPos("out");
@@ -47,47 +46,60 @@ public class StatesAutoLeft extends StatesAuto {
 
             //intake spike sample 1
             driveInches(12, 0.4f, dir.FORWARD, 30);
-            driveInches(55, 0.4f, dir.LEFTROT, 30);
+            driveInches(48, 0.4f, dir.LEFTROT, 30);
             SetVSlideSpeed(-0.75);
             SetHArmPos("down");
             moveClaw(true);
-            SethSlidePos(0.5);
+            SethSlidePos(0.55);
             sleep(1000);
             SetVSlideSpeed(0);
-            SethSlidePos(0.377);
+            SethSlidePos(hsOut);
             sleep(450);//reduce this if low time(extra wait but dont feel like changing)
             driveInches(4, 0.2f, dir.FORWARD, 30);
             moveClaw(false);
             sleep(500);
 
-        //transfer spike sample 1
-        SetHArmPos("up");
-        SethSlidePos(0.6078);
-
-        sleep(1200);
-        hClawServo.setPosition(0.625);
-
-        sleep(200);
-        hClawServo.setPosition(0.75);
-        SethSlidePos(0.377);
-
-        sleep(100);
-
+            transferSample(true);
 
             //outtake spike sample 1
             SetVSlideSpeed(0.75);
-            driveInches(4, 0.2f, dir.BACKWARD, 30);
-            driveInches(55, 0.4f, dir.RIGHTROT, 30);
+            driveInches(3, 0.2f, dir.BACKWARD, 30);
+            driveInches(48, 0.4f, dir.RIGHTROT, 30);
             driveInches(14, 0.4f, dir.BACKWARD, 30);
             SetVArmPos("out");
             sleep(1000);
             SetVArmPos("down");
-            sleep(1000);
 
+        // intake spike sample 2
         SetHArmPos("down");
-        sleep(500);
-        easeInches(50, 0.5f, 0.5f, dir.BLROT, 30);
+        SethSlidePos(hsIn);
+        moveClaw(true);
+        sleep(1250);
+        easeInches(60, 0.4f, 0.6f, dir.BLROT, 30);
+        SetVSlideSpeed(-0.75);
+        SethSlidePos(0.5);
+        easeInches(8, 0.4f, 0.6f, dir.FORWARD, 30);
         moveClaw(false);
+        sleep(300);
+        easeInches(8, 0.4f, 0.6f, dir.BACKWARD, 30);
+//        sleep(1000);
+        SetVSlideSpeed(0);
+
+        transferSample(true);
+
+        //outtake spike sample 2
+        SetVSlideSpeed(0.75);
+        easeInches(60, 0.4f, 0.6f, dir.BLROTNEG, 30);
+        sleep(800);
+        SetVArmPos("out");
+        sleep(1000);
+        SetVArmPos("down");
+        sleep(1000);
+
+
+
+
+
 
 
 

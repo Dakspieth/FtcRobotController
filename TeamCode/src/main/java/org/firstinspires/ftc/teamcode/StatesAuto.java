@@ -20,6 +20,9 @@ public class StatesAuto extends LinearOpMode {
     static final double rotConst = 0.2797;
     static final double blrotConst = 0.5625;
 
+    protected final double hsOut = 0.377;
+    protected final double hsIn = 0.6078;
+
     static final int maxSlideTicks = 2000;
     static final int minSlideTicks = 0;
 
@@ -444,27 +447,27 @@ public class StatesAuto extends LinearOpMode {
         }
 
         if(down == "down"){
-            hArmOpen.setPosition(0.17f);
+            hArmOpen.setPosition(0.175f);
         }
     }
 
-    protected void transferSample() {
+    protected void transferSample(Boolean withSwag) {
 
-        boolean transfering = true;
-        while(transfering) {
+        boolean isTransfering = true;
+        while(isTransfering) {
+            //transfer spike sample 1
             SetHArmPos("up");
-            SethSlidePos(0.6078);
+            SethSlidePos(hsIn);
 
-            sleep(1000);
-            hClawServo.setPosition(0.6);
+            sleep(1100);
+            hClawServo.setPosition(0.625);
 
             sleep(200);
             hClawServo.setPosition(0.75);
-            SethSlidePos(0.377);
+            SethSlidePos(hsOut);
 
             sleep(100);
-            transferStep = 0;
-            transfering = false;
+            isTransfering = false;
         }
     }
 
