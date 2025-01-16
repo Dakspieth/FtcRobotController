@@ -30,11 +30,9 @@ public class StatesAutoLeft extends StatesAuto {
 
 
         ////////////////// main /////////////////////
-        easeInches(1000, 0.5f, 0.5f, dir.BLROT, 30);
-        //driveInches(1000, 0.5f, dir.BLROTNEG, 30);
 
 
-        /*SetVArmPos("down");
+        SetVArmPos("down");
         SetHArmPos("up");
 
         //outtake preload sample
@@ -84,7 +82,14 @@ public class StatesAutoLeft extends StatesAuto {
             SetVArmPos("out");
             sleep(1000);
             SetVArmPos("down");
-            sleep(1000);*/
+            sleep(1000);
+
+        SetHArmPos("down");
+        sleep(500);
+        easeInches(50, 0.5f, 0.5f, dir.BLROT, 30);
+        moveClaw(false);
+
+
 
 
 

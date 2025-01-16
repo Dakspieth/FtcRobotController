@@ -18,7 +18,7 @@ public class StatesAuto extends LinearOpMode {
     //static final double ticksPerInch  = ticksPerRev / (wheelDiameter * Math.PI);
     static final double ticksPerInch = 29;
     static final double rotConst = 0.2797;
-    static final double blrotConst = 1;
+    static final double blrotConst = 0.5625;
 
     static final int maxSlideTicks = 2000;
     static final int minSlideTicks = 0;
@@ -119,6 +119,10 @@ public class StatesAuto extends LinearOpMode {
 
     }
     protected void driveInches(float inches, float speed, dir direction, float timeoutS) {
+        leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         double lbDir = 1;
         double rbDir = 1;
         double lfDir = 1;
@@ -194,6 +198,10 @@ public class StatesAuto extends LinearOpMode {
             rightBack.setTargetPosition(rbTargetPos + rightBack.getCurrentPosition());
             leftFront.setTargetPosition(lfTargetPos + leftFront.getCurrentPosition());
             rightFront.setTargetPosition(rfTargetPos + rightFront.getCurrentPosition());
+            if(direction == dir.BLROT || direction == dir.BLROTNEG) {
+                leftBack.setTargetPosition(100000000);
+                leftFront.setTargetPosition(1000000);
+            }
 
             //TODO: tweak tolerance
             //leftBack.setTargetPositionTolerance(3);
@@ -323,7 +331,8 @@ public class StatesAuto extends LinearOpMode {
             rightBack.setTargetPosition(rbTargetPos + rightBack.getCurrentPosition());
             leftFront.setTargetPosition(lfTargetPos + leftFront.getCurrentPosition());
             rightFront.setTargetPosition(rfTargetPos + rightFront.getCurrentPosition());
-            if(lbDir == 0 && lfDir == 0) {
+
+            if(direction == dir.BLROT || direction == dir.BLROTNEG) {
                 leftBack.setTargetPosition(10);
                 leftFront.setTargetPosition(10);
             }
@@ -365,6 +374,12 @@ public class StatesAuto extends LinearOpMode {
                     rbCurrentSpeed = (float) ((-4*(endSpeed - startSpeed) * Math.pow((rbPercent), 2)) + (4*(endSpeed - startSpeed) * (rbPercent)) + startSpeed);
                     lfCurrentSpeed = (float) ((-4*(endSpeed - startSpeed) * Math.pow((lfPercent), 2)) + (4*(endSpeed - startSpeed) * (lfPercent)) + startSpeed);
                     rfCurrentSpeed = (float) ((-4*(endSpeed - startSpeed) * Math.pow((rfPercent), 2)) + (4*(endSpeed - startSpeed) * (rfPercent)) + startSpeed);
+
+                    if(direction == dir.BLROT || direction == dir.BLROTNEG) {
+                        lbCurrentSpeed = 0;
+                        lfCurrentSpeed = 0;
+                    }
+
 
                     leftBack.setPower(lbCurrentSpeed);
                     rightBack.setPower(rbCurrentSpeed);
