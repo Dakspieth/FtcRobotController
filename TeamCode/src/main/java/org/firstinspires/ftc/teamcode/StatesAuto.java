@@ -25,6 +25,7 @@ public class StatesAuto extends LinearOpMode {
 
     static final int maxSlideTicks = 2000;
     static final int minSlideTicks = 0;
+    protected float hArmPos = 0.9f;
 
     protected DcMotor leftBack, rightBack, leftFront, rightFront; //Initializes direct current main wheel motors for the driving function of our robot, gary.
     protected DcMotor vLinearSlideLeft, vLinearSlideRight, hangMotorLeft, hangMotorRight;
@@ -85,6 +86,7 @@ public class StatesAuto extends LinearOpMode {
         telemetry.addData("Starting pos: ", leftBack.getCurrentPosition());
         telemetry.update();
         waitForStart();
+
 
     }
 
@@ -203,7 +205,7 @@ public class StatesAuto extends LinearOpMode {
             rightFront.setTargetPosition(rfTargetPos + rightFront.getCurrentPosition());
             if(direction == dir.BLROT || direction == dir.BLROTNEG) {
                 leftBack.setTargetPosition(100000000);
-                leftFront.setTargetPosition(1000000);
+                leftFront.setTargetPosition(10000000);
             }
 
             //TODO: tweak tolerance
@@ -224,8 +226,21 @@ public class StatesAuto extends LinearOpMode {
             rightFront.setPower(speed);
 
             while(opModeIsActive() && timeoutS > runtime.seconds() && (leftBack.isBusy() && rightBack.isBusy() && leftFront.isBusy() && rightFront.isBusy())) {
-                telemetry.addData("ticks", leftBack.getCurrentPosition());
-                telemetry.addData("total ticks", lbTargetPos);
+
+                hArmOpen.setPosition(hArmPos);
+
+                telemetry.addData("lbPower:", leftBack.getPower());
+                telemetry.addData("rbPower:", rightBack.getPower());
+                telemetry.addData("lfPower:", leftFront.getPower());
+                telemetry.addData("rfPower:", rightFront.getPower());
+                telemetry.addData("lbTargetPos:", leftBack.getTargetPosition());
+                telemetry.addData("rbTargetPos:", rightBack.getTargetPosition());
+                telemetry.addData("lfTargetPos:", leftFront.getTargetPosition());
+                telemetry.addData("rfTargetPos:", rightFront.getTargetPosition());
+                telemetry.addData("lbPos:", leftBack.getCurrentPosition());
+                telemetry.addData("rbPos:", rightBack.getCurrentPosition());
+                telemetry.addData("lfPos:", leftFront.getCurrentPosition());
+                telemetry.addData("rfPos:", rightFront.getCurrentPosition());
                 telemetry.update();
             }
         }
@@ -241,7 +256,6 @@ public class StatesAuto extends LinearOpMode {
         rightBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        vLinearSlideRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         double lbDir = 1;
         double rbDir = 1;
         double lfDir = 1;
@@ -336,8 +350,8 @@ public class StatesAuto extends LinearOpMode {
             rightFront.setTargetPosition(rfTargetPos + rightFront.getCurrentPosition());
 
             if(direction == dir.BLROT || direction == dir.BLROTNEG) {
-                leftBack.setTargetPosition(10);
-                leftFront.setTargetPosition(10);
+                leftBack.setTargetPosition(100);
+                leftFront.setTargetPosition(100);
             }
 
             //TODO: tweek tolerance
@@ -358,7 +372,6 @@ public class StatesAuto extends LinearOpMode {
 
             while(opModeIsActive() && timeoutS > runtime.seconds() && (leftBack.isBusy() && rightBack.isBusy() && leftFront.isBusy() && rightFront.isBusy())) {
 
-                //doesnt work at normal size, so multiply by 100 then divide
                 lbPercent = (float)leftBack.getCurrentPosition()/ (lbTargetPos - lbStartPos);
                 rbPercent = (float)rightBack.getCurrentPosition()/ (rbTargetPos - rbStartPos);
                 lfPercent = (float)leftFront.getCurrentPosition()/ (lfTargetPos - lfStartPos);
@@ -373,15 +386,17 @@ public class StatesAuto extends LinearOpMode {
                     lfCurrentSpeed = (endSpeed - startSpeed) * lfPercent + startSpeed;
                     rfCurrentSpeed = (endSpeed - startSpeed) * rfPercent + startSpeed;*/
                 //parabola speed: y= -4(M-m)x^2 + 4(M-m)x + m
-                    lbCurrentSpeed = (float) ((-4*(endSpeed - startSpeed) * Math.pow((lbPercent), 2)) + (4*(endSpeed - startSpeed) * (lbPercent)) + startSpeed);
-                    rbCurrentSpeed = (float) ((-4*(endSpeed - startSpeed) * Math.pow((rbPercent), 2)) + (4*(endSpeed - startSpeed) * (rbPercent)) + startSpeed);
-                    lfCurrentSpeed = (float) ((-4*(endSpeed - startSpeed) * Math.pow((lfPercent), 2)) + (4*(endSpeed - startSpeed) * (lfPercent)) + startSpeed);
-                    rfCurrentSpeed = (float) ((-4*(endSpeed - startSpeed) * Math.pow((rfPercent), 2)) + (4*(endSpeed - startSpeed) * (rfPercent)) + startSpeed);
 
-                    if(direction == dir.BLROT || direction == dir.BLROTNEG) {
-                        lbCurrentSpeed = 0;
-                        lfCurrentSpeed = 0;
-                    }
+
+                        lbCurrentSpeed = (float) ((-4*(endSpeed - startSpeed) * Math.pow((lbPercent), 2)) + (4*(endSpeed - startSpeed) * (lbPercent)) + startSpeed);
+                        rbCurrentSpeed = (float) ((-4*(endSpeed - startSpeed) * Math.pow((rbPercent), 2)) + (4*(endSpeed - startSpeed) * (rbPercent)) + startSpeed);
+                        lfCurrentSpeed = (float) ((-4*(endSpeed - startSpeed) * Math.pow((lfPercent), 2)) + (4*(endSpeed - startSpeed) * (lfPercent)) + startSpeed);
+                        rfCurrentSpeed = (float) ((-4*(endSpeed - startSpeed) * Math.pow((rfPercent), 2)) + (4*(endSpeed - startSpeed) * (rfPercent)) + startSpeed);
+
+                if(direction == dir.BLROT || direction == dir.BLROTNEG) {
+                    lbCurrentSpeed = 0;
+                    lfCurrentSpeed = 0;
+                }
 
 
                     leftBack.setPower(lbCurrentSpeed);
@@ -389,19 +404,30 @@ public class StatesAuto extends LinearOpMode {
                     leftFront.setPower(lfCurrentSpeed);
                     rightFront.setPower(rfCurrentSpeed);
 
+                hArmOpen.setPosition(hArmPos);
+
                 telemetry.addData("lbPower:", leftBack.getPower());
                 telemetry.addData("rbPower:", rightBack.getPower());
                 telemetry.addData("lfPower:", leftFront.getPower());
                 telemetry.addData("rfPower:", rightFront.getPower());
+                telemetry.addData("lbTargetPos:", leftBack.getTargetPosition());
+                telemetry.addData("rbTargetPos:", rightBack.getTargetPosition());
+                telemetry.addData("lfTargetPos:", leftFront.getTargetPosition());
+                telemetry.addData("rfTargetPos:", rightFront.getTargetPosition());
+                telemetry.addData("lbPos:", leftBack.getCurrentPosition());
+                telemetry.addData("rbPos:", rightBack.getCurrentPosition());
+                telemetry.addData("lfPos:", leftFront.getCurrentPosition());
+                telemetry.addData("rfPos:", rightFront.getCurrentPosition());
 
 
                 telemetry.update();
             }
         }
-        leftBack.setPower(endSpeed);
-        rightBack.setPower(endSpeed);
-        leftFront.setPower(endSpeed);
-        rightFront.setPower(endSpeed);
+
+        if(direction == dir.BLROT || direction == dir.BLROTNEG) {
+            leftBack.setPower(0);
+            leftFront.setPower(0);
+        }
 
         /*leftBack.setPower(0);
         rightBack.setPower(0);
@@ -442,19 +468,30 @@ public class StatesAuto extends LinearOpMode {
 
     protected void SetHArmPos(String down){
 
-        if(down == "up"){
-        hArmOpen.setPosition(0.9f);
-        }
+            if(down == "up"){
+                hArmPos = 0.9f;
+                hArmOpen.setPosition(hArmPos);
+            }
 
-        if(down == "down"){
-            hArmOpen.setPosition(0.175f);
-        }
+            if(down == "down"){
+                hArmPos = 0.175f;
+                hArmOpen.setPosition(hArmPos);;//0.175f
+
+            }
+
+
+
     }
 
-    protected void transferSample(Boolean withSwag) {
+    protected void resetDriveEncoders() {
+        leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    }
 
-        boolean isTransfering = true;
-        while(isTransfering) {
+   /* protected void transferSample(Boolean withSwag) {
+
             //transfer spike sample 1
             SetHArmPos("up");
             SethSlidePos(hsIn);
@@ -467,9 +504,7 @@ public class StatesAuto extends LinearOpMode {
             SethSlidePos(hsOut);
 
             sleep(100);
-            isTransfering = false;
-        }
-    }
+    }*/
 
 }
 

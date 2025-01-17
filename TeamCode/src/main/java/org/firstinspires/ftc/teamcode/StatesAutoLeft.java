@@ -46,7 +46,7 @@ public class StatesAutoLeft extends StatesAuto {
 
             //intake spike sample 1
             driveInches(12, 0.4f, dir.FORWARD, 30);
-            driveInches(48, 0.4f, dir.LEFTROT, 30);
+            driveInches(46, 0.4f, dir.LEFTROT, 30);
             SetVSlideSpeed(-0.75);
             SetHArmPos("down");
             moveClaw(true);
@@ -59,7 +59,15 @@ public class StatesAutoLeft extends StatesAuto {
             moveClaw(false);
             sleep(500);
 
-            transferSample(true);
+            //transfer spike sample 1
+            SetHArmPos("up");
+            SethSlidePos(hsIn);
+            sleep(1000);
+            hClawServo.setPosition(0.625);
+            sleep(200);
+            hClawServo.setPosition(0.75);
+            SethSlidePos(hsOut);
+            sleep(100);
 
             //outtake spike sample 1
             SetVSlideSpeed(0.75);
@@ -73,32 +81,50 @@ public class StatesAutoLeft extends StatesAuto {
         // intake spike sample 2
         SetHArmPos("down");
         SethSlidePos(hsIn);
+        sleep(100);
         moveClaw(true);
-        sleep(1250);
-        easeInches(60, 0.4f, 0.6f, dir.BLROT, 30);
+        sleep(500);
+        easeInches(60, 0.3f, 0.5f, dir.BLROT, 30);
         SetVSlideSpeed(-0.75);
         SethSlidePos(0.5);
         easeInches(8, 0.4f, 0.6f, dir.FORWARD, 30);
         moveClaw(false);
-        sleep(300);
+        sleep(400);
         easeInches(8, 0.4f, 0.6f, dir.BACKWARD, 30);
 //        sleep(1000);
         SetVSlideSpeed(0);
 
-        transferSample(true);
+        //transfer spike sample 2
+        SetHArmPos("up");
+        SethSlidePos(hsIn);
+        sleep(1000);
+        hClawServo.setPosition(0.625);
+        sleep(200);
+        hClawServo.setPosition(0.75);
+        SethSlidePos(hsOut);
+        sleep(100);
 
         //outtake spike sample 2
-        SetVSlideSpeed(0.75);
-        easeInches(60, 0.4f, 0.6f, dir.BLROTNEG, 30);
+        SetVSlideSpeed(0.8);
+        easeInches(70, 0.3f, 0.5f, dir.BLROTNEG, 30);
         sleep(800);
         SetVArmPos("out");
         sleep(1000);
         SetVArmPos("down");
-        sleep(1000);
+        sleep(500);
 
-
-
-
+            //intake spike sample 3
+            easeInches(4, 0.2f, 0.4f, dir.FORWARD, 30);
+            SetVSlideSpeed(-0.6);
+            SetHArmPos("down");
+            hArmOpen.setPosition(hArmPos);
+            sleep(1000);
+            driveInches(75, 0.4f, dir.LEFTROT, 30);
+            hClawServo.setPosition(0.625);
+            sleep(700);
+            driveInches(8f, 0.3f, dir.FORWARD, 30);
+            moveClaw(false);
+            sleep(1000);
 
 
 
