@@ -146,7 +146,9 @@ public class StatesAutoLeft extends StatesAuto {
             sleep(800);
             SetVArmPos("down");
             sleep(500 );
-            easeInches(24, 0.3f, 0.75f , dir.FORWARD, 30);
+
+        driveInches(8, 0.6f , dir.LEFT, 30);
+        easeInches(24, 0.2f, 0.7f , dir.FORWARD, 30);
 
 
 
