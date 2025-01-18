@@ -1,9 +1,10 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.AAAstates;
 
 import com.acmerobotics.roadrunner.ftc.Encoder;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -27,7 +28,7 @@ public class StatesAuto extends LinearOpMode {
     static final int minSlideTicks = 0;
     protected float hArmPos = 0.9f;
 
-    protected DcMotor leftBack, rightBack, leftFront, rightFront; //Initializes direct current main wheel motors for the driving function of our robot, gary.
+    protected DcMotorEx leftBack, rightBack, leftFront, rightFront; //Initializes direct current main wheel motors for the driving function of our robot, gary.
     protected DcMotor vLinearSlideLeft, vLinearSlideRight, hangMotorLeft, hangMotorRight;
     //private Servo hLinearSlideRight;
     protected Servo vArmServo, hArmOpen, hLinearSlideLeft, hLinearSlideRight, hClawServo;
@@ -40,10 +41,10 @@ public class StatesAuto extends LinearOpMode {
     @Override
     public void runOpMode() {
         //setting motors and servos
-        leftBack    = hardwareMap.get(DcMotor.class, "left_back");
-        rightBack   = hardwareMap.get(DcMotor.class, "right_back");
-        leftFront   = hardwareMap.get(DcMotor.class, "left_front");
-        rightFront  = hardwareMap.get(DcMotor.class, "right_front");
+        leftBack    = hardwareMap.get(DcMotorEx.class, "left_back");
+        rightBack   = hardwareMap.get(DcMotorEx.class, "right_back");
+        leftFront   = hardwareMap.get(DcMotorEx.class, "left_front");
+        rightFront  = hardwareMap.get(DcMotorEx.class, "right_front");
         vLinearSlideLeft = hardwareMap.get(DcMotor.class, "vertical_slide_left"); //
         vLinearSlideRight = hardwareMap.get(DcMotor.class, "vertical_slide_right"); //  EH2
         hangMotorLeft = hardwareMap.get(DcMotor.class, "hang_motor_left"); // CH3
@@ -209,27 +210,30 @@ public class StatesAuto extends LinearOpMode {
             }
 
             //TODO: tweak tolerance
-            //leftBack.setTargetPositionTolerance(3);
-            //rightBack.setTargetPositionTolerance(3);
-            //leftFront.setTargetPositionTolerance(3);
-            //rightFront.setTargetPositionTolerance(3);
+
+            /*leftBack.setTargetPositionTolerance(5);
+            rightBack.setTargetPositionTolerance(5);
+            leftFront.setTargetPositionTolerance(5);
+            rightFront.setTargetPositionTolerance(5);*/
+
 
             leftBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             rightBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-
             leftBack.setPower(speed);
             rightBack.setPower(speed);
             leftFront.setPower(speed);
             rightFront.setPower(speed);
 
+
             while(opModeIsActive() && timeoutS > runtime.seconds() && (leftBack.isBusy() && rightBack.isBusy() && leftFront.isBusy() && rightFront.isBusy())) {
 
                 hArmOpen.setPosition(hArmPos);
-
-                telemetry.addData("lbPower:", leftBack.getPower());
+                telemetry.addData("hArmPos var:", hArmPos);
+                telemetry.addData("harmPos:", hArmOpen.getPosition());
+                /*telemetry.addData("lbPower:", leftBack.getPower());
                 telemetry.addData("rbPower:", rightBack.getPower());
                 telemetry.addData("lfPower:", leftFront.getPower());
                 telemetry.addData("rfPower:", rightFront.getPower());
@@ -240,7 +244,7 @@ public class StatesAuto extends LinearOpMode {
                 telemetry.addData("lbPos:", leftBack.getCurrentPosition());
                 telemetry.addData("rbPos:", rightBack.getCurrentPosition());
                 telemetry.addData("lfPos:", leftFront.getCurrentPosition());
-                telemetry.addData("rfPos:", rightFront.getCurrentPosition());
+                telemetry.addData("rfPos:", rightFront.getCurrentPosition());*/
                 telemetry.update();
             }
         }
@@ -355,10 +359,11 @@ public class StatesAuto extends LinearOpMode {
             }
 
             //TODO: tweek tolerance
-            //leftBack.setTargetPositionTolerance(3);
-            //rightBack.setTargetPositionTolerance(3);
-            //leftFront.setTargetPositionTolerance(3);
-            //rightFront.setTargetPositionTolerance(3);
+            /*leftBack.setTargetPositionTolerance(0);
+            rightBack.setTargetPositionTolerance(0);
+            leftFront.setTargetPositionTolerance(0);
+            rightFront.setTargetPositionTolerance(0);*/
+
 
             leftBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             rightBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -405,7 +410,9 @@ public class StatesAuto extends LinearOpMode {
                     rightFront.setPower(rfCurrentSpeed);
 
                 hArmOpen.setPosition(hArmPos);
-
+                telemetry.addData("hArmPos var:", hArmPos);
+                telemetry.addData("harmPos:", hArmOpen.getPosition());
+                /*
                 telemetry.addData("lbPower:", leftBack.getPower());
                 telemetry.addData("rbPower:", rightBack.getPower());
                 telemetry.addData("lfPower:", leftFront.getPower());
@@ -418,7 +425,7 @@ public class StatesAuto extends LinearOpMode {
                 telemetry.addData("rbPos:", rightBack.getCurrentPosition());
                 telemetry.addData("lfPos:", leftFront.getCurrentPosition());
                 telemetry.addData("rfPos:", rightFront.getCurrentPosition());
-
+                */
 
                 telemetry.update();
             }

@@ -1,12 +1,14 @@
 package org.firstinspires.ftc.teamcode.ZZZold.oldScripts;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@Autonomous //(name="Robot: Auto Drive By Encoder", group="Robot")
+@Disabled
+//(name="Robot: Auto Drive By Encoder", group="Robot")
 public class ScrimmageAuto extends LinearOpMode {
     ///////////////////////////////pseudocode///////////////////////////////
     //(robot is 17 inches long)

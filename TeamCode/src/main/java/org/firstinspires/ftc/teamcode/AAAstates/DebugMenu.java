@@ -1,5 +1,6 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.AAAstates;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -10,7 +11,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.acmerobotics.roadrunner.ftc.Encoder;
 
-@TeleOp(name="DebugMenu", group="Linear OpMode")
+@Disabled//(name="DebugMenu", group="Linear OpMode")
 public class DebugMenu extends LinearOpMode {
 
         // ROBOT MOVEMENT //

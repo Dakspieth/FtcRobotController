@@ -1,8 +1,9 @@
 package org.firstinspires.ftc.teamcode.ZZZold.oldScripts;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
-@Autonomous(name="LeftSideAuto", group="Robot")
+@Disabled//(name="LeftSideAuto", group="Robot")
 public class LeftSideAuto extends ScrimmageAuto {
     public void runOpMode() {
         // Call the parent class method to use its setup

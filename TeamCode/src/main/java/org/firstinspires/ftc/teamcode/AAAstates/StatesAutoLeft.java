@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.AAAstates;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
@@ -36,21 +36,21 @@ public class StatesAutoLeft extends StatesAuto {
         SetHArmPos("up");
         //outtake preload sample
         SetVSlideSpeed(0.75);
-        easeInches(7, 0.2f, 0.4f, dir.LEFT, 30);
-        easeInches(18.5f, 0.2f, 0.4f, dir.BACKWARD, 30);
+        driveInches(7, 0.4f, dir.LEFT, 30);
+        driveInches(18.5f, 0.4f, dir.BACKWARD, 30);
         driveInches(50, 0.4f, dir.LEFTROT, 30);
         driveInches(5, 0.4f, dir.BACKWARD, 30);
         SetVArmPos("out");
-        sleep(1000);
+        sleep(800);
         SetVArmPos("down");
 
             //intake spike sample 1
             driveInches(12, 0.4f, dir.FORWARD, 30);
-            driveInches(46, 0.4f, dir.LEFTROT, 30);
+            driveInches(42, 0.4f, dir.LEFTROT, 30);
             SetVSlideSpeed(-0.75);
             SetHArmPos("down");
-            moveClaw(true);
             SethSlidePos(0.55);
+            moveClaw(true);
             sleep(1000);
             SetVSlideSpeed(0);
             SethSlidePos(hsOut);
@@ -72,10 +72,10 @@ public class StatesAutoLeft extends StatesAuto {
             //outtake spike sample 1
             SetVSlideSpeed(0.75);
             driveInches(3, 0.2f, dir.BACKWARD, 30);
-            driveInches(48, 0.4f, dir.RIGHTROT, 30);
+            driveInches(42, 0.4f, dir.RIGHTROT, 30);
             driveInches(14, 0.4f, dir.BACKWARD, 30);
             SetVArmPos("out");
-            sleep(1000);
+            sleep(800);
             SetVArmPos("down");
 
         // intake spike sample 2
@@ -84,13 +84,14 @@ public class StatesAutoLeft extends StatesAuto {
         sleep(100);
         moveClaw(true);
         sleep(500);
-        easeInches(60, 0.3f, 0.5f, dir.BLROT, 30);
+        easeInches(60, 0.5f, 0.5f, dir.BLROT, 30);
         SetVSlideSpeed(-0.75);
         SethSlidePos(0.5);
-        easeInches(8, 0.4f, 0.6f, dir.FORWARD, 30);
+        sleep(250);
+        driveInches(6, 0.5f, dir.FORWARD, 30);
         moveClaw(false);
         sleep(400);
-        easeInches(8, 0.4f, 0.6f, dir.BACKWARD, 30);
+        driveInches(8, 0.6f, dir.BACKWARD, 30);
 //        sleep(1000);
         SetVSlideSpeed(0);
 
@@ -102,29 +103,50 @@ public class StatesAutoLeft extends StatesAuto {
         sleep(200);
         hClawServo.setPosition(0.75);
         SethSlidePos(hsOut);
+        SetHArmPos("up");
         sleep(100);
 
         //outtake spike sample 2
         SetVSlideSpeed(0.8);
-        easeInches(70, 0.3f, 0.5f, dir.BLROTNEG, 30);
-        sleep(800);
+        easeInches(70, 0.5f, 0.5f, dir.BLROTNEG, 30);
+        //sleep(800);
         SetVArmPos("out");
-        sleep(1000);
+        SetHArmPos("up");
+        sleep(800);
         SetVArmPos("down");
+        SetHArmPos("down");
         sleep(500);
 
             //intake spike sample 3
-            easeInches(4, 0.2f, 0.4f, dir.FORWARD, 30);
+            driveInches(4, 0.4f, dir.FORWARD, 30);
             SetVSlideSpeed(-0.6);
             SetHArmPos("down");
-            hArmOpen.setPosition(hArmPos);
             sleep(1000);
-            driveInches(75, 0.4f, dir.LEFTROT, 30);
-            hClawServo.setPosition(0.625);
+            driveInches(82, 0.5f, dir.LEFTROT, 30);
+            hClawServo.setPosition(0.575);
             sleep(700);
-            driveInches(8f, 0.3f, dir.FORWARD, 30);
+            driveInches(14, 0.3f, dir.FORWARD, 30);
             moveClaw(false);
             sleep(1000);
+            driveInches(8, 0.3f, dir.BACKWARD, 30);
+
+            SethSlidePos(hsIn);
+            SetHArmPos("up");
+            sleep(1000);
+            hClawServo.setPosition(0.625);
+            sleep(200);
+            hClawServo.setPosition(0.75);
+            SethSlidePos(hsOut);
+            sleep(100);
+
+            SetVSlideSpeed(0.8f);
+            driveInches(65, 0.5f, dir.RIGHTROT, 30);
+            driveInches(5, 0.5f, dir.BACKWARD, 30);
+            SetVArmPos("out");
+            sleep(800);
+            SetVArmPos("down");
+            sleep(500 );
+            easeInches(24, 0.3f, 0.75f , dir.FORWARD, 30);
 
 
 
