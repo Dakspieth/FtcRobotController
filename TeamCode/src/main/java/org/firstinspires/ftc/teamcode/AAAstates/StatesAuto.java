@@ -476,12 +476,12 @@ public class StatesAuto extends LinearOpMode {
     protected void SetHArmPos(String down){
 
             if(down == "up"){
-                hArmPos = 0.9f;
+                hArmPos = 0.86f;
                 hArmOpen.setPosition(hArmPos);
             }
 
             if(down == "down"){
-                hArmPos = 0.17f;
+                hArmPos = 0.13f;
                 hArmOpen.setPosition(hArmPos);;//0.175f
 
             }

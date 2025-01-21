@@ -30,8 +30,11 @@ public class StatesAutoRight extends StatesAuto {
 
 
         ////////////////// main /////////////////////
+        driveInches(3, 0.5f, dir.LEFT, 30);
+        easeInches(25, 0.3f, 0.5f, dir.FORWARD, 30);
 
-        driveInches(2, 0.6f, dir.FORWARD, 30);
+
+        /*driveInches(2, 0.6f, dir.FORWARD, 30);
         driveInches(21, 0.6f, dir.RIGHT, 30);
 
         driveInches(54, 0.6f, dir.FORWARD, 30);
@@ -46,7 +49,7 @@ public class StatesAutoRight extends StatesAuto {
         driveInches(3, 0.6f, dir.RIGHT, 30);
         driveInches(50, 0.6f, dir.BACKWARD, 30);
 
-        driveInches(2, 0.6f, dir.FORWARD, 30);
+        driveInches(2, 0.6f, dir.FORWARD, 30);*/
 
 
 

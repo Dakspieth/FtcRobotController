@@ -61,8 +61,9 @@ public class StatesAutoLeft extends StatesAuto {
 
             //transfer spike sample 1
             SetHArmPos("up");
+            sleep(600);
             SethSlidePos(hsIn);
-            sleep(1000);
+            sleep(800);
             hClawServo.setPosition(0.625);
             sleep(200);
             hClawServo.setPosition(0.75);
@@ -84,7 +85,7 @@ public class StatesAutoLeft extends StatesAuto {
         sleep(100);
         moveClaw(true);
         sleep(500);
-        easeInches(60, 0.5f, 0.5f, dir.BLROT, 30);
+        easeInches(56, 0.5f, 0.5f, dir.BLROT, 30);
         SetVSlideSpeed(-0.75);
         SethSlidePos(0.5);
         sleep(250);
@@ -97,18 +98,18 @@ public class StatesAutoLeft extends StatesAuto {
 
         //transfer spike sample 2
         SetHArmPos("up");
+        sleep(700);
         SethSlidePos(hsIn);
-        sleep(1000);
+        sleep(800);
         hClawServo.setPosition(0.625);
         sleep(200);
-        hClawServo.setPosition(0.75);
+        // mn  hClawServo.setPosition(0.75);
         SethSlidePos(hsOut);
-        SetHArmPos("up");
         sleep(100);
 
         //outtake spike sample 2
         SetVSlideSpeed(0.8);
-        easeInches(70, 0.5f, 0.5f, dir.BLROTNEG, 30);
+        easeInches(66, 0.5f, 0.5f, dir.BLROTNEG, 30);
         //sleep(800);
         SetVArmPos("out");
         SetHArmPos("up");
@@ -130,9 +131,10 @@ public class StatesAutoLeft extends StatesAuto {
             sleep(1000);
             driveInches(8, 0.3f, dir.BACKWARD, 30);
 
-            SethSlidePos(hsIn);
             SetHArmPos("up");
-            sleep(1000);
+            sleep(600);
+            SethSlidePos(hsIn);
+            sleep(800);
             hClawServo.setPosition(0.625);
             sleep(200);
             hClawServo.setPosition(0.75);
@@ -140,7 +142,7 @@ public class StatesAutoLeft extends StatesAuto {
             sleep(100);
 
             SetVSlideSpeed(0.8f);
-            driveInches(65, 0.5f, dir.RIGHTROT, 30);
+            driveInches(70, 0.5f, dir.RIGHTROT, 30);
             driveInches(5, 0.5f, dir.BACKWARD, 30);
             SetVArmPos("out");
             sleep(800);

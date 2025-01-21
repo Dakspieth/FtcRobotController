@@ -28,6 +28,7 @@ public class MainMovement extends LinearOpMode {
     final float joystickDeadzone = 0.1f; // Area where joystick will not detect input
 
     double hsMinExtensionR, hsMaxExtensionR;
+    double hArmUpValue, hArmDownValue;
 
         // ROBOT OTHER STUFF //
 
@@ -152,7 +153,7 @@ public class MainMovement extends LinearOpMode {
             VerticalArmAndOuttake();
             TransferFunction();
             Sweeper();
-            LevelTwoHang();
+            //LevelTwoHang();
 
 
             setMotorPowers();
@@ -302,9 +303,10 @@ public class MainMovement extends LinearOpMode {
     //////////////////////// END OF MOVEMENT CODE ////////////////////////
 
     private void HorizontalSlideMovement() {
-        hsMinExtensionR = 0.6078;
+        hsMinExtensionR = 0.605;
         hsMaxExtensionR = 0.377;
-        //double hsMinExtensionL = 0.025, hsMaxExtensionL = 0.325;
+        //hsMaxExtensionR = 0;
+        //hsMinExtensionR = 1;
         // controls - horizontal slide
         boolean hsExtendBtn = gamepad2.left_bumper, hsRetractBtn = gamepad2.right_bumper;
         double hsStickY = gamepad2.right_stick_y;
@@ -314,12 +316,13 @@ public class MainMovement extends LinearOpMode {
         // Gradual horizontal slide Movement
         if(Math.abs(hsStickY) > joystickDeadzone) {
             // moves the horizontal linear slide with joystick
-            //hLinearSlideLeft.setPosition(Math.max(hsMinExtensionL, Math.min(hsMaxExtensionL, hLinearSlideLeft.getPosition() - (hsStickY / 400)))); //used to be division by 800
             hLinearSlideRight.setPosition(Math.min(hsMinExtensionR, Math.max(hsMaxExtensionR, hLinearSlideRight.getPosition() + (hsStickY / 400)))); //used to be division by 800
+            //hArmOpen.setPosition(Math.min(hsMinExtensionR, Math.max(hsMaxExtensionR, hArmOpen.getPosition() + (hsStickY / 400)))); //used to be division by 800
+
         } else {
             // make slide stay in place so it doesn't slide back and forth while driving
-            //hLinearSlideLeft.setPosition(hLinearSlideLeft.getPosition());
             hLinearSlideRight.setPosition(hLinearSlideRight.getPosition());
+            //hArmOpen.setPosition(hArmOpen.getPosition());
         }
 
         // Snap horizontal slide to FULLY EXTENDED
@@ -333,6 +336,7 @@ public class MainMovement extends LinearOpMode {
             //hLinearSlideLeft.setPosition(hsMinExtensionL);
             hLinearSlideRight.setPosition(hsMinExtensionR);
         }
+        telemetry.addData("hArmPos", hArmOpen.getPosition());
 
     }
 
@@ -341,7 +345,8 @@ public class MainMovement extends LinearOpMode {
     }
     private void HorizontalClawAndArm() {
         double hClawOpenValue = 0.377, hClawClosedValue = 0.75;
-        double hArmUpValue = 0.835, hArmDownValue = 0.135; // .95 and 0.25 before
+        hArmUpValue = 0.14;
+        hArmDownValue = 1; // .835 and 0.135 before
         // controls - horizontal claw and arm
         boolean hClawToggleBtn = gamepad2.b; // open/close claw
         boolean hArmToggleBtn = gamepad2.y; // swing horizontal arm out/in
@@ -395,13 +400,13 @@ public class MainMovement extends LinearOpMode {
             telemetry.addData("SWEEPPOS", sweeper.getPosition());
             if(chamberStep == 0) {
                 sweeper.setPosition(0.875);
-                hLinearSlideRight.setPosition(0.55);
+                hLinearSlideRight.setPosition(hsMinExtensionR - 0.1f);
 
                 chamberStep = 1;
             } else if(chamberStep == 1 && sweeperTimer.milliseconds() >= 1000 ) {
                 //sweeps in
                 sweeper.setPosition(0);
-                hArmOpen.setPosition(0.835);
+                hArmOpen.setPosition(hArmDownValue);
                 hClawServo.setPosition(0.377);
                 chamberStep = 2;
             } else if(chamberStep == 2 && sweeperTimer.milliseconds() >= 1250) {
@@ -453,7 +458,7 @@ public class MainMovement extends LinearOpMode {
 
     }
 
-    private void LevelTwoHang() {
+   /* private void LevelTwoHang() {
 
         //allows the player to move the hang motors
         if(gamepad2.dpad_right && hangTimer1.milliseconds() >= 200){
@@ -472,7 +477,7 @@ public class MainMovement extends LinearOpMode {
             hangMotorRight.setPower(0);
         }
 
-    }
+    }*/
 
 
     private void TransferFunction() {
@@ -487,20 +492,23 @@ public class MainMovement extends LinearOpMode {
 
         if (enableTransfer) {
             if(transferStep == 0) {
-                hArmOpen.setPosition(0.11);
-                hLinearSlideRight.setPosition(hsMinExtensionR);
+                hArmOpen.setPosition(hArmUpValue);
                 transferTimer.reset();
                 transferStep = 1;
-            } else if(transferStep == 1 && transferTimer.milliseconds() >= 1000) {
-                hClawServo.setPosition(0.6);
+            }else if (transferStep == 1 && transferTimer.milliseconds() >= 700) {
+                hLinearSlideRight.setPosition(hsMinExtensionR);
                 transferTimer.reset();
                 transferStep = 2;
-            } else if(transferStep == 2 && transferTimer.milliseconds() >= 200) {
+            } else if(transferStep == 2 && transferTimer.milliseconds() >= 700) {
+                hClawServo.setPosition(0.60);
+                transferTimer.reset();
+                transferStep = 3;
+            } else if(transferStep == 3 && transferTimer.milliseconds() >= 200) {
                 hClawServo.setPosition(0.75);
                 hLinearSlideRight.setPosition(hsMaxExtensionR);
                 transferTimer.reset();
-                transferStep = 3;
-            } else if(transferStep == 3 && transferTimer.milliseconds() >= 100) {
+                transferStep = 4;
+            } else if(transferStep == 4 && transferTimer.milliseconds() >= 100) {
                 transferStep = 0;
                 transferTimer.reset();
                 enableTransfer = false;
@@ -516,13 +524,13 @@ public class MainMovement extends LinearOpMode {
     private void setMotorPowers() {
             
         if (Strafing && Rotating) {
-            leftBack.setPower(((RotateBL + StrafeBL) / 2) * rotationSpeed * 0.5);
+            leftBack.setPower(((RotateBL + StrafeBL)) * rotationSpeed * 0.5);
 
-            rightFront.setPower(((RotateFR + StrafeFR) / 2) * rotationSpeed * 0.5);
+            rightFront.setPower(((RotateFR + StrafeFR)) * rotationSpeed * 0.5);
 
-            leftFront.setPower(((RotateFL + StrafeFL) / 2) * rotationSpeed * 0.5);
+            leftFront.setPower(((RotateFL + StrafeFL)) * rotationSpeed * 0.5);
 
-            rightBack.setPower(((RotateBR + StrafeBR) / 2) * rotationSpeed * 0.5);
+            rightBack.setPower(((RotateBR + StrafeBR)) * rotationSpeed * 0.5);
             // hello :3
         } else if (Strafing && !Rotating) {
             leftBack.setPower(StrafeBL * 0.5);
