@@ -66,7 +66,7 @@ public class StatesAutoLeft extends StatesAuto {
             sleep(800);
             hClawServo.setPosition(0.625);
             sleep(200);
-            hClawServo.setPosition(0.75);
+            //hClawServo.setPosition(0.75);
             SethSlidePos(hsOut);
             sleep(100);
 
@@ -137,7 +137,7 @@ public class StatesAutoLeft extends StatesAuto {
             sleep(800);
             hClawServo.setPosition(0.625);
             sleep(200);
-            hClawServo.setPosition(0.75);
+            //hClawServo.setPosition(0.75);
             SethSlidePos(hsOut);
             sleep(100);
 
