@@ -28,7 +28,7 @@ public class MainMovement extends LinearOpMode {
     final float joystickDeadzone = 0.1f; // Area where joystick will not detect input
 
     double hsMinExtensionR, hsMaxExtensionR;
-    double hArmUpValue, hArmDownValue;
+    double hArmUpValue, hArmDownValue, hArmMidValue;
 
         // ROBOT OTHER STUFF //
 
@@ -106,7 +106,7 @@ public class MainMovement extends LinearOpMode {
         vArmServo = hardwareMap.get(Servo.class, "bucket_arm_woohoo"); //     CH2
         hLinearSlideLeft = hardwareMap.get(Servo.class, "horizontal_slide_left"); //  CH1
         hLinearSlideRight = hardwareMap.get(Servo.class, "horizontal_slide_right"); //  EH1
-        hArmOpen = hardwareMap.get(Servo.class, "horizontal_arm"); //      EH3
+        hArmOpen = hardwareMap.get(Servo.class, "horizontal_arm"); //      EH4
         hClawServo = hardwareMap.get(Servo.class, "horizontal_claw"); //    EH5
 
         hArmOpen.setDirection(Servo.Direction.REVERSE);
@@ -345,8 +345,9 @@ public class MainMovement extends LinearOpMode {
     }
     private void HorizontalClawAndArm() {
         double hClawOpenValue = 0.377, hClawClosedValue = 0.75;
-        hArmUpValue = 0.225;
-        hArmDownValue = 0.96; // .835 and 0.135 before
+        hArmUpValue = 0.235;
+        hArmDownValue = 0.92; // .835 and 0.135 before
+        hArmMidValue = 0.8;
         // controls - horizontal claw and arm
         boolean hClawToggleBtn = gamepad2.b; // open/close claw
         boolean hArmToggleBtn = gamepad2.y; // swing horizontal arm out/in
@@ -369,6 +370,7 @@ public class MainMovement extends LinearOpMode {
         }
 
         // HORIZONTAL ARM IN ? OUT
+        telemetry.addData("irbfogiugboiughoiru", hArmUp);
 
         if (hArmToggleBtn && hArmTimer.milliseconds() >= 250) {
             hArmUp = !hArmUp; // toggle arm rotation
@@ -380,6 +382,11 @@ public class MainMovement extends LinearOpMode {
                 hArmOpen.setPosition(hArmUpValue);
             }
             hArmTimer.reset();
+        }
+
+        if(gamepad2.dpad_right){
+            hArmOpen.setPosition(hArmMidValue);
+            hArmUp = false;
         }
     }
 
@@ -403,7 +410,7 @@ public class MainMovement extends LinearOpMode {
                 hLinearSlideRight.setPosition(hsMinExtensionR - 0.1f);
 
                 chamberStep = 1;
-            } else if(chamberStep == 1 && sweeperTimer.milliseconds() >= 1000 ) {
+            } else if(chamberStep == 1 && sweeperTimer.milliseconds() >= 1000) {
                 //sweeps in
                 sweeper.setPosition(0);
                 hArmOpen.setPosition(hArmDownValue);
@@ -493,6 +500,7 @@ public class MainMovement extends LinearOpMode {
         if (enableTransfer) {
             if(transferStep == 0) {
                 hArmOpen.setPosition(hArmUpValue);
+                hArmUp = true;
                 transferTimer.reset();
                 transferStep = 1;
             }else if (transferStep == 1 && transferTimer.milliseconds() >= 700) {
@@ -504,7 +512,9 @@ public class MainMovement extends LinearOpMode {
                 transferTimer.reset();
                 transferStep = 3;
             } else if(transferStep == 3 && transferTimer.milliseconds() >= 200) {
-                hLinearSlideRight.setPosition(hsMaxExtensionR);
+                if(hArmOpen.getPosition() <= 0.5) {
+                    hLinearSlideRight.setPosition(hsMaxExtensionR);
+                }
                 transferTimer.reset();
                 transferStep = 4;
             } else if(transferStep == 4 && transferTimer.milliseconds() >= 100) {

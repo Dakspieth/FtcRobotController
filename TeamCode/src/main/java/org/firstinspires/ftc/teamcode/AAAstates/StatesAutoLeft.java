@@ -63,7 +63,7 @@ public class StatesAutoLeft extends StatesAuto {
             SetHArmPos("up");
             sleep(600);
             SethSlidePos(hsIn);
-            sleep(800);
+            sleep(600);
             hClawServo.setPosition(0.625);
             sleep(200);
             //hClawServo.setPosition(0.75);
@@ -85,7 +85,7 @@ public class StatesAutoLeft extends StatesAuto {
         sleep(100);
         moveClaw(true);
         sleep(500);
-        easeInches(56, 0.5f, 0.5f, dir.BLROT, 30);
+        easeInches(60, 0.5f, 0.5f, dir.BLROT, 30);
         SetVSlideSpeed(-0.75);
         SethSlidePos(0.5);
         sleep(250);
@@ -100,7 +100,7 @@ public class StatesAutoLeft extends StatesAuto {
         SetHArmPos("up");
         sleep(700);
         SethSlidePos(hsIn);
-        sleep(800);
+        sleep(600);
         hClawServo.setPosition(0.625);
         sleep(200);
         // mn  hClawServo.setPosition(0.75);
@@ -109,7 +109,7 @@ public class StatesAutoLeft extends StatesAuto {
 
         //outtake spike sample 2
         SetVSlideSpeed(0.8);
-        easeInches(66, 0.5f, 0.5f, dir.BLROTNEG, 30);
+        easeInches(68, 0.5f, 0.5f, dir.BLROTNEG, 30);
         //sleep(800);
         SetVArmPos("out");
         SetHArmPos("up");
@@ -122,19 +122,19 @@ public class StatesAutoLeft extends StatesAuto {
             driveInches(4, 0.4f, dir.FORWARD, 30);
             SetVSlideSpeed(-0.6);
             SetHArmPos("down");
-            sleep(1000);
+            sleep(200);
             driveInches(82, 0.5f, dir.LEFTROT, 30);
             hClawServo.setPosition(0.575);
-            sleep(700);
+            sleep(100);
             driveInches(14, 0.3f, dir.FORWARD, 30);
             moveClaw(false);
-            sleep(1000);
+            sleep(200);
             driveInches(8, 0.3f, dir.BACKWARD, 30);
 
             SetHArmPos("up");
             sleep(600);
             SethSlidePos(hsIn);
-            sleep(800);
+            sleep(650);
             hClawServo.setPosition(0.625);
             sleep(200);
             //hClawServo.setPosition(0.75);
@@ -147,13 +147,23 @@ public class StatesAutoLeft extends StatesAuto {
             SetVArmPos("out");
             sleep(800);
             SetVArmPos("down");
-            sleep(500 );
-
-        driveInches(8, 0.6f , dir.LEFT, 30);
-        easeInches(24, 0.2f, 0.7f , dir.FORWARD, 30);
+            moveClaw(false);
+            sleep(500);
 
 
+        easeInches(24, 0.7f, 0.7f , dir.BLROT, 30);
+        SetVSlideSpeed(-0.5 );
+        driveInches(38, 0.7f, dir.FORWARD, 30);
+        driveInches(50, 0.7f, dir.RIGHTROT, 30);
 
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
