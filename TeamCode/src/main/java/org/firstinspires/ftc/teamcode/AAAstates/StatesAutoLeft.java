@@ -31,7 +31,14 @@ public class StatesAutoLeft extends StatesAuto {
 
         ////////////////// main /////////////////////
 
-
+/*
+        while(true){
+            SetHArmPos("up");
+            sleep(1500);
+            SetHArmPos("down");
+            sleep(1500);
+        }
+*/
         SetVArmPos("down");
         SetHArmPos("up");
         //outtake preload sample
@@ -99,7 +106,7 @@ public class StatesAutoLeft extends StatesAuto {
         //transfer spike sample 2
         SetHArmPos("up");
         sleep(700);
-        SethSlidePos(hsIn);
+        SethSlidePos(hsIn );
         sleep(600);
         hClawServo.setPosition(0.625);
         sleep(200);
@@ -131,6 +138,7 @@ public class StatesAutoLeft extends StatesAuto {
             sleep(200);
             driveInches(8, 0.3f, dir.BACKWARD, 30);
 
+            //transfer spike sample 3
             SetHArmPos("up");
             sleep(600);
             SethSlidePos(hsIn);
@@ -141,6 +149,7 @@ public class StatesAutoLeft extends StatesAuto {
             SethSlidePos(hsOut);
             sleep(100);
 
+            //outtake spike sample 3
             SetVSlideSpeed(0.8f);
             driveInches(70, 0.5f, dir.RIGHTROT, 30);
             driveInches(5, 0.5f, dir.BACKWARD, 30);
@@ -150,7 +159,7 @@ public class StatesAutoLeft extends StatesAuto {
             moveClaw(false);
             sleep(500);
 
-
+        //go to chamber to save a few seconds in teleop
         easeInches(24, 0.7f, 0.7f , dir.BLROT, 30);
         SetVSlideSpeed(-0.5 );
         driveInches(38, 0.7f, dir.FORWARD, 30);
