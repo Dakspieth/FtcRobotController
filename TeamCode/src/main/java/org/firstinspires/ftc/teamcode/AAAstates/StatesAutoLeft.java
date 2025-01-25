@@ -31,14 +31,17 @@ public class StatesAutoLeft extends StatesAuto {
 
         ////////////////// main /////////////////////
 
-/*
-        while(true){
+
+  /*      while(true){
+            moveClaw(false);
+            SetVArmPos("down");
             SetHArmPos("up");
             sleep(1500);
             SetHArmPos("down");
             sleep(1500);
         }
 */
+
         SetVArmPos("down");
         SetHArmPos("up");
         //outtake preload sample
@@ -53,7 +56,7 @@ public class StatesAutoLeft extends StatesAuto {
 
             //intake spike sample 1
             driveInches(12, 0.4f, dir.FORWARD, 30);
-            driveInches(42, 0.4f, dir.LEFTROT, 30);
+            driveInches(45, 0.4f, dir.LEFTROT, 30);
             SetVSlideSpeed(-0.75);
             SetHArmPos("down");
             SethSlidePos(0.55);
@@ -80,7 +83,7 @@ public class StatesAutoLeft extends StatesAuto {
             //outtake spike sample 1
             SetVSlideSpeed(0.75);
             driveInches(3, 0.2f, dir.BACKWARD, 30);
-            driveInches(42, 0.4f, dir.RIGHTROT, 30);
+            driveInches(45, 0.4f, dir.RIGHTROT, 30);
             driveInches(14, 0.4f, dir.BACKWARD, 30);
             SetVArmPos("out");
             sleep(800);
@@ -162,8 +165,8 @@ public class StatesAutoLeft extends StatesAuto {
         //go to chamber to save a few seconds in teleop
         easeInches(24, 0.7f, 0.7f , dir.BLROT, 30);
         SetVSlideSpeed(-0.5 );
-        driveInches(38, 0.7f, dir.FORWARD, 30);
-        driveInches(50, 0.7f, dir.RIGHTROT, 30);
+        //driveInches(38, 0.7f, dir.FORWARD, 30);
+        //driveInches(50, 0.7f, dir.RIGHTROT, 30);
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

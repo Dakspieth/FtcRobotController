@@ -136,7 +136,7 @@ public class MainMovement extends LinearOpMode {
         telemetry.update();
 
         waitForStart(); //waits for play on the driver hub :3
-
+        vArmServo.setPosition(0.775);
         while (opModeIsActive()) {
             // detecting the x and y position of both joysticks
             LjoystickX = gamepad1.left_stick_x;
@@ -303,7 +303,7 @@ public class MainMovement extends LinearOpMode {
     //////////////////////// END OF MOVEMENT CODE ////////////////////////
 
     private void HorizontalSlideMovement() {
-        hsMinExtensionR = 0.605;
+        hsMinExtensionR = 0.6;
         hsMaxExtensionR = 0.377;
         //hsMaxExtensionR = 0;
         //hsMinExtensionR = 1;
@@ -345,8 +345,8 @@ public class MainMovement extends LinearOpMode {
     }
     private void HorizontalClawAndArm() {
         double hClawOpenValue = 0.377, hClawClosedValue = 0.75;
-        hArmUpValue = 0.075;
-        hArmDownValue = 0.975 ; // .835 and 0.135 before
+        hArmUpValue = 0.285;
+        hArmDownValue = 0.98 ; // .835 and 0.135 before
         hArmMidValue = 0.8;
         // controls - horizontal claw and arm
         boolean hClawToggleBtn = gamepad2.b; // open/close claw
@@ -370,7 +370,7 @@ public class MainMovement extends LinearOpMode {
         }
 
         // HORIZONTAL ARM IN ? OUT
-        telemetry.addData("irbfogiugboiughoiru", hArmUp);
+        telemetry.addData("H Arm Value", hArmUp);
 
         if (hArmToggleBtn && hArmTimer.milliseconds() >= 250) {
             hArmUp = !hArmUp; // toggle arm rotation
@@ -503,12 +503,12 @@ public class MainMovement extends LinearOpMode {
                 hArmUp = true;
                 transferTimer.reset();
                 transferStep = 1;
-            }else if (transferStep == 1 && transferTimer.milliseconds() >= 700) {
+            }else if (transferStep == 1 && transferTimer.milliseconds() >= 1000) {
                 hLinearSlideRight.setPosition(hsMinExtensionR);
                 transferTimer.reset();
                 transferStep = 2;
             } else if(transferStep == 2 && transferTimer.milliseconds() >= 700) {
-                hClawServo.setPosition(0.58);
+                hClawServo.setPosition(0.625);
                 transferTimer.reset();
                 transferStep = 3;
             } else if(transferStep == 3 && transferTimer.milliseconds() >= 200) {
@@ -529,7 +529,7 @@ public class MainMovement extends LinearOpMode {
 
 
 
-
+//I know very well how this whole motor power setting is very long and inefficient but it used to be different and I don't feel like fixing it
     private void setMotorPowers() {
             
         if (Strafing && Rotating) {
