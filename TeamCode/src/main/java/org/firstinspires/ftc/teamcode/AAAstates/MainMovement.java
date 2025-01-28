@@ -345,7 +345,7 @@ public class MainMovement extends LinearOpMode {
     }
     private void HorizontalClawAndArm() {
         double hClawOpenValue = 0.377, hClawClosedValue = 0.75;
-        hArmUpValue = 0.285;
+        hArmUpValue = 0.29;
         hArmDownValue = 0.98 ; // .835 and 0.135 before
         hArmMidValue = 0.8;
         // controls - horizontal claw and arm
