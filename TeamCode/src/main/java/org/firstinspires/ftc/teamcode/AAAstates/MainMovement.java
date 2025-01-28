@@ -532,7 +532,7 @@ public class MainMovement extends LinearOpMode {
 //I know very well how this whole motor power setting is very long and inefficient but it used to be different and I don't feel like fixing it
     private void setMotorPowers() {
             
-        if (Strafing && Rotating) {
+        if (Strafing || Rotating) {
             leftBack.setPower(((RotateBL + StrafeBL)) * rotationSpeed * 0.5);
 
             rightFront.setPower(((RotateFR + StrafeFR)) * rotationSpeed * 0.5);
@@ -541,24 +541,6 @@ public class MainMovement extends LinearOpMode {
 
             rightBack.setPower(((RotateBR + StrafeBR)) * rotationSpeed * 0.5);
             // hello :3
-        } else if (Strafing && !Rotating) {
-            leftBack.setPower(StrafeBL * 0.5);
-
-            rightFront.setPower(StrafeFR * 0.5);
-
-            leftFront.setPower(StrafeFL * 0.5);
-
-            rightBack.setPower(StrafeBR * 0.5);
-
-        } else if (!Strafing && Rotating) {
-            leftBack.setPower(RotateBL * rotationSpeed * 0.5);
-
-            rightFront.setPower(RotateFR * rotationSpeed * 0.5);
-
-            leftFront.setPower(RotateFL * rotationSpeed * 0.5);
-
-            rightBack.setPower(RotateBR * rotationSpeed * 0.5);
-
         } else {
             leftBack.setPower(0);
 
