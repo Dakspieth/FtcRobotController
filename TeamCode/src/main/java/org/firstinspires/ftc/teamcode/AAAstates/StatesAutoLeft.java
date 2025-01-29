@@ -56,7 +56,7 @@ public class StatesAutoLeft extends StatesAuto {
 
             //intake spike sample 1
             driveInches(12, 0.4f, dir.FORWARD, 30);
-            driveInches(45, 0.4f, dir.LEFTROT, 30);
+            driveInches(46.5f, 0.4f, dir.LEFTROT, 30);
             SetVSlideSpeed(-0.75);
             SetHArmPos("down");
             SethSlidePos(0.55);
@@ -83,7 +83,7 @@ public class StatesAutoLeft extends StatesAuto {
             //outtake spike sample 1
             SetVSlideSpeed(0.75);
             driveInches(3, 0.2f, dir.BACKWARD, 30);
-            driveInches(45, 0.4f, dir.RIGHTROT, 30);
+            driveInches(44.5f, 0.4f, dir.RIGHTROT, 30);
             driveInches(14, 0.4f, dir.BACKWARD, 30);
             SetVArmPos("out");
             sleep(800);
@@ -95,7 +95,7 @@ public class StatesAutoLeft extends StatesAuto {
         sleep(100);
         moveClaw(true);
         sleep(500);
-        easeInches(60, 0.5f, 0.5f, dir.BLROT, 30);
+        easeInches(63.5f, 0.5f, 0.5f, dir.BLROT, 30);
         SetVSlideSpeed(-0.75);
         SethSlidePos(0.5);
         sleep(250);
@@ -108,8 +108,8 @@ public class StatesAutoLeft extends StatesAuto {
 
         //transfer spike sample 2
         SetHArmPos("up");
-        sleep(700);
-        SethSlidePos(hsIn );
+        sleep(900);
+        SethSlidePos(0.585);
         sleep(600);
         hClawServo.setPosition(0.625);
         sleep(200);
@@ -119,7 +119,7 @@ public class StatesAutoLeft extends StatesAuto {
 
         //outtake spike sample 2
         SetVSlideSpeed(0.8);
-        easeInches(68, 0.5f, 0.5f, dir.BLROTNEG, 30);
+        easeInches(73, 0.5f, 0.5f, dir.BLROTNEG, 30);
         //sleep(800);
         SetVArmPos("out");
         SetHArmPos("up");
@@ -133,10 +133,10 @@ public class StatesAutoLeft extends StatesAuto {
             SetVSlideSpeed(-0.6);
             SetHArmPos("down");
             sleep(200);
-            driveInches(82, 0.5f, dir.LEFTROT, 30);
+            driveInches(85, 0.5f, dir.LEFTROT, 30);
             hClawServo.setPosition(0.575);
             sleep(100);
-            driveInches(14, 0.3f, dir.FORWARD, 30);
+            driveInches(16, 0.3f, dir.FORWARD, 30);
             moveClaw(false);
             sleep(200);
             driveInches(8, 0.3f, dir.BACKWARD, 30);
@@ -155,7 +155,7 @@ public class StatesAutoLeft extends StatesAuto {
             //outtake spike sample 3
             SetVSlideSpeed(0.8f);
             driveInches(70, 0.5f, dir.RIGHTROT, 30);
-            driveInches(5, 0.5f, dir.BACKWARD, 30);
+            driveInches(7, 0.5f, dir.BACKWARD, 30);
             SetVArmPos("out");
             sleep(800);
             SetVArmPos("down");

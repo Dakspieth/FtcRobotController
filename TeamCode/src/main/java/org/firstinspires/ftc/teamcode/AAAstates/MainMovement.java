@@ -356,8 +356,10 @@ public class MainMovement extends LinearOpMode {
 
         if(gamepad2.left_trigger > 0.5) {
             hClawServo.setPosition(0.625); // OPENS claw slighty
+            hClawOpen = true;
         } else if(gamepad2.right_trigger > 0.5) {
             hClawServo.setPosition(hClawClosedValue); // OPENS claw
+            hClawOpen = false;
         }
         else if (hClawToggleBtn && hClawTimer.milliseconds() >= 200) {
             hClawOpen = !hClawOpen; // toggle state of claw
@@ -509,6 +511,7 @@ public class MainMovement extends LinearOpMode {
                 transferStep = 2;
             } else if(transferStep == 2 && transferTimer.milliseconds() >= 700) {
                 hClawServo.setPosition(0.625);
+                hClawOpen = true;
                 transferTimer.reset();
                 transferStep = 3;
             } else if(transferStep == 3 && transferTimer.milliseconds() >= 200) {
