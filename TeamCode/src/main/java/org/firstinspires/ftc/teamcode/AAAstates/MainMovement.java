@@ -303,7 +303,7 @@ public class MainMovement extends LinearOpMode {
     //////////////////////// END OF MOVEMENT CODE ////////////////////////
 
     private void HorizontalSlideMovement() {
-        hsMinExtensionR = 0.6;
+        hsMinExtensionR = 0.575;
         hsMaxExtensionR = 0.377;
         //hsMaxExtensionR = 0;
         //hsMinExtensionR = 1;

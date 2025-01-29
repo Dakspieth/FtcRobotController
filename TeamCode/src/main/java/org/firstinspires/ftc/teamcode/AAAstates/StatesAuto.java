@@ -22,7 +22,7 @@ public class StatesAuto extends LinearOpMode {
     static final double blrotConst = 0.5625;
 
     protected final double hsOut = 0.377;
-    protected final double hsIn = 0.6;
+    protected final double hsIn = 0.575;
 
     static final int maxSlideTicks = 2000;
     static final int minSlideTicks = 0;
@@ -476,7 +476,7 @@ public class StatesAuto extends LinearOpMode {
     protected void SetHArmPos(String down){
 
             if(down == "down"){
-                hArmPos = 0.025f;
+                hArmPos = 0.015f;
                 hArmOpen.setPosition(hArmPos);
             }
 
