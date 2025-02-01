@@ -138,7 +138,7 @@ public class StatesAutoLeft extends StatesAuto {
             //driveInches(4, 0.5f, dir.LEFT, 30);
             hClawServo.setPosition(0.575);
             sleep(100);
-            driveInches(16.75f, 0.3f, dir.FORWARD, 30);
+            driveInches(16.5f, 0.3f, dir.FORWARD, 30);
             // sleep(230);
             moveClaw(false);
             sleep(200);

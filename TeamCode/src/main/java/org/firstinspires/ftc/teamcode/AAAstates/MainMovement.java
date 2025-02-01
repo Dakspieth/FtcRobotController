@@ -173,7 +173,7 @@ public class MainMovement extends LinearOpMode {
     //////////////////////// START OF MOVEMENT CODE ////////////////////////
 
     //////////////////////// START OF MOVEMENT CODE ////////////////////////
-    
+
     //////////////////////// START OF MOVEMENT CODE ////////////////////////
 
     private void epicRotationMovement() {
@@ -346,7 +346,7 @@ public class MainMovement extends LinearOpMode {
     private void HorizontalClawAndArm() {
         double hClawOpenValue = 0.377, hClawClosedValue = 0.75;
         hArmUpValue = 0.29;
-        hArmDownValue = 0.98 ; // .835 and 0.135 before
+        hArmDownValue = 0.985 ; // .835 and 0.135 before
         hArmMidValue = 0.8;
         // controls - horizontal claw and arm
         boolean hClawToggleBtn = gamepad2.b; // open/close claw
@@ -356,10 +356,10 @@ public class MainMovement extends LinearOpMode {
 
         if(gamepad2.left_trigger > 0.5) {
             hClawServo.setPosition(0.625); // OPENS claw slighty
-            hClawOpen = true;
+            hClawOpen = false;
         } else if(gamepad2.right_trigger > 0.5) {
             hClawServo.setPosition(hClawClosedValue); // OPENS claw
-            hClawOpen = false;
+            hClawOpen = true;
         }
         else if (hClawToggleBtn && hClawTimer.milliseconds() >= 200) {
             hClawOpen = !hClawOpen; // toggle state of claw
