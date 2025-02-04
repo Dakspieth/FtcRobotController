@@ -30,8 +30,33 @@ public class StatesAutoRight extends StatesAuto {
 
 
         ////////////////// main /////////////////////
+
+
         driveInches(3, 0.5f, dir.LEFT, 30);
         easeInches(25, 0.3f, 0.5f, dir.FORWARD, 30);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
         /*driveInches(2, 0.6f, dir.FORWARD, 30);
