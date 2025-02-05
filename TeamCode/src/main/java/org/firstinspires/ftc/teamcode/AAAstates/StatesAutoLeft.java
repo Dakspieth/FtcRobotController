@@ -47,7 +47,7 @@ public class StatesAutoLeft extends StatesAuto {
         //outtake preload sample
         SetVSlideSpeed(0.75);
         driveInches(7, 0.4f, dir.LEFT, 30);
-        driveInches(18.5f, 0.4f, dir.BACKWARD, 30);
+        driveInches(17.5f, 0.4f, dir.BACKWARD, 30);
         driveInches(46, 0.4f, dir.LEFTROT, 30);
         driveInches(5, 0.4f, dir.BACKWARD, 30);
         SetVArmPos("out");
@@ -133,13 +133,13 @@ public class StatesAutoLeft extends StatesAuto {
             SetVSlideSpeed(-0.6);
             SetHArmPos("down");
             sleep(200);
-            driveInches(75.5f, 0.5f, dir.LEFTROT, 30);
+            driveInches(78f, 0.5f, dir.LEFTROT, 30);
             //driveInches(75, 0.5f, dir.LEFTROT, 30);
             //driveInches(4, 0.5f, dir.LEFT, 30);
             hClawServo.setPosition(0.575);
             sleep(100);
-            driveInches(12.5f, 0.3f, dir.FORWARD, 30);
-            // sleep(230);
+            driveInches(11.2f, 0.3f, dir.FORWARD, 30);
+            //sleep(250);
             moveClaw(false);
             sleep(200);
 
