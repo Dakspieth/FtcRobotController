@@ -52,8 +52,11 @@ public final class TwoDeadWheelLocalizer implements Localizer {
         par = new OverflowEncoder(new RawEncoder(hardwareMap.get(DcMotorEx.class, "par")));
         perp = new OverflowEncoder(new RawEncoder(hardwareMap.get(DcMotorEx.class, "perp")));
 
+
         // TODO: reverse encoder directions if needed
+
         par.setDirection(DcMotorEx.Direction.REVERSE);
+        //perp.setDirection(Encoder.Direction.REVERSE);
 
         this.imu = imu;
 
