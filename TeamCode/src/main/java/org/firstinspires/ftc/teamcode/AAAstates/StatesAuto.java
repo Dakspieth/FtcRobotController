@@ -41,10 +41,10 @@ public class StatesAuto extends LinearOpMode {
     @Override
     public void runOpMode() {
         //setting motors and servos
-        leftBack    = hardwareMap.get(DcMotorEx.class, "left_back");
-        rightBack   = hardwareMap.get(DcMotorEx.class, "right_back");
-        leftFront   = hardwareMap.get(DcMotorEx.class, "left_front");
-        rightFront  = hardwareMap.get(DcMotorEx.class, "right_front");
+        leftBack    = hardwareMap.get(DcMotorEx.class, "leftBack");
+        rightBack   = hardwareMap.get(DcMotorEx.class, "rightBack");
+        leftFront   = hardwareMap.get(DcMotorEx.class, "leftFront");
+        rightFront  = hardwareMap.get(DcMotorEx.class, "rightFront");
         vLinearSlideLeft = hardwareMap.get(DcMotor.class, "vertical_slide_left"); //
         vLinearSlideRight = hardwareMap.get(DcMotor.class, "vertical_slide_right"); //  EH2
         hangMotorLeft = hardwareMap.get(DcMotor.class, "hang_motor_left"); // CH3
